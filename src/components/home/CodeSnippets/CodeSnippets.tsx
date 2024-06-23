@@ -1,5 +1,5 @@
 import { $cn } from "@/utils";
-import { JavaScript, Typescript } from "../shared";
+import { JavaScript, Typescript } from "../../shared";
 import { CodeSnippetsProps } from "./@types";
 import SnippetSingle from "./_snippet";
 

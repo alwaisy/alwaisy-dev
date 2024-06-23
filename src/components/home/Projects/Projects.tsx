@@ -1,5 +1,5 @@
 import { $cn } from "@/utils";
-import { NextJs, Tailwind, Typescript } from "../shared";
+import { NextJs, Tailwind, Typescript } from "../../shared";
 import { ProjectsProps } from "./@types";
 import ProjectSingle from "./_project";
 

@@ -11,7 +11,7 @@ import { useRef, useState } from "react";
 import type { Swiper as SwiperType } from "swiper";
 import "swiper/css";
 import { SwiperSlide as Slide, Swiper } from "swiper/react";
-import { ArrowNext } from "../shared";
+import { ArrowNext } from "../../shared";
 import { WhatMeDoProps } from "./@types";
 import CarouselCard from "./__card";
 

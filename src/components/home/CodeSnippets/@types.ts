@@ -1,4 +1,4 @@
-import { SvgIconProps } from "../shared/icons/@types";
+import { SvgIconProps } from "../../shared/icons/@types";
 
 export interface CodeSnippetsProps {
   title: string;
