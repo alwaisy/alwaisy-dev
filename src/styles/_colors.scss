@@ -1,7 +1,7 @@
 :root {
     --color-white: #fff;
     --color-green-300: #86efac;
-    --color-green-400: #4ade80;
+    --color-green-400: #4ade80; // #3BF686
     --color-neutral-200: #e5e5e5;
     --color-neutral-300: #d4d4d4;
     --color-neutral-400: #a3a3a3;
@@ -10,8 +10,11 @@
     --color-blue-400: #60a5fa;
     --color-zinc-300: #fafafa; // #FBFBFB
     --color-zinc-300: #d4d4d8; // #D6D6D6
-    --color-zinc-700: #3f3f46;
+    --color-zinc-700: #3f3f46; // #323443
     --color-stone-300: #d6d3d1;
+    --color-stone-500: #fafaf9; // #FAFAF9
+    --color-rose-200: #fecdd3; // #EDCECE
+    --color-cyan-300: #67e8f9; // #62D9FF
 }
 
 .gradient {

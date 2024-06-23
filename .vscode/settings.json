@@ -5,6 +5,8 @@
     "clsx",
     "hugeicons",
     "nextui",
+    "swiper",
+    "Swiper",
     "tailwindcss"
   ]
 }

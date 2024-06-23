@@ -33,19 +33,17 @@ const Biography = () => {
 
       <div className="flex justify-between">
         <div className="w-4/6">
-          <h4 className="text-[1.75rem] leading-[4.5rem] font-bold text-zinc-50">
-            Biography
-          </h4>
+          <h4 className="h4">Biography</h4>
           <p className="text-lg text-zinc-300">
-            Self-taught software engineer with a medical background. Founding
-            engineer at a US VR startup. Passionate IndieHacker contributing to
-            the internet.
+            <span className="text-green-400 font-bold">Self-taught</span>{" "}
+            software engineer with a medical background. Founding engineer at a
+            US VR startup. Passionate{" "}
+            <span className="text-cyan-300 font-bold">IndieHacker</span>{" "}
+            contributing to the internet.
           </p>
         </div>
         <div className="w-auto">
-          <h4 className="text-[1.75rem] leading-[4.5rem] font-bold text-zinc-50">
-            Let&apos;s connect
-          </h4>
+          <h4 className="h4">Let&apos;s connect</h4>
           <div className="flex gap-x-4">
             {socialIcons.map(({ Component, href, label, id }) => (
               <Button isIconOnly key={id}>

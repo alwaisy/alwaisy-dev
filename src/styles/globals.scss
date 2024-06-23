@@ -1,4 +1,5 @@
 @use "./_colors.scss";
+@use "./_sizes";
 
 @tailwind base;
 @tailwind components;
@@ -9,5 +10,5 @@ main {
 }
 
 .section {
-    @apply max-w-6xl mx-auto;
+    @apply max-w-6xl mx-auto overflow-x-hidden;
 }

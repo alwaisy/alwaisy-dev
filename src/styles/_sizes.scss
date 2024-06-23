@@ -1,0 +1,14 @@
+h1 {
+}
+
+.h2 {
+    @apply text-[3.5rem] font-bold font-sora leading-[4.5rem] tracking-wide;
+}
+
+.h4 {
+    @apply text-[1.75rem] leading-[4.5rem] font-bold text-zinc-50 font-sora;
+}
+
+.h6 {
+    @apply text-base leading-[4.5rem] font-semibold font-sora text-stone-50;
+}
