@@ -33,7 +33,7 @@ const Biography = () => {
 
       <div className="flex justify-between">
         <div className="w-4/6">
-          <h4 className="h4">Biography</h4>
+          <h4 className="h4 text-zinc-50">Biography</h4>
           <p className="text-lg text-zinc-300">
             <span className="text-green-400 font-bold">Self-taught</span>{" "}
             software engineer with a medical background. Founding engineer at a
@@ -43,7 +43,7 @@ const Biography = () => {
           </p>
         </div>
         <div className="w-auto">
-          <h4 className="h4">Let&apos;s connect</h4>
+          <h4 className="h4 text-zinc-50">Let&apos;s connect</h4>
           <div className="flex gap-x-4">
             {socialIcons.map(({ Component, href, label, id }) => (
               <Button isIconOnly key={id}>
