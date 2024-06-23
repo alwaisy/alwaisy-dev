@@ -5,10 +5,22 @@ h1 {
     @apply text-[3.5rem] font-bold font-sora leading-[4.5rem] tracking-wide;
 }
 
+.h3 {
+    @apply text-5xl font-bold font-sora leading-[3.5rem] tracking-[0.063em];
+}
+
 .h4 {
     @apply text-[1.75rem] leading-[4.5rem] font-bold text-zinc-50 font-sora;
 }
 
 .h6 {
     @apply text-base leading-[4.5rem] font-semibold font-sora text-stone-50;
+}
+
+.text-body {
+    @apply text-lg leading-8;
+}
+
+.text-body-bold {
+    @apply text-lg leading-8 font-bold;
 }
