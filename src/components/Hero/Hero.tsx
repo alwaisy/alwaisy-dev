@@ -1,6 +1,6 @@
 const Hero = () => {
   return (
-    <section className="max-w-6xl mx-auto pt-14">
+    <section className="section">
       <h2
         className={`gradient-v1 text-[3.5rem] font-bold font-sora leading-[4.5rem] tracking-wide`}
       >

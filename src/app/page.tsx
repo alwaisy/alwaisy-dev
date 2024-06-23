@@ -1,10 +1,11 @@
-import { Header, Hero } from "@/components";
+import { Biography, Header, Hero } from "@/components";
 
 export default function Home() {
   return (
-    <main>
+    <main className="space-y-20">
       <Header />
       <Hero />
+      <Biography />
     </main>
   );
 }

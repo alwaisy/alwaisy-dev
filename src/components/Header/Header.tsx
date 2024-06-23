@@ -13,7 +13,7 @@ const navMenu = [
 
 const Header = () => {
   return (
-    <header className="max-w-6xl mx-auto h-32 flex items-center justify-between border-b-1 border-neutral-600">
+    <header className="section h-32 flex items-center justify-between border-b-1 border-neutral-600">
       <Logo />
       <nav className="flex gap-x-16">
         {navMenu.map(({ label, path }) => (

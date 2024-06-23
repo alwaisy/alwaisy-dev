@@ -7,3 +7,7 @@
 main {
     @apply dark h-screen bg-background text-foreground;
 }
+
+.section {
+    @apply max-w-6xl mx-auto;
+}
