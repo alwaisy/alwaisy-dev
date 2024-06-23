@@ -1,3 +1,5 @@
+import { SvgIconProps } from "@/components/shared/icons/@types";
+
 export interface ProjectsProps {
   title: string;
   className?: React.HTMLAttributes<HTMLElement>["className"];
@@ -8,7 +10,7 @@ export interface Project {
   title: string;
   bio: string;
   image: string;
-  stack: (() => JSX.Element)[];
+  stack: React.FC<SvgIconProps>[];
   link: string;
   own: boolean;
 }
