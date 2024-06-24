@@ -1,20 +1,26 @@
-import { Button } from "@nextui-org/react";
-import { Linkedin02Icon, TwitterIcon } from "hugeicons-react";
+import { Button, Link } from "@nextui-org/react";
+import { GithubIcon, Linkedin02Icon, TwitterIcon } from "hugeicons-react";
 import Image from "next/image";
 
 export const socialIcons = [
   {
     Component: TwitterIcon,
-    href: "https://twitter.com/alvaisy",
+    href: "https://go.alwaisy.dev/twitter",
     label: "Twitter",
     id: "twitter",
   },
 
   {
     Component: Linkedin02Icon,
-    href: "https://www.linkedin.com/in/alwaisy/",
+    href: "https://go.alwaisy.dev/linkedin",
     label: "Linkedin",
     id: "linkedin",
+  },
+  {
+    Component: GithubIcon,
+    href: "https://go.alwaisy.dev/github",
+    label: "Github",
+    id: "github",
   },
 ];
 
@@ -46,7 +52,7 @@ const Biography = () => {
           <h4 className="h4 text-zinc-50">Let&apos;s connect</h4>
           <div className="flex gap-x-4">
             {socialIcons.map(({ Component, href, label, id }) => (
-              <Button isIconOnly key={id}>
+              <Button as={Link} isIconOnly key={id} href={href} target="_blank">
                 <Component />
               </Button>
             ))}

@@ -1,5 +1,6 @@
+import { socialIcons } from "@/components/home/Biography/Biography";
 import { Image } from "@nextui-org/react";
-import { GithubIcon, Linkedin02Icon, TwitterIcon } from "hugeicons-react";
+import { Mailbox01Icon } from "hugeicons-react";
 import SocialLink from "./_social-link";
 
 const AboutMeSocial = () => {
@@ -13,24 +14,17 @@ const AboutMeSocial = () => {
       />
 
       <div className="mt-9">
-        <ul role="list">
-          <SocialLink href="https://twitter.com/alvaisy" icon={TwitterIcon}>
-            Follow on Twitter
-          </SocialLink>
-
+        <ul role="list" className="space-y-4">
+          {socialIcons.map(({ Component, href, label, id }) => (
+            <SocialLink key={id} href={href} icon={Component}>
+              Follow {label}
+            </SocialLink>
+          ))}
           <SocialLink
-            href="https://github.com/alwaisy"
-            icon={GithubIcon}
-            className="mt-4"
+            href={"mailto:hello@alwaisy.dev?subject=Hello"}
+            icon={Mailbox01Icon}
           >
-            Follow on GitHub
-          </SocialLink>
-          <SocialLink
-            href="https://www.linkedin.com/in/alwaisy/"
-            icon={Linkedin02Icon}
-            className="mt-4"
-          >
-            Follow on LinkedIn
+            hello@alwaisy.dev
           </SocialLink>
         </ul>
       </div>
