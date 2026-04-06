@@ -1,0 +1,20 @@
+{
+    "tailwindCSS.classAttributes": ["class", "className", "class:list"],
+    "files.associations": {
+        "*.css": "tailwindcss"
+    },
+    "prettier.documentSelectors": ["**/*.astro"],
+    "[astro]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": ["source.organizeImports"],
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "cSpell.words": ["Alwaisy", "Awais", "frontends"],
+    "mcpServers": {
+        "Astro docs": {
+            "httpUrl": "https://mcp.docs.astro.build/mcp"
+        }
+    }
+}
