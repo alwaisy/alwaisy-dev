@@ -10,6 +10,7 @@ seo:
   image:
     src: '../../assets/images/blog/paddle-to-polar/images/cover.png'
     alt: Paddle rejection to Polar approval - solo founder journey
+isFeatured: true
 ---
 
 ![Payment gateway approval journey](../../assets/images/blog/paddle-to-polar/images/cover.png)

@@ -6,6 +6,7 @@ seo:
   image:
     src: '../../assets/images/projects/fewwords.png'
     alt: Fewwords - AI content summarization tool
+isFeatured: true
 ---
 
 ![Project preview](../../assets/images/projects/fewwords.png)

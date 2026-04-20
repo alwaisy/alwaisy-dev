@@ -11,6 +11,7 @@ seo:
   image:
     src: '../../assets/images/blog/getting-gemini-cli-to-work/images/cover.png'
     alt: Gemini CLI authentication tutorial for Linux
+isFeatured: true
 ---
 
 ![Gemini CLI authentication setup](../../assets/images/blog/getting-gemini-cli-to-work/images/cover.png)
