@@ -1,10 +1,9 @@
-import avatar from '../assets/media/avatar.png';
 import type { SiteConfig } from '../types';
 
 const siteConfig: SiteConfig = {
     website: 'https://alwaisy.dev',
     avatar: {
-        src: avatar,
+        src: '/media/avatar.png',
         alt: 'Awais Alwaisy'
     },
     title: 'Awais Alwaisy',

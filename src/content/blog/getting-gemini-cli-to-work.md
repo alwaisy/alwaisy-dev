@@ -9,12 +9,12 @@ tags:
   - Vibe Coding
 seo:
   image:
-    src: '../../assets/media/blog/getting-gemini-cli-to-work/images/cover.png'
+    src: '/media/blog/getting-gemini-cli-to-work/images/cover.png'
     alt: Gemini CLI authentication tutorial for Linux
 isFeatured: true
 ---
 
-![Gemini CLI authentication setup](../../assets/media/blog/getting-gemini-cli-to-work/images/cover.png)
+![Gemini CLI authentication setup](/media/blog/getting-gemini-cli-to-work/images/cover.png)
 
 I am not going to sugarcoat this. Getting Gemini CLI to recognize your Google AI Pro subscription on Linux is, objectively, a mess. Google built a tool that is supposed to work with a subscription they sell, and then made the login flow incompatible with it. That is not a skill issue. That is a Google issue.
 
@@ -38,7 +38,7 @@ The following products are not yet authorized to access your account:
 Gemini CLI
 ```
 
-![Gemini CLI login failure error](../../assets/media/blog/getting-gemini-cli-to-work/images/login-failed.png)
+![Gemini CLI login failure error](/media/blog/getting-gemini-cli-to-work/images/login-failed.png)
 
 Yes, your subscription _does_ include Gemini CLI. Google's own page says so. The tool just can't figure that out on its own.
 

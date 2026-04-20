@@ -3,12 +3,9 @@ title: whoami
 seo:
   title: About Me
   description: I cover solo product founders. The ones building from 0 to first $1k MRR without VC backing.
-  image:
-    src: '../../assets/media/about.png'
-    alt: Awais Alwaisy - covering solo product founders
 ---
 
-![Awais Alwaisy](../../assets/media/about.png)
+![Awais Alwaisy](/media/about.png)
 
 ## The Story
 

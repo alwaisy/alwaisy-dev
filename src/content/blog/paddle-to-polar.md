@@ -8,12 +8,12 @@ tags:
   - SaaS
 seo:
   image:
-    src: '../../assets/media/blog/paddle-to-polar/images/cover.png'
+    src: '/media/blog/paddle-to-polar/images/cover.png'
     alt: Paddle rejection to Polar approval - solo founder journey
 isFeatured: true
 ---
 
-![Payment gateway approval journey](../../assets/media/blog/paddle-to-polar/images/cover.png)
+![Payment gateway approval journey](/media/blog/paddle-to-polar/images/cover.png)
 
 _I didn't expect a payment gateway to feel like a job application._
 
@@ -138,7 +138,7 @@ No explanation. No feedback. No appeal.
 
 Just… no.
 
-![Paddle rejection email](../../assets/media/blog/paddle-to-polar/images/paddle-rejection.png)
+![Paddle rejection email](/media/blog/paddle-to-polar/images/paddle-rejection.png)
 
 ---
 
@@ -280,7 +280,7 @@ No long wait. No rejection email. No drama.
 
 Just done.
 
-![Polar approval confirmation](../../assets/media/blog/paddle-to-polar/images/polar-approval.png)
+![Polar approval confirmation](/media/blog/paddle-to-polar/images/polar-approval.png)
 
 ---
 
