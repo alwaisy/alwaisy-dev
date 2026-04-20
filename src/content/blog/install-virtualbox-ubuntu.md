@@ -10,19 +10,19 @@ tags:
 isFeatured: true
 ---
 
-**VirtualBox** is a software program that lets you run multiple operating systems on a single computer. It's a type of software called a **hosted hypervisor**. It allows us to create Virtual Machines (VMs). Each VM is a separate computer with its operating system but with shared resources from our Physical system. Depending on Computer / Laptop resources multiple VMs can be created with different Operating Systems for each on the same machine. 
+**VirtualBox** is a software program that lets you run multiple operating systems on a single computer. It's a type of software called a **hosted hypervisor**. It allows us to create Virtual Machines (VMs). Each VM is a separate computer with its operating system but with shared resources from our Physical system. Depending on Computer / Laptop resources multiple VMs can be created with different Operating Systems for each on the same machine.
 
 ## VMware Workstation & Usage
 
-From running multiple operating systems to managing them, allocating resources, and allowing complex network configuration VMware does all these things.  For whom VMware works perfectly are;
+From running multiple operating systems to managing them, allocating resources, and allowing complex network configuration VMware does all these things. For whom VMware works perfectly are;
 
 - **IT professionals** use it for testing, development, and deploying the Software. eg; VPS
 - **Developers** use it to create an isolated development environment, eg; CodeSandBox, Blitz
 - **Educators** use it to teach, and students use it to explore different Operating systems.
 
-As I have discussed how virtual machine makes our work easy. Do you need it on your Laptop / Computer? Let's do it. 
+As I have discussed how virtual machine makes our work easy. Do you need it on your Laptop / Computer? Let's do it.
 
-There are initial system requirements and a few steps to install **VirtualBox** on Ubuntu 24.04. 
+There are initial system requirements and a few steps to install **VirtualBox** on Ubuntu 24.04.
 
 ## Prerequisites
 
@@ -34,7 +34,7 @@ There are initial system requirements and a few steps to install **VirtualBox** 
 - A 64-bit processor with virtualization technology enabled, dual or higher is better.
 - Better internet connection
 
-Before I begin, I need to install a few peer dependencies and update our system. 
+Before I begin, I need to install a few peer dependencies and update our system.
 
 ### Update the System Packages
 
@@ -44,7 +44,7 @@ Update the system using the following command.
 sudo apt upgrade && sudo apt update
 ```
 
-![System update](../../assets/images/blog/install-virtualbox-ubuntu/images/Untitled.png)
+![Terminal showing sudo apt upgrade and update commands](../../assets/images/blog/install-virtualbox-ubuntu/images/01-system-update.png)
 
 ### Installing Peer Dependencies
 
@@ -52,29 +52,29 @@ sudo apt upgrade && sudo apt update
 sudo apt install gcc make libx11-dev libxext-dev libqt5gui5 libqt5dbus5 libqt5network5 libssl-dev liblzf1 libqt5help5 libqt5opengl5t64 libqt5printsupport5t64 libqt5sql5-sqlite libqt5sql5t64 libqt5xml5t64 libtpms0
 ```
 
-![Peer dependencies](../../assets/images/blog/install-virtualbox-ubuntu/images/Untitled%201.png)
+![Terminal installing VirtualBox peer dependencies packages](../../assets/images/blog/install-virtualbox-ubuntu/images/02-peer-dependencies-start.png)
 
-![Dependencies complete](../../assets/images/blog/install-virtualbox-ubuntu/images/Untitled%202.png)
+![VirtualBox peer dependencies installation completed](../../assets/images/blog/install-virtualbox-ubuntu/images/03-peer-dependencies-complete.png)
 
-Okay, alright. It's time to move forward to our actual installation. 
+Okay, alright. It's time to move forward to our actual installation.
 
 ## Installing VirtualBox
 
 Okay, so the initial step is downloading **VirtualBox** from their official website. Use [direct link](https://www.virtualbox.org/wiki/Linux_Downloads).
 
-![Download VirtualBox](../../assets/images/blog/install-virtualbox-ubuntu/images/9d877565-eb47-4e7e-93f8-3c1508a6b32f.png)
+![VirtualBox download page from official website](../../assets/images/blog/install-virtualbox-ubuntu/images/04-download-virtualbox.png)
 
 ### Step 1: Open the Terminal
 
-Open the terminal using the command *CTRL+ALT+A.*  
+Open the terminal using the command _CTRL+ALT+A._
 
-Update the system, again, yes, I have installed the peer dependencies therefore I need to update the system again. 
+Update the system, again, yes, I have installed the peer dependencies therefore I need to update the system again.
 
 ```bash
 sudo apt update
 ```
 
-Change the directory using the following command. 
+Change the directory using the following command.
 
 ```bash
 cd Downloads
@@ -82,17 +82,17 @@ cd Downloads
 ls -lta
 ```
 
-![List downloads](../../assets/images/blog/install-virtualbox-ubuntu/images/Untitled%203.png)
+![Terminal listing Downloads directory with ls -lta](../../assets/images/blog/install-virtualbox-ubuntu/images/05-list-downloads.png)
 
 ### Step 2: Installing
 
-After locating the *deb* file, now install it. Use the following command to install it. 
+After locating the _deb_ file, now install it. Use the following command to install it.
 
-**sudo:** full root access 
+**sudo:** full root access
 
 **dpkg -i:** to extract and install the binaries into the system
 
-**location/path:** Location or path of the .*deb*  file
+**location/path:** Location or path of the ._deb_ file
 
 After summing up, the command should be following
 
@@ -100,16 +100,16 @@ After summing up, the command should be following
 sudo dpkg -i virtualbox-7.0_7.0.18-162988\~Ubuntu\~noble_amd64.deb
 ```
 
-![Install VirtualBox](../../assets/images/blog/install-virtualbox-ubuntu/images/b7355e09-260a-4035-8fa1-ffe8766c865e.png)
+![Terminal running sudo dpkg -i virtualbox deb package command](../../assets/images/blog/install-virtualbox-ubuntu/images/06-dpkg-install-virtualbox.png)
 
 **Hit enter** and see the magic. And boom!!!.
 
-![VirtualBox installed](../../assets/images/blog/install-virtualbox-ubuntu/images/Untitled%204.png)
+![VirtualBox installation completed successfully in terminal](../../assets/images/blog/install-virtualbox-ubuntu/images/07-virtualbox-installed.png)
 
 ### Step 3: Open VirtualBox and Enjoy
 
-![VirtualBox running](../../assets/images/blog/install-virtualbox-ubuntu/images/Untitled%205.png)
+![Oracle VM VirtualBox application running on Ubuntu 24.04](../../assets/images/blog/install-virtualbox-ubuntu/images/08-virtualbox-running.png)
 
-I have explained how to install Oracle VM VirtualBox. Normally the flow goes as I did, but exceptions are there, *deb* file may break so always install the latest one. Sometimes you may face an error on step 2, you better restart your system can fix the problem. 
+I have explained how to install Oracle VM VirtualBox. Normally the flow goes as I did, but exceptions are there, _deb_ file may break so always install the latest one. Sometimes you may face an error on step 2, you better restart your system can fix the problem.
 
 By the way, I enjoyed exploring this topic, I was stuck too, yes, I had to uninstall Virtualbox, I had to remove everything then I installed it again. I hope it is easy for you as I explained it in step by step.

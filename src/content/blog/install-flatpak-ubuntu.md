@@ -15,9 +15,9 @@ Flatpak is another software packaging system that offers self-contained applicat
 
 ### Step 1: Open the terminal
 
-Open the terminal using the quick command *CTRL + ALT + A.* 
+Open the terminal using the quick command _CTRL + ALT + A._
 
-![Open terminal](../../assets/images/blog/install-flatpak-ubuntu/images/Untitled.png)
+![Opening terminal with Ctrl+Alt+T shortcut](../../assets/images/blog/install-flatpak-ubuntu/images/01-open-terminal.png)
 
 ### Step 2: Install flatpak
 
@@ -27,9 +27,9 @@ Run the following command. Enter your password when prompted. This will download
 sudo apt install flatpak
 ```
 
-Write Y and press Enter 
+Write Y and press Enter
 
-![Install flatpak](../../assets/images/blog/install-flatpak-ubuntu/images/Untitled%201.png)
+![Running sudo apt install flatpak command in terminal](../../assets/images/blog/install-flatpak-ubuntu/images/02-apt-install-flatpak.png)
 
 ### Step 3: Enable flatpak
 
@@ -39,7 +39,7 @@ We have installed Flatpak but access to the repository is not available right no
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 ```
 
-![Enable flathub](../../assets/images/blog/install-flatpak-ubuntu/images/Untitled%202.png)
+![Adding flathub repository with flatpak remote-add command](../../assets/images/blog/install-flatpak-ubuntu/images/03-enable-flathub.png)
 
 **Now we need to restart our computer.**
 
@@ -53,11 +53,11 @@ sudo apt install gnome-software-plugin-flatpak
 
 **Start:**
 
-![Plugin install start](../../assets/images/blog/install-flatpak-ubuntu/images/Untitled%203.png)
+![Installing gnome-software-plugin-flatpak package](../../assets/images/blog/install-flatpak-ubuntu/images/04-plugin-install-start.png)
 
-**Final:** 
+**Final:**
 
-![Plugin install complete](../../assets/images/blog/install-flatpak-ubuntu/images/Untitled%204.png)
+![Software Flatpak plugin installation completed successfully](../../assets/images/blog/install-flatpak-ubuntu/images/05-plugin-install-complete.png)
 
 ### Step 4: Optional
 
@@ -65,7 +65,7 @@ Some users may face following error. It is due to repository of packages was not
 
 **Problem**
 
-![Error message](../../assets/images/blog/install-flatpak-ubuntu/images/Untitled%205.png)
+![Flathub repository error message in terminal](../../assets/images/blog/install-flatpak-ubuntu/images/06-error-message.png)
 
 **Let's fix the problem, use following command**
 
@@ -78,12 +78,12 @@ flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flat
 
 ## Time to test
 
-Let's test it by installing something. I have to install ksnip. 
+Let's test it by installing something. I have to install ksnip.
 
 ```bash
 flatpak install flathub org.ksnip.ksnip
 ```
 
-Installed… 
+Installed…
 
-![Ksnip installed](../../assets/images/blog/install-flatpak-ubuntu/images/Untitled%206.png)
+![Ksnip application installed via Flatpak running on Ubuntu](../../assets/images/blog/install-flatpak-ubuntu/images/07-ksnip-installed.png)
