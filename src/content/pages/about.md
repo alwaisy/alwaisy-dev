@@ -12,79 +12,36 @@ seo:
 
 ## The Story
 
-I started as a Vue developer in 2021. Built e-commerce stores, healthcare portals, legacy system rewrites. Did the remote work thing for US companies. Got good at it. Made decent money from it.
+I started as a Vue developer in 2021. Built e-commerce stores, healthcare portals, legacy system rewrites for US companies. Made decent money. But I was always the horse. Someone else had the idea. Someone else owned the product. I just built it.
 
-But something kept bothering me.
+I didn't want that. So I tried things. YouTube channel. Reddit community. ProductHunt clone. Finance newsletter. Then I built [Fewwords](https://fewwords.app) from scratch, alone. Real architecture. Queues, SSE, multi-provider LLMs. My own solo build. My own case study.
 
-I was always the horse. Someone else had the idea. Someone else owned the product. Someone else decided what got built. I just built it. And I watched that pattern repeat everywhere around me. Smart engineers, good people, executing other people's visions for their entire careers.
-
-I didn't want that. But I also didn't know exactly what I wanted instead.
-
-So I tried things.
-
-I started a YouTube channel teaching CS fundamentals in English and Urdu. I built PakStartups, a Reddit community to gather Pakistan's startup ecosystem in one place. I launched Startup Crunch, a ProductHunt-style discovery platform for Pakistani founders. I explored robotics. I started writing. I edited a finance newsletter.
-
-Then I built [Fewwords](https://fewwords.app), an AI-powered content summarization tool, from scratch, alone. Real architecture. Queues, SSE, multi-provider LLMs, proper auth. My own solo build. My own case study.
-
-Every one of these things taught me something. Then 2026 arrived and I made a decision.
-
-Stop spreading. Pick one lane and go deep.
+Every one of these things taught me something. Then 2026 arrived and I made a decision. Stop spreading. Pick one lane and go deep.
 
 ## What I Do Now
 
-I cover solo product founders.
+I cover solo product founders. The ones building from zero to first customer, from first customer to $1k MRR. I care about how they found the problem, what they built first, the real numbers, and the moments they almost quit.
 
-Not funded startups. Not VC-backed companies. Not big tech. The people building products alone or with one other person. The ones figuring out how to get from zero to first customer, from first customer to $1k MRR, from $1k MRR to something sustainable.
-
-I care about:
-
-- How they found the problem worth solving
-- What they built and how they decided what to build first
-- The real numbers, not the polished version
-- The decisions that actually moved the needle
-- The moments they almost quit and why they didn't
-
-These stories exist. They just don't get covered. Big tech gets media. Funded startups get TechCrunch. The solo founder who built a niche tool and hit $3k MRR in six months gets nothing. I'm fixing that.
+Big tech gets media. Funded startups get TechCrunch. The solo founder who hit $3k MRR in six months gets nothing. I'm fixing that.
 
 ## Why I Can Do This
 
-I am one of these people.
-
-I know what it feels like to ship something nobody asked for and figure out distribution after the fact. I know what it's like to build alone, make architecture decisions with no one to ask, and wonder if any of it is going anywhere. I've done it. I'm still doing it with Fewwords.
-
-That gives me something most content creators in this space don't have. I can read a founder's stack, understand their technical decisions, and ask the questions that actually matter. Not surface-level "how did you feel" questions. Real ones. Why Postgres over Mongo. Why they didn't charge earlier. What the first bad review taught them.
+I am one of these people. I know what it feels like to ship something nobody asked for and figure out distribution after. I can read a founder's stack and ask real questions. Why Postgres over Mongo. Why they didn't charge earlier. What the first bad review taught them.
 
 ## Current Focus
 
-**Content:** LinkedIn. Covering solo product founders. Their builds, their numbers, their decisions. Minimum 6 months of consistent, focused output.
+**Content:** LinkedIn. Covering solo product founders. Minimum 6 months of consistent output.
 
-**Product:** [Fewwords](https://fewwords.app). An AI-powered summarization tool for articles, YouTube videos, and Reddit threads. My own solo build. My own case study.
+**Product:** [Fewwords](https://fewwords.app). My own solo build. My own case study.
 
-**Audience I am building for:** Solo builders and indie product founders. People building without outside funding, without big teams, without the safety net. Especially the early ones. 0 to first $1k MRR.
-
-**Audience I am staying away from:** VC-backed startups, enterprise, anything that needs a pitch deck to exist.
-
-## The Tech Stack
-
-I would say I'm pretty comfortable with:
-
-- **Frontend:** Vue.js 3, Nuxt 3, React, Next.js 14, TypeScript
-- **Backend:** Node.js, PostgreSQL, Drizzle ORM, BullMQ, Redis
-- **AI/LLMs:** OpenRouter, multi-provider architecture, prompt versioning
-- **Infrastructure:** Queues, SSE for real-time updates, proper auth
-
-The kind of stack you need when you're building alone and every decision sticks for two years.
+**Audience:** Solo builders without funding, without teams, without safety nets. 0 to first $1k MRR.
 
 ## Core Belief
 
-The most interesting products being built right now are not in Silicon Valley. They're being built by one person, usually at night, usually without anyone watching. Those people deserve coverage. Their decisions are worth studying. Their numbers are worth knowing.
-
-That's what I'm here for.
+The most interesting products right now are not in Silicon Valley. They're being built by one person, usually at night, without anyone watching. Those people deserve coverage. That's what I'm here for.
 
 ## Let's Talk
 
-Building something solo? Got a product story I should cover? Just want to chat about why most tech content misses the point?
+Building something solo? Got a product story I should cover?
 
-Hit me up. I'm on [LinkedIn](https://linkedin.com/in/alwaisy), [GitHub](https://github.com/alwaisy), and [Twitter](https://x.com/alvaisy).
-
-Or just [send me a message](/contact). I actually respond.
+Hit me up on [LinkedIn](https://linkedin.com/in/alwaisy), [GitHub](https://github.com/alwaisy), or [Twitter](https://x.com/alvaisy). Or [send me a message](/contact). I actually respond.
