@@ -59,7 +59,7 @@ This is the most straightforward way. You connect a VPN once to complete the log
 
 ### What you need
 
-Any VPN works. [Windscribe](https://windscribe.com) has a free tier that is generous enough. The server location matters — use a European or US server. A French server (Paris, Jardin) worked reliably in testing.
+Any VPN works. [Windscribe](https://windscribe.com/yo/a60wwbui) has a free tier that is generous enough. The server location matters — use a European or US server. A French server (Paris, Jardin) worked reliably in testing.
 
 ### Steps
 

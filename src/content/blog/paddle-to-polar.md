@@ -137,6 +137,8 @@ No explanation. No feedback. No appeal.
 
 Just… no.
 
+![Paddle rejection email](../../assets/images/blog/paddle-to-polar/images/paddle-rejection.png)
+
 ---
 
 ## That moment hits different
@@ -276,6 +278,8 @@ Approved.
 No long wait. No rejection email. No drama.
 
 Just done.
+
+![Polar approval confirmation](../../assets/images/blog/paddle-to-polar/images/polar-approval.png)
 
 ---
 
