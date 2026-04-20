@@ -26,13 +26,18 @@ It is the Ubuntu Software Center, and the new name is App Center. Installing Sof
 
 Press the Super key or click on the right top corner of the screen,
 
-![Ubuntu desktop showing Super key application menu](../../assets/images/blog/install-software-ubuntu/images/01-super-key-menu.png)
+![Ubuntu desktop showing Super key application menu](../../assets/media/blog/install-software-ubuntu/images/01-super-key-menu.png)
 
 ### Step 2:
 
 Search _App Center._
 
 Search your favorite Software in from the search bar.
+
+<video controls width="100%">
+  <source src="../../assets/media/blog/install-software-ubuntu/video/app-center-software-install.webm" type="video/webm">
+  Your browser does not support the video tag.
+</video>
 
 ## Using Package manager
 
@@ -42,7 +47,7 @@ There are multiple package managers for Ubuntu but I'll discuss 2 in this sectio
 
 Open the terminal using CTRL + ALT + A
 
-![Terminal window opened with keyboard shortcut](../../assets/images/blog/install-software-ubuntu/images/02-open-terminal.png)
+![Terminal window opened with keyboard shortcut](../../assets/media/blog/install-software-ubuntu/images/02-open-terminal.png)
 
 ### Step 2:
 
@@ -52,17 +57,17 @@ Install the package. The structure is _sudo apt install <package_name>, eg;_
 sudo apt install flameshot
 ```
 
-![Terminal showing sudo apt install flameshot command execution](../../assets/images/blog/install-software-ubuntu/images/03-apt-install-flameshot.png)
+![Terminal showing sudo apt install flameshot command execution](../../assets/media/blog/install-software-ubuntu/images/03-apt-install-flameshot.png)
 
 And yay!!!
 
-![Flameshot screenshot tool successfully installed via apt](../../assets/images/blog/install-software-ubuntu/images/04-flameshot-installed.png)
+![Flameshot screenshot tool successfully installed via apt](../../assets/media/blog/install-software-ubuntu/images/04-flameshot-installed.png)
 
 ### Using snapd
 
 Same procedure but using _snapd._ I can install any package from snapcraft io store using this command. Snapcraft is an official package store by canonical. It is the 2nd most easy way to install packages in Ubuntu 24.04. eg;
 
-![Ubuntu Snap Store application interface](../../assets/images/blog/install-software-ubuntu/images/05-snap-store.png)
+![Ubuntu Snap Store application interface](../../assets/media/blog/install-software-ubuntu/images/05-snap-store.png)
 
 Let's install Vault, I have not used Vault by the way. Let's install it and explore.
 
@@ -72,9 +77,9 @@ Let's install Vault, I have not used Vault by the way. Let's install it and expl
 sudo snap install vault
 ```
 
-![Terminal running sudo snap install vault command](../../assets/images/blog/install-software-ubuntu/images/06-snap-install-vault.png)
+![Terminal running sudo snap install vault command](../../assets/media/blog/install-software-ubuntu/images/06-snap-install-vault.png)
 
-![HashiCorp Vault successfully installed via Snap](../../assets/images/blog/install-software-ubuntu/images/07-vault-installed.png)
+![HashiCorp Vault successfully installed via Snap](../../assets/media/blog/install-software-ubuntu/images/07-vault-installed.png)
 
 ## Using Flatpak
 
@@ -86,7 +91,7 @@ For example, I have to install GIMP, I can use the following command;
 flatpak install flathub org.gimp.GIMP
 ```
 
-![Terminal showing flatpak install flathub org.gimp.GIMP command](../../assets/images/blog/install-software-ubuntu/images/08-flatpak-install-gimp.png)
+![Terminal showing flatpak install flathub org.gimp.GIMP command](../../assets/media/blog/install-software-ubuntu/images/08-flatpak-install-gimp.png)
 
 ## Manual Installation
 
@@ -131,6 +136,11 @@ sudo dpkg -i zoom_amd64.deb
 
 That's all and here is my result;
 
+<video controls width="100%">
+  <source src="../../assets/media/blog/install-software-ubuntu/video/dpkg-deb-install-demo.webm" type="video/webm">
+  Your browser does not support the video tag.
+</video>
+
 ### Using Tar/Untar
 
 I found it the most complex option to install Software on Ubuntu 24.04. I usually avoid it. But sometimes I need to do it, so how I do it;
@@ -161,7 +171,7 @@ Confirm the existence of the package. One way is, I am already in Downloads
 ls -lta
 ```
 
-![Terminal showing ls -lta output in Downloads directory](../../assets/images/blog/install-software-ubuntu/images/09-list-downloads.png)
+![Terminal showing ls -lta output in Downloads directory](../../assets/media/blog/install-software-ubuntu/images/09-list-downloads.png)
 
 **Extracting it**
 
@@ -173,7 +183,7 @@ tar -xf obsidian-1.5.12-arm64.tar.gz
 
 Enter the extracted folder, like this. And locate the file highlighted (obsidian)
 
-![File manager showing extracted Obsidian folder contents](../../assets/images/blog/install-software-ubuntu/images/10-extracted-folder.png)
+![File manager showing extracted Obsidian folder contents](../../assets/media/blog/install-software-ubuntu/images/10-extracted-folder.png)
 
 Make it executable. Using
 
@@ -187,9 +197,14 @@ Then run it by running
 ./obsidian
 ```
 
-![Obsidian application running after manual tar.gz installation](../../assets/images/blog/install-software-ubuntu/images/11-run-obsidian.png)
+![Obsidian application running after manual tar.gz installation](../../assets/media/blog/install-software-ubuntu/images/11-run-obsidian.png)
 
 And it'll open the program.
+
+<video controls width="100%">
+  <source src="../../assets/media/blog/install-software-ubuntu/video/tar-extract-manual-install.webm" type="video/webm">
+  Your browser does not support the video tag.
+</video>
 
 It was a bit complicated but interesting too. Usually, this format is usable for a single run. Because by default it doesn't add the Software to Applications.
 

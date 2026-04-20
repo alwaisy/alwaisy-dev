@@ -4,12 +4,12 @@ description: Articles, YouTube videos, Reddit threads. I built this because I co
 publishDate: 'Jan 2026'
 seo:
   image:
-    src: '../../assets/images/projects/fewwords.png'
+    src: '../../assets/media/projects/fewwords.png'
     alt: Fewwords - AI content summarization tool
 isFeatured: true
 ---
 
-![Project preview](../../assets/images/projects/fewwords.png)
+![Project preview](../../assets/media/projects/fewwords.png)
 
 <a href="https://fewwords.app" target="_blank">Visit Fewwords</a>
 

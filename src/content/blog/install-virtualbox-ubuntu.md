@@ -44,7 +44,7 @@ Update the system using the following command.
 sudo apt upgrade && sudo apt update
 ```
 
-![Terminal showing sudo apt upgrade and update commands](../../assets/images/blog/install-virtualbox-ubuntu/images/01-system-update.png)
+![Terminal showing sudo apt upgrade and update commands](../../assets/media/blog/install-virtualbox-ubuntu/images/01-system-update.png)
 
 ### Installing Peer Dependencies
 
@@ -52,9 +52,9 @@ sudo apt upgrade && sudo apt update
 sudo apt install gcc make libx11-dev libxext-dev libqt5gui5 libqt5dbus5 libqt5network5 libssl-dev liblzf1 libqt5help5 libqt5opengl5t64 libqt5printsupport5t64 libqt5sql5-sqlite libqt5sql5t64 libqt5xml5t64 libtpms0
 ```
 
-![Terminal installing VirtualBox peer dependencies packages](../../assets/images/blog/install-virtualbox-ubuntu/images/02-peer-dependencies-start.png)
+![Terminal installing VirtualBox peer dependencies packages](../../assets/media/blog/install-virtualbox-ubuntu/images/02-peer-dependencies-start.png)
 
-![VirtualBox peer dependencies installation completed](../../assets/images/blog/install-virtualbox-ubuntu/images/03-peer-dependencies-complete.png)
+![VirtualBox peer dependencies installation completed](../../assets/media/blog/install-virtualbox-ubuntu/images/03-peer-dependencies-complete.png)
 
 Okay, alright. It's time to move forward to our actual installation.
 
@@ -62,7 +62,7 @@ Okay, alright. It's time to move forward to our actual installation.
 
 Okay, so the initial step is downloading **VirtualBox** from their official website. Use [direct link](https://www.virtualbox.org/wiki/Linux_Downloads).
 
-![VirtualBox download page from official website](../../assets/images/blog/install-virtualbox-ubuntu/images/04-download-virtualbox.png)
+![VirtualBox download page from official website](../../assets/media/blog/install-virtualbox-ubuntu/images/04-download-virtualbox.png)
 
 ### Step 1: Open the Terminal
 
@@ -82,7 +82,7 @@ cd Downloads
 ls -lta
 ```
 
-![Terminal listing Downloads directory with ls -lta](../../assets/images/blog/install-virtualbox-ubuntu/images/05-list-downloads.png)
+![Terminal listing Downloads directory with ls -lta](../../assets/media/blog/install-virtualbox-ubuntu/images/05-list-downloads.png)
 
 ### Step 2: Installing
 
@@ -100,15 +100,15 @@ After summing up, the command should be following
 sudo dpkg -i virtualbox-7.0_7.0.18-162988\~Ubuntu\~noble_amd64.deb
 ```
 
-![Terminal running sudo dpkg -i virtualbox deb package command](../../assets/images/blog/install-virtualbox-ubuntu/images/06-dpkg-install-virtualbox.png)
+![Terminal running sudo dpkg -i virtualbox deb package command](../../assets/media/blog/install-virtualbox-ubuntu/images/06-dpkg-install-virtualbox.png)
 
 **Hit enter** and see the magic. And boom!!!.
 
-![VirtualBox installation completed successfully in terminal](../../assets/images/blog/install-virtualbox-ubuntu/images/07-virtualbox-installed.png)
+![VirtualBox installation completed successfully in terminal](../../assets/media/blog/install-virtualbox-ubuntu/images/07-virtualbox-installed.png)
 
 ### Step 3: Open VirtualBox and Enjoy
 
-![Oracle VM VirtualBox application running on Ubuntu 24.04](../../assets/images/blog/install-virtualbox-ubuntu/images/08-virtualbox-running.png)
+![Oracle VM VirtualBox application running on Ubuntu 24.04](../../assets/media/blog/install-virtualbox-ubuntu/images/08-virtualbox-running.png)
 
 I have explained how to install Oracle VM VirtualBox. Normally the flow goes as I did, but exceptions are there, _deb_ file may break so always install the latest one. Sometimes you may face an error on step 2, you better restart your system can fix the problem.
 
