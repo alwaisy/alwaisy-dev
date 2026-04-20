@@ -36,6 +36,17 @@ I am one of these people. I know what it feels like to ship something nobody ask
 
 **Audience:** Solo builders without funding, without teams, without safety nets. 0 to first $1k MRR.
 
+## The Tech Stack
+
+I would say I'm pretty comfortable with:
+
+- **Frontend:** Vue.js 3, Nuxt 3, React, Next.js 14, TypeScript
+- **Backend:** Node.js, PostgreSQL, Drizzle ORM, BullMQ, Redis
+- **AI/LLMs:** OpenRouter, multi-provider architecture, prompt versioning
+- **Infrastructure:** Queues, SSE for real-time updates, proper auth
+
+The kind of stack you need when you're building alone and every decision sticks for two years.
+
 ## Core Belief
 
 The most interesting products right now are not in Silicon Valley. They're being built by one person, usually at night, without anyone watching. Those people deserve coverage. That's what I'm here for.
