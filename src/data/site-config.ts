@@ -5,15 +5,15 @@ const siteConfig: SiteConfig = {
     website: 'https://alwaisy.dev',
     avatar: {
         src: avatar,
-        alt: 'Awais Alwaisy / Startup Guy'
+        alt: 'Awais Alwaisy'
     },
-    title: 'Awais Alwaisy / Startup Guy',
-    subtitle: "Building Pakistan's Startup Ecosystem",
+    title: 'Awais Alwaisy',
+    subtitle: "Covering solo product founders. The ones building from 0 to first $1k MRR.",
     description:
-        "Frontend Engineer turned Community Builder. Founder of PakStartups. Building the infrastructure that produces Pakistan's next generation of founders and CEOs.",
+        "I write about solo founders and indie hackers who ship without VC backing. Problem-first stories, real numbers, and the decisions that actually moved the needle.",
     image: {
         src: '/og.png',
-        alt: 'Awais Alwaisy - Community Builder & Founder'
+        alt: 'Awais Alwaisy - Solo Founder Media'
     },
     headerNavLinks: [
         {
@@ -58,12 +58,12 @@ const siteConfig: SiteConfig = {
         }
     ],
     hero: {
-        title: "Hey, I'm Awais. I Build Ecosystems, Not Just Code.",
-        text: "After 3+ years building B2B SaaS frontends for US companies, I realized something. Real impact comes from creating platforms where others can build.\n\nNow I'm focused on Pakistan's startup infrastructure. Founded **PakStartups** (Pakistan's largest startup community on Reddit), building ProductHunt for Pakistani startups, and creating 7+ professional communities across ML/AI, embedded systems, UX, and more.\n\nPreviously shipped healthcare portals with 40% productivity improvements, e-commerce platforms handling thousands of daily transactions, and legacy system modernizations with 50% performance gains.\n\nTech stack: React, Next.js 14, TypeScript, Vue.js 3, Node.js.\n\nCheck out my work on [GitHub](https://github.com/alwaisy) or connect on [LinkedIn](https://linkedin.com/in/alwaisy).",
+        title: "I cover solo product founders.",
+        text: "Not funded startups. Not VC-backed companies. The people building products alone or with one other person. The ones figuring out how to get from zero to first customer, from first customer to $1k MRR.\n\nI started as a Vue developer in 2021. Built e-commerce stores, healthcare portals, legacy system rewrites. But I kept noticing the same pattern. Smart engineers executing other people's visions for their entire careers. I didn't want that.\n\nSo I tried things. YouTube channel. A Reddit community. A ProductHunt clone. A finance newsletter. And now **Fewwords** — an AI-powered summarization tool I built solo to solve my own problem.\n\nNow I write about people like me. I lead with the problem they solve, not their founder resume. I ask about their tech stack choices, their pricing decisions, the moment they almost quit.\n\nI'm one of these people. That is why I can cover them.",
         actions: [
             {
-                text: "Let's Chat",
-                href: '/contact'
+                text: "Read the about page",
+                href: '/about'
             }
         ]
     },

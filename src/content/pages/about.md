@@ -2,87 +2,89 @@
 title: whoami
 seo:
   title: About Me
-  description: From frontend dev to ecosystem builder. Here's why I stopped writing code for others and started building platforms for Pakistani founders.
+  description: I cover solo product founders. The ones building from 0 to first $1k MRR without VC backing.
   image:
     src: '../../assets/images/about.png'
-    alt: Awais Alwaisy working on building Pakistan's startup ecosystem
+    alt: Awais Alwaisy - covering solo product founders
 ---
 
 ![Awais Alwaisy](../../assets/images/about.png)
 
-<!-- ## The Switch -->
+## The Story
 
-For three years, I wrote code for US companies. Built healthcare portals. E-commerce platforms. Legacy system rewrites. Made things 40% faster here, 50% more efficient there. Got really good at React, TypeScript, Next.js.
+I started as a Vue developer in 2021. Built e-commerce stores, healthcare portals, legacy system rewrites. Did the remote work thing for US companies. Got good at it. Made decent money from it.
 
-But something felt off.
+But something kept bothering me.
 
-I was building other people's visions. Helping American startups scale while Pakistani engineers stayed stuck in the employee loop. Smart people. Talented people. Just no infrastructure to turn them into founders.
+I was always the horse. Someone else had the idea. Someone else owned the product. Someone else decided what got built. I just built it. And I watched that pattern repeat everywhere around me. Smart engineers, good people, executing other people's visions for their entire careers.
 
-So I quit the safe path and started building that infrastructure myself.
+I didn't want that. But I also didn't know exactly what I wanted instead.
 
-## What I'm Building Now
+So I tried things.
 
-**PakStartups** - Pakistan's largest startup community on Reddit. A place where founders, builders, and dreamers actually help each other instead of just networking.
+I started a YouTube channel teaching CS fundamentals in English and Urdu. I built PakStartups, a Reddit community to gather Pakistan's startup ecosystem in one place. I launched Startup Crunch, a ProductHunt-style discovery platform for Pakistani founders. I explored robotics. I started writing. I edited a finance newsletter.
 
-**ProductHunt for Pakistan** - Because Pakistani startups deserve a discovery platform that actually works for our market.
+Then I built [Fewwords](https://fewwords.app), an AI-powered content summarization tool, from scratch, alone. Real architecture. Queues, SSE, multi-provider LLMs, proper auth. My own solo build. My own case study.
 
-**7+ Professional Communities** - ML/AI engineers, embedded systems developers, UX designers, medical professionals. Each community solving real problems for Pakistani builders.
+Every one of these things taught me something. Then 2026 arrived and I made a decision.
 
-**Consultation Platform** - Connecting Pakistani professionals who know their stuff with people who need that knowledge.
+Stop spreading. Pick one lane and go deep.
 
-The goal? Turn individual contributors into business leaders. Give engineers the networks, platforms, and confidence to start their own thing.
+## What I Do Now
 
-## The Technical Stuff
+I cover solo product founders.
 
-Still writing code. Just for myself now.
+Not funded startups. Not VC-backed companies. Not big tech. The people building products alone or with one other person. The ones figuring out how to get from zero to first customer, from first customer to $1k MRR, from $1k MRR to something sustainable.
 
-**What I use:** React, Next.js 14, TypeScript, Vue.js 3, Node.js, Nuxt 3, Pinia, atomic design patterns, SCSS.
+I care about:
 
-**What I've shipped:**
+- How they found the problem worth solving
+- What they built and how they decided what to build first
+- The real numbers, not the polished version
+- The decisions that actually moved the needle
+- The moments they almost quit and why they didn't
 
-- Healthcare management systems (40% productivity boost)
-- E-commerce platforms handling thousands of daily transactions
-- Vue.js apps with SSR that improved SEO by 30%
-- Legacy PHP/jQuery sites transformed into modern Vue apps (50% performance gain)
+These stories exist. They just don't get covered. Big tech gets media. Funded startups get TechCrunch. The solo founder who built a niche tool and hit $3k MRR in six months gets nothing. I'm fixing that.
 
-Three years of remote work with US companies taught me how to ship fast, communicate clearly, and own my work. Now I'm using those skills to build for Pakistan.
+## Why I Can Do This
 
-## Why This Matters
+I am one of these people.
 
-Pakistan has 220 million people. Tons of engineers. But our startup ecosystem is tiny compared to our potential.
+I know what it feels like to ship something nobody asked for and figure out distribution after the fact. I know what it's like to build alone, make architecture decisions with no one to ask, and wonder if any of it is going anywhere. I've done it. I'm still doing it with Fewwords.
 
-Why? Because we're missing the boring infrastructure stuff. The communities. The discovery platforms. The networks where a random engineer in Lahore can connect with someone in Karachi who's solving the same problem.
+That gives me something most content creators in this space don't have. I can read a founder's stack, understand their technical decisions, and ask the questions that actually matter. Not surface-level "how did you feel" questions. Real ones. Why Postgres over Mongo. Why they didn't charge earlier. What the first bad review taught them.
 
-We don't need more bootcamps teaching React. We need places where builders can find each other, share what works, and actually start companies.
+## Current Focus
 
-That's what I'm building.
+**Content:** LinkedIn. Covering solo product founders. Their builds, their numbers, their decisions. Minimum 6 months of consistent, focused output.
 
-## Before All This
+**Product:** [Fewwords](https://fewwords.app). An AI-powered summarization tool for articles, YouTube videos, and Reddit threads. My own solo build. My own case study.
 
-Started as a content creator on YouTube (2021-2022). Made videos about operating systems, terminals, programming languages. English and Urdu. Taught beginners how this stuff actually works.
+**Audience I am building for:** Solo builders and indie product founders. People building without outside funding, without big teams, without the safety net. Especially the early ones. 0 to first $1k MRR.
 
-Built a writing platform for medical professionals. Like Medium, but for doctors.
+**Audience I am staying away from:** VC-backed startups, enterprise, anything that needs a pitch deck to exist.
 
-Worked at SigmaEMP (Malaysia), LoopBrackets, Cryptum Technologies, Dolami Inc. Each job taught me something. How to work remotely. How to lead a frontend team. How to ship under pressure. How to turn legacy code into something people actually want to use.
+## The Tech Stack
 
-Then I started [Money Matters, Bro](https://dub.sh/moneymattersbro). A weekly newsletter where I read the boring stuff (news, policies, funding updates) and make it readable. Simple breakdowns, a few charts, just enough memes.
+I would say I'm pretty comfortable with:
 
-All of it was training for what I'm doing now.
+- **Frontend:** Vue.js 3, Nuxt 3, React, Next.js 14, TypeScript
+- **Backend:** Node.js, PostgreSQL, Drizzle ORM, BullMQ, Redis
+- **AI/LLMs:** OpenRouter, multi-provider architecture, prompt versioning
+- **Infrastructure:** Queues, SSE for real-time updates, proper auth
 
-## What Drives Me
+The kind of stack you need when you're building alone and every decision sticks for two years.
 
-I'm tired of seeing talented Pakistani engineers stuck in the employee mindset. Not because they can't build companies. But because no one showed them it was possible.
+## Core Belief
 
-Every successful founder who comes out of PakStartups makes the whole ecosystem stronger. They hire people. They solve local problems. They prove it can be done.
+The most interesting products being built right now are not in Silicon Valley. They're being built by one person, usually at night, usually without anyone watching. Those people deserve coverage. Their decisions are worth studying. Their numbers are worth knowing.
 
-That's worth more than any frontend job.
+That's what I'm here for.
 
 ## Let's Talk
 
-Building something for Pakistani founders? Want to contribute to one of the communities? Just want to chat about startups, code, or why most tech content is terrible?
+Building something solo? Got a product story I should cover? Just want to chat about why most tech content misses the point?
 
 Hit me up. I'm on [LinkedIn](https://linkedin.com/in/alwaisy), [GitHub](https://github.com/alwaisy), and [Twitter](https://x.com/alvaisy).
 
 Or just [send me a message](/contact). I actually respond.
-
-Let's build something that matters.
