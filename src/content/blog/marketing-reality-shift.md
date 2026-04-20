@@ -6,13 +6,7 @@ tags:
   - Marketing
   - Startups
   - AI Search
-seo:
-  image:
-    src: '../../assets/images/blog/marketing-reality-shift/images/cover.png'
-    alt: AI search marketing strategy for startups
 ---
-
-![AI search marketing strategy](../../assets/images/blog/marketing-reality-shift/images/cover.png)
 
 I wanted to start this by saying something you probably need to hear. You aren't behind. It just feels that way because the "rules" of marketing are shifting under our feet.
 
