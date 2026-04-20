@@ -36,6 +36,8 @@ The following products are not yet authorized to access your account:
 Gemini CLI
 ```
 
+![Gemini CLI login failure error](../../assets/images/blog/getting-gemini-cli-to-work/images/login-failed.png)
+
 Yes, your subscription _does_ include Gemini CLI. Google's own page says so. The tool just can't figure that out on its own.
 
 ---
