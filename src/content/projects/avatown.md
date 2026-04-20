@@ -4,11 +4,11 @@ description: A dedicated marketplace for virtual avatars. Buy, sell and discover
 publishDate: 'May 06 2023'
 seo:
   image:
-    src: '../../assets/images/project-avatown.png'
+    src: '../../assets/images/projects/avatown.png'
     alt: Avatown marketplace preview
 ---
 
-![Project preview](../../assets/images/project-avatown.png)
+![Project preview](../../assets/images/projects/avatown.png)
 
 <a href="https://goavatown.com" target="_blank">Visit Avatown</a>
 
