@@ -1,14 +1,14 @@
 ---
-title: "Fewwords - AI content summarization that actually works"
+title: 'Fewwords - AI content summarization that actually works'
 description: Articles, YouTube videos, Reddit threads. I built this because I couldn't sit through 2-hour videos and my browser was a graveyard of tabs I'd never read.
 publishDate: 'Jan 2026'
 seo:
   image:
-    src: '../../assets/images/project-fewwords.png'
+    src: 'https://fewwords.app/og-image.png'
     alt: Fewwords - AI content summarization tool
 ---
 
-![Project preview](../../assets/images/project-fewwords.png)
+![Project preview](https://fewwords.app/og-image.png)
 
 <a href="https://fewwords.app" target="_blank">Visit Fewwords</a>
 
@@ -47,7 +47,7 @@ By early 2026, the technology had caught up. New models like the Gemini 3 series
 
 2. **Multi-stage classification engine** — It doesn't just "summarize." It classifies content type and picks the right strategy:
    - **Structured:** Essays, research, analysis
-   - **Data Shot:** Specs, tutorials, how-tos  
+   - **Data Shot:** Specs, tutorials, how-tos
    - **Decision Brief:** News, reviews, updates
 
 3. **Three distinct pipelines** — One for articles, one for short videos, one for long-form content up to 3 hours
