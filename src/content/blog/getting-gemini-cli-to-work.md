@@ -6,6 +6,7 @@ tags:
   - Tutorial
   - Linux
   - AI Tools
+  - Vibe Coding
 seo:
   image:
     src: '../../assets/images/blog/getting-gemini-cli-to-work/images/cover.png'

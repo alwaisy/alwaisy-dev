@@ -49,6 +49,8 @@ Stop writing generic blog posts for keywords. Start building entity recognition.
 
 If you aren't sure who your target audience is, look at the AI search queries. Track what questions AI platforms are answering about your category. See what they recommend and, more importantly, _why_ they recommend it. This reveals the "content gaps" that your competitors are missing.
 
+![AI search results example](../../assets/images/blog/marketing-reality-shift/images/ai-search-example.png)
+
 You don't need expensive enterprise tools for this. You can leverage the free versions of Claude or Perplexity to understand the distribution landscape. Use them to see where your customers are already searching and build visibility right in their path.
 
 ## Shortening the Sales Cycle
