@@ -90,7 +90,9 @@ Installed…
 
 Watch the complete installation process:
 
-<video controls width="100%">
-  <source src="../../assets/media/blog/install-flatpak-ubuntu/video/flatpak-ksnip-install-demo.webm" type="video/webm">
-  Your browser does not support the video tag.
-</video>
+<div class="video-wrapper not-prose">
+  <video controls>
+    <source src="/media/blog/install-flatpak-ubuntu/flatpak-ksnip-install-demo.webm" type="video/webm">
+    Your browser does not support the video tag.
+  </video>
+</div>

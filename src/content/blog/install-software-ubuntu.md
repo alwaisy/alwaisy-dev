@@ -1,6 +1,6 @@
 ---
 title: How to Install Software on Ubuntu 24.04
-description: Complete guide to installing software on Ubuntu 24.04 using GUI tools, package managers (apt, snap), Flatpak, and manual installation methods.
+excerpt: Complete guide to installing software on Ubuntu 24.04 using GUI tools, package managers (apt, snap), Flatpak, and manual installation methods.
 publishDate: 'June 02 2024'
 tags:
   - Tutorial
@@ -34,10 +34,12 @@ Search _App Center._
 
 Search your favorite Software in from the search bar.
 
-<video controls width="100%">
-  <source src="../../assets/media/blog/install-software-ubuntu/video/app-center-software-install.webm" type="video/webm">
-  Your browser does not support the video tag.
-</video>
+<div class="video-wrapper not-prose">
+  <video controls>
+    <source src="/media/blog/install-software-ubuntu/app-center-software-install.webm" type="video/webm">
+    Your browser does not support the video tag.
+  </video>
+</div>
 
 ## Using Package manager
 
@@ -136,10 +138,12 @@ sudo dpkg -i zoom_amd64.deb
 
 That's all and here is my result;
 
-<video controls width="100%">
-  <source src="../../assets/media/blog/install-software-ubuntu/video/dpkg-deb-install-demo.webm" type="video/webm">
-  Your browser does not support the video tag.
-</video>
+<div class="video-wrapper not-prose">
+  <video controls>
+    <source src="/media/blog/install-software-ubuntu/dpkg-deb-install-demo.webm" type="video/webm">
+    Your browser does not support the video tag.
+  </video>
+</div>
 
 ### Using Tar/Untar
 
@@ -201,10 +205,12 @@ Then run it by running
 
 And it'll open the program.
 
-<video controls width="100%">
-  <source src="../../assets/media/blog/install-software-ubuntu/video/tar-extract-manual-install.webm" type="video/webm">
-  Your browser does not support the video tag.
-</video>
+<div class="video-wrapper not-prose">
+  <video controls>
+    <source src="/media/blog/install-software-ubuntu/tar-extract-manual-install.webm" type="video/webm">
+    Your browser does not support the video tag.
+  </video>
+</div>
 
 It was a bit complicated but interesting too. Usually, this format is usable for a single run. Because by default it doesn't add the Software to Applications.
 

@@ -1,6 +1,6 @@
 ---
 title: How to Install VirtualBox on Ubuntu 24.04
-description: Complete guide to installing Oracle VM VirtualBox on Ubuntu 24.04. Includes prerequisites, peer dependencies, and step-by-step installation using dpkg.
+excerpt: Complete guide to installing Oracle VM VirtualBox on Ubuntu 24.04. Includes prerequisites, peer dependencies, and step-by-step installation using dpkg.
 publishDate: 'June 01 2024'
 tags:
   - Tutorial
