@@ -8,11 +8,11 @@ tags:
   - AI Tools
 seo:
   image:
-    src: '../../assets/images/blog/gemini-cli-auth-tutorial/images/cover.png'
+    src: '../../assets/images/blog/getting-gemini-cli-to-work/images/cover.png'
     alt: Gemini CLI authentication tutorial for Linux
 ---
 
-![Gemini CLI authentication setup](../../assets/images/blog/gemini-cli-auth-tutorial/images/cover.png)
+![Gemini CLI authentication setup](../../assets/images/blog/getting-gemini-cli-to-work/images/cover.png)
 
 I am not going to sugarcoat this. Getting Gemini CLI to recognize your Google AI Pro subscription on Linux is, objectively, a mess. Google built a tool that is supposed to work with a subscription they sell, and then made the login flow incompatible with it. That is not a skill issue. That is a Google issue.
 
@@ -36,7 +36,7 @@ The following products are not yet authorized to access your account:
 Gemini CLI
 ```
 
-Yes, your subscription *does* include Gemini CLI. Google's own page says so. The tool just can't figure that out on its own.
+Yes, your subscription _does_ include Gemini CLI. Google's own page says so. The tool just can't figure that out on its own.
 
 ---
 
@@ -202,12 +202,12 @@ If that line is missing or says `Free`, the project is wrong or the API is not e
 
 ## Quick Comparison
 
-| | Method 1 (VPN) | Method 2 (gcloud) |
-|---|---|---|
-| Setup time | 2 minutes | 15 minutes |
-| VPN needed | Only for login | Never |
-| Token management | Automatic | Manual refresh or alias |
-| Re-login friction | Connect VPN, done | Run export command |
-| Works without gcloud | Yes | No |
+|                      | Method 1 (VPN)    | Method 2 (gcloud)       |
+| -------------------- | ----------------- | ----------------------- |
+| Setup time           | 2 minutes         | 15 minutes              |
+| VPN needed           | Only for login    | Never                   |
+| Token management     | Automatic         | Manual refresh or alias |
+| Re-login friction    | Connect VPN, done | Run export command      |
+| Works without gcloud | Yes               | No                      |
 
 Both methods get you on your actual AI Pro quota. Pick whichever fits how you work.
