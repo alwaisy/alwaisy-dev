@@ -1,5 +1,6 @@
 ---
 import { ClientRouter } from 'astro:transitions';
+import { SimpleAnalytics } from 'astro-simpleanalytics-plugin';
 import BaseHead, { type Props as HeadProps } from '../components/base-head.astro';
 import Footer from '../components/footer.astro';
 import Header from '../components/header.astro';
@@ -31,5 +32,6 @@ const { showHeader = true, ...head } = Astro.props;
             </main>
             <Footer />
         </div>
+        <SimpleAnalytics collectDNT={true} allEnvironments={true} />
     </body>
 </html>
