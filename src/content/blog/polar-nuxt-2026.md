@@ -12,7 +12,7 @@ seo:
     src: '/media/blog/polar-nuxt-2026/images/cover.png'
     alt: 'Polar payment integration with Nuxt 2026 tutorial'
   pageType: article
-isFeatured: true
+isFeatured: false
 ---
 
 ![Polar Nuxt integration tutorial](/media/blog/polar-nuxt-2026/images/cover.png)
