@@ -51,13 +51,13 @@ A #1 badge means other founders thought your launch page looked decent. That's i
 
 And it's not just Product Hunt. There are 250+ launch directories now. Same model, same audience. Just more platforms collecting the same badge from the same people.
 
-## Does It Actually Need an Existing Audience to Work?
+## It Only Works If You Already Have Momentum
 
 Basically, yes.
 
 Products that get real traction almost always have something before the launch. A Twitter following, a newsletter, a community watching the build. The launch is an event for people who already know you, not a way to find people who don't.
 
-I wrote about this in a [validation playbook for solo founders](#). Short version: a Product Hunt launch is one of the first things you cut when you have no audience and no budget. It needs momentum to create momentum.
+The [playbook I use for zero-audience founders](/blog/idea-validation-playbook) cuts Product Hunt entirely until you have traction. It needs momentum to create momentum.
 
 ## When Does It Actually Make Sense?
 
