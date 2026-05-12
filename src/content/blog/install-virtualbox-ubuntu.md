@@ -8,6 +8,8 @@ tags:
   - Linux
   - Virtualization
 isFeatured: false
+seo:
+  description: "How to install VirtualBox on Ubuntu 24.04 and set up your first virtual machine. A clear tutorial for running multiple operating systems on Linux."
 ---
 
 **VirtualBox** is a software program that lets you run multiple operating systems on a single computer. It's a type of software called a **hosted hypervisor**. It allows us to create Virtual Machines (VMs). Each VM is a separate computer with its operating system but with shared resources from our Physical system. Depending on Computer / Laptop resources multiple VMs can be created with different Operating Systems for each on the same machine.

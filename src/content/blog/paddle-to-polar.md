@@ -7,6 +7,7 @@ tags:
   - Payments
   - SaaS
 seo:
+  description: "How to migrate from Paddle to Polar for your SaaS payments. Why solo founders are switching and a complete guide to the integration process."
   image:
     src: '/media/blog/paddle-to-polar/images/cover.png'
     alt: Paddle rejection to Polar approval - solo founder journey

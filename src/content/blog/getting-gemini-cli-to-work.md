@@ -8,6 +8,7 @@ tags:
   - AI Tools
   - Vibe Coding
 seo:
+  description: "Step-by-step guide to setting up Gemini CLI authentication on Linux. Fix common auth issues and get Google's AI running in your terminal."
   image:
     src: '/media/blog/getting-gemini-cli-to-work/images/cover.png'
     alt: Gemini CLI authentication tutorial for Linux

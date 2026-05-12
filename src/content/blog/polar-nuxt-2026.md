@@ -8,6 +8,7 @@ tags:
   - Payments
   - SaaS
 seo:
+  description: "The complete 2026 guide to integrating Polar payments with Nuxt. Setup webhooks, products, and checkout for your solo founder project."
   image:
     src: '/media/blog/polar-nuxt-2026/images/cover.png'
     alt: 'Polar payment integration with Nuxt 2026 tutorial'

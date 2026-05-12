@@ -7,6 +7,7 @@ tags:
   - Validation
   - Strategy
 seo:
+  description: "Stop looking for ideas and start looking for pain. A 4-stage playbook for solo founders to validate startup ideas with zero budget using Reddit and real data."
   image:
     src: '/media/blog/idea-validation-playbook/images/cover.png'
     alt: Solo founder playbook for idea validation

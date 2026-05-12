@@ -7,6 +7,7 @@ tags:
   - Marketing
   - Distribution
 seo:
+  description: "Is Product Hunt actually good for customer acquisition? An honest look at who uses the platform, the upvote reality, and when it actually makes sense to launch."
   image:
     src: '/media/blog/do-consumers-care-about-ph/images/cover.png'
     alt: Do consumers care about Product Hunt - honest answer for solo founders

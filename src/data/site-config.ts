@@ -9,7 +9,7 @@ const siteConfig: SiteConfig = {
     title: 'Awais Alwaisy',
     subtitle: "Covering solo product founders. The ones building from 0 to first $1k MRR.",
     description:
-        "I write about solo founders and indie hackers who ship without VC backing. Problem-first stories, real numbers, and the decisions that actually moved the needle.",
+        "Actionable stories for solo founders and indie hackers building from zero to $1k MRR. Learn how to find product-market fit, validate ideas, and ship without VC backing.",
     image: {
         src: '/og.png',
         alt: 'Awais Alwaisy - Solo Founder Media'
