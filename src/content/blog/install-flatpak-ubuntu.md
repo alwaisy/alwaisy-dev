@@ -6,7 +6,7 @@ tags:
   - Tutorial
   - Ubuntu
   - Linux
-isFeatured: true
+isFeatured: false
 ---
 
 Flatpak is another software packaging system that offers self-contained application bundles. Mostly these bundles have all the peer dependencies for the specific package. It is a more one-liner solution just like Snapcraft. It also has a vast repository of applications.

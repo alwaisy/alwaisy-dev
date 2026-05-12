@@ -7,7 +7,7 @@ tags:
   - Ubuntu
   - Linux
   - Virtualization
-isFeatured: true
+isFeatured: false
 ---
 
 **VirtualBox** is a software program that lets you run multiple operating systems on a single computer. It's a type of software called a **hosted hypervisor**. It allows us to create Virtual Machines (VMs). Each VM is a separate computer with its operating system but with shared resources from our Physical system. Depending on Computer / Laptop resources multiple VMs can be created with different Operating Systems for each on the same machine.

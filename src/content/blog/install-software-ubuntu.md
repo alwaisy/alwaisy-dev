@@ -6,7 +6,7 @@ tags:
   - Tutorial
   - Ubuntu
   - Linux
-isFeatured: true
+isFeatured: false
 ---
 
 Hi in this article I'll explain how to install software on Ubuntu 24.04. In Windows or Mac, software installation is not difficult; it is seamless but rough in Linux and Unix operating systems. But I'll make it easy.
