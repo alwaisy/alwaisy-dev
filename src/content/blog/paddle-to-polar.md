@@ -25,8 +25,6 @@ Except this time, I wasn't applying to work for someone.
 
 I was trying to get permission to **run my own thing**.
 
----
-
 ## How this even started
 
 I'm building small SaaS products under one umbrella:
@@ -42,8 +40,6 @@ It's a simple product. You give it long text. It gives you something shorter and
 Now, instead of creating separate legal setups for every product, I wanted one parent brand. One identity. One place for legal pages. One place for payments.
 
 That's why the umbrella exists.
-
----
 
 ## Why I needed something like Paddle
 
@@ -67,8 +63,6 @@ On paper, it solves everything:
 Basically, it becomes the "seller," and you just build the product.
 
 Perfect, right?
-
----
 
 ## Preparing for approval
 
@@ -96,8 +90,6 @@ Even the small stuff:
 
 From a technical perspective, the site was pretty solid. I even deployed it properly. No localhost nonsense. Real domain. Real content.
 
----
-
 ## Filling the application
 
 The form itself was… long.
@@ -124,8 +116,6 @@ Submitted. Done.
 
 Now the waiting game.
 
----
-
 ## The email
 
 It came fast. Too fast.
@@ -139,8 +129,6 @@ No explanation. No feedback. No appeal.
 Just… no.
 
 ![Paddle rejection email](/media/blog/paddle-to-polar/images/paddle-rejection.png)
-
----
 
 ## That moment hits different
 
@@ -205,8 +193,6 @@ Let's be real. Pakistan adds friction. Not impossible. But stricter review.
 
 So your margin for error becomes smaller. Even small uncertainty can push you into rejection.
 
----
-
 ## Could this have been approved?
 
 Yeah. I think so.
@@ -242,8 +228,6 @@ Anything that says: "People actually use this"
 **Delay the umbrella**
 
 The umbrella idea isn't wrong. Just too early. Payment platforms don't like "potential." They like "predictability."
-
----
 
 ## Switching to Polar
 
@@ -282,8 +266,6 @@ Just done.
 
 ![Polar approval confirmation](/media/blog/paddle-to-polar/images/polar-approval.png)
 
----
-
 ## Why did Polar work?
 
 A few reasons, I think:
@@ -293,8 +275,6 @@ A few reasons, I think:
 - Slightly more flexible risk model
 
 Also, timing matters. Sometimes it's not just what you built. It's **who reviews it and when**.
-
----
 
 ## But approval is not the finish line
 
@@ -312,8 +292,6 @@ There's still monitoring:
 
 Everything is watched.
 
----
-
 ## What I'm doing differently now
 
 I'm keeping things simple.
@@ -325,8 +303,6 @@ I'm keeping things simple.
 No rush to scale.
 
 Just making sure: The first few payments go smoothly.
-
----
 
 ## Final thoughts
 
@@ -351,8 +327,6 @@ Sometimes you just need to:
 - adjust the story
 - simplify the setup
 - try a different platform
-
----
 
 All right, so that's where I'm at right now.
 

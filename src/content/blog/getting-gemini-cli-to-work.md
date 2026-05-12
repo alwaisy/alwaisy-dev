@@ -20,8 +20,6 @@ I am not going to sugarcoat this. Getting Gemini CLI to recognize your Google AI
 
 But it does work. There are two ways. Here is exactly what I did, so you don't have to spend three hours in the same rabbit hole.
 
----
-
 ## Who This Is For
 
 You have a **Google AI Pro** (or Google One AI Premium) subscription. You are on Linux. You run `gemini`, you pick "Sign in with Google," the browser thing opens, you log in — and then you get this:
@@ -42,15 +40,11 @@ Gemini CLI
 
 Yes, your subscription _does_ include Gemini CLI. Google's own page says so. The tool just can't figure that out on its own.
 
----
-
 ## Why This Happens
 
 When Gemini CLI tries to log you in, Node.js — the thing it runs on — needs to make a call to `oauth2.googleapis.com/token` to finish the handshake. In many regions, this call gets blocked at the ISP level. The browser part works fine. The token exchange part dies silently.
 
 There are two ways around this. Pick whichever fits your situation.
-
----
 
 ## Method 1 — VPN Login (Simplest)
 
@@ -75,8 +69,6 @@ That's it. Credentials get saved to `~/.gemini/oauth_creds.json` and `~/.gemini/
 ### When it asks to re-login
 
 Connect VPN, complete login, disconnect. Takes about 30 seconds.
-
----
 
 ## Method 2 — gcloud Bridge (No VPN Required)
 
@@ -172,8 +164,6 @@ Then just type `gemini-start` each time. It grabs a fresh token automatically.
 source ~/.bashrc
 ```
 
----
-
 ## How to Verify It Is Using Your Pro Subscription
 
 Once inside the CLI, run:
@@ -189,8 +179,6 @@ Tier    Gemini Code Assist in Google One AI Pro
 ```
 
 If that line is missing or says `Free`, the project is wrong or the API is not enabled on it.
-
----
 
 ## Things That Don't Work (And Why People Keep Trying Them)
 
