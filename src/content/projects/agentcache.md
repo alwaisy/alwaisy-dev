@@ -11,7 +11,7 @@ seo:
 
 ![Project preview](/media/projects/agentcache.png)
 
-<a href="https://agentcache.run" target="_blank">Visit Agent Cache</a>
+<a href="https://agentcache.run" target="_blank" rel="dofollow">Visit Agent Cache</a>
 
 AI coding agents work best when you give them plain local files.
 
@@ -66,6 +66,6 @@ Instead of monolithic loading bars, I built Server-Sent Events (SSE) streaming a
 
 ## Reality Check
 
-In the first 48 hours after launching at [agentcache.run](https://agentcache.run), the site logged 848 unique visitor sessions and 110 real documentation crawl jobs in the Turso database.
+In the first 48 hours after launching at <a href="https://agentcache.run" target="_blank" rel="dofollow">agentcache.run</a>, the site logged 848 unique visitor sessions and 110 real documentation crawl jobs in the Turso database.
 
 It is not an over-engineered enterprise platform. It simply solves one real problem: giving your coding agent clean, authoritative Markdown documentation on your local disk so it stops hallucinating APIs.
