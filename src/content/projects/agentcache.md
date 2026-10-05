@@ -2,7 +2,7 @@
 title: 'Agent Cache - Clean Local Documentation Bundles for AI Coding Agents'
 description: Turn any documentation website into a clean Markdown ZIP for Cursor, Claude Code, and Windsurf without remote API delays.
 publishDate: 'Oct 2026'
-isFeatured: false
+isFeatured: true
 seo:
   image:
     src: '/media/projects/agentcache.png'
