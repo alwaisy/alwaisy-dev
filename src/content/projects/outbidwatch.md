@@ -27,7 +27,7 @@ When I started, I had an ambitious plan. I wanted a live leaderboard that stayed
 
 The idea was to have background scrapers visit every single bidding site every thirty minutes, grab the latest bid amounts, and update the directory automatically.
 
-I tried building it multiple ways: lightweight fetch parsers, headless browser scrapers, and scheduled serverless functions. It turned into a maintenance nightmare. Half the bidding platforms had broken HTML that changed twice a day, breaking regex selectors. Other sites hid their live bids behind client-side JavaScript hydration. More than half the platforms went dead within forty-eight hours, throwing 404s, domain parking pages, or Cloudflare Turnstile captchas. On top of that, Cloudflare Workers enforce a 50-subrequest limit per execution, which meant crawling dozens of external sites exhausted quotas immediately.
+I tried building it multiple ways: lightweight fetch parsers, headless browser scrapers, and scheduled serverless functions. It turned into a maintenance nightmare. Half the bidding platforms had broken HTML that changed twice a day, breaking regex selectors. Other sites hid their live bids behind client-side JavaScript hydration. More than half the platforms went dead within forty-eight hours, throwing 404s, domain parking pages, or <mark>Cloudflare</mark> Turnstile captchas. On top of that, <mark>Cloudflare</mark> Workers enforce a 50-subrequest limit per execution, which meant crawling dozens of external sites exhausted quotas immediately.
 
 I failed to make real-time updates reliable. It was eating up all my time and blocking the entire launch. To remove the blocker, I had to be realistic and kill that feature completely. I simplified the scope to focus on what actually mattered: a dependable, high-integrity chronological directory and timeline.
 
@@ -37,11 +37,11 @@ Determining the true launch order of over 300 platforms was another rabbit hole.
 
 At first, I relied on domain registration dates from WHOIS records via RDAP. But a domain registration date does not tell you when a site actually opened for business. A founder could register a domain in November and launch in February.
 
-Next, I tried the Wayback Machine, but it was completely useless for platforms that were only two days to three weeks old because crawlers had not archived them yet.
+Next, I tried the <mark>Wayback Machine</mark>, but it was completely useless for platforms that were only two days to three weeks old because crawlers had not archived them yet.
 
-Then I tried Certificate Transparency logs. I connected directly to crt.sh's open database via `psql -t -h crt.sh -p 5432 -U guest certwatch` to query `x509_notBefore(c.CERTIFICATE)` issuance dates. That ran straight into server pool caps: `pgbouncer cannot connect to server` and `no more connections allowed`. I wrote Python retry loops with exponential backoff and connection-reuse logic just to get queries through.
+Then I tried Certificate Transparency logs. I connected directly to <mark>crt.sh</mark>'s open database via `psql -t -h crt.sh -p 5432 -U guest certwatch` to query `x509_notBefore(c.CERTIFICATE)` issuance dates. That ran straight into server pool caps: `pgbouncer cannot connect to server` and `no more connections allowed`. I wrote Python retry loops with exponential backoff and connection-reuse logic just to get queries through.
 
-Even then, certificate logs had a flaw: builders had generated pre-existing wildcard certificates (`*.domain.com`) for staging environments weeks earlier, and Cloudflare Universal SSL issued certificates before any public content existed.
+Even then, certificate logs had a flaw: builders had generated pre-existing wildcard certificates (`*.domain.com`) for staging environments weeks earlier, and <mark>Cloudflare</mark> Universal SSL issued certificates before any public content existed.
 
 In the end, I had to do it the hard way: manual OSINT detective work. I dug through Twitter, searched for the original launch tweets from founders, and cross-referenced their earliest announcement posts. Finding the actual maker behind each platform, and then trying to verify where they were located, was a massive pain. But it gave the directory real integrity.
 
@@ -52,8 +52,8 @@ To manage over 300 platforms without drowning in manual database entries, I buil
 1. **Deduplication**: `01_dedup.mjs` normalized domains, stripped path variants (like `lastspot.lol/friends`), and collapsed duplicates into clean canonical records.
 2. **Extraction Ladder**: An automated ladder queried `curl.md` first with millisecond cost tracking, falling back to `r.jina.ai` with custom selectors. If a page was under 200 characters or blocked by anti-bot checks, it was flagged as dead without wasting paid credits.
 3. **Purify & Signals**: A custom script stripped scripts, navigation headers, and footers while preserving `x.com` and `twitter.com` links into a structured signals file to track founder handles.
-4. **Context.dev Logo Integration**: Connected Context.dev CDN Logo Links directly to the domain with an initials fallback (like `TV` for `topvc.lol`), avoiding the need to rehost image bytes.
-5. **SQL Generation**: Seed queues were converted into executable SQL scripts applied directly to Cloudflare D1 with `bun run db:seed`.
+4. **Context.dev Logo Integration**: Connected <mark>Context.dev</mark> CDN Logo Links directly to the domain with an initials fallback (like `TV` for `topvc.lol`), avoiding the need to rehost image bytes.
+5. **SQL Generation**: Seed queues were converted into executable SQL scripts applied directly to <mark>Cloudflare</mark> D1 with `bun run db:seed`.
 
 ## Technical Stack
 

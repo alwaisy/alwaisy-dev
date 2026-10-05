@@ -12,15 +12,15 @@ seo:
 
 <a href="https://goavatown.com" target="_blank">Visit Avatown</a>
 
-I joined Dolamni Inc. in 2023 as a founding engineer. On May 6, 2023, I started building Avatown from scratch. Zero pages, zero users, just an idea. This marketplace would let people buy and sell virtual avatars across different platforms.
+I joined <mark>Dolamni Inc.</mark> in 2023 as a founding engineer. On May 6, 2023, I started building Avatown from scratch. Zero pages, zero users, just an idea. This marketplace would let people buy and sell virtual avatars across different platforms like <mark>VRChat</mark>, <mark>Spatial</mark>, and <mark>Neos VR</mark>.
 
 ## Technical Decisions (The Hard Way)
 
 **Initial Stack:**
 
-- Next.js 13 with App Router
-- Material UI (MUI)
-- Tailwind CSS
+- <mark>Next.js</mark> 13 with App Router
+- <mark>Material UI</mark> (MUI)
+- <mark>Tailwind CSS</mark>
 - Atomic Design Pattern
 - Server Components
 

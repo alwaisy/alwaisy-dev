@@ -15,22 +15,22 @@ isFeatured: true
 
 I have a confession: I can't focus through long articles. And I definitely can't sit through 2-hour videos. My attention span is short, and my browser was a graveyard of 47 open tabs I'd never actually read. We both know that "later" never comes.
 
-For a year, my workflow was broken. Every time I wanted to extract the essence of a video, I had to hunt for a transcript tool, copy a wall of text, and paste it into ChatGPT with unreliable prompts. It worked, but it felt like too much friction just to save time.
+For a year, my workflow was broken. Every time I wanted to extract the essence of a video, I had to hunt for a transcript tool, copy a wall of text, and paste it into <mark>ChatGPT</mark> with unreliable prompts. It worked, but it felt like too much friction just to save time.
 
-So I built Fewwords. An AI-powered summarization tool for articles, YouTube videos, and Reddit threads.
+So I built Fewwords. An AI-powered summarization tool for articles, <mark>YouTube</mark> videos, and <mark>Reddit</mark> threads.
 
 ## First Attempt (And Why It Failed)
 
 This wasn't my first try.
 
-In early 2025, I built a first version called Key-Insights. At the time, AI models weren't capable of processing video natively. So I had to rely on brittle transcription scrapers that YouTube eventually blocked.
+In early 2025, I built a first version called Key-Insights. At the time, AI models weren't capable of processing video natively. So I had to rely on brittle transcription scrapers that <mark>YouTube</mark> eventually blocked.
 
 I hit a technical dead end and quit.
 
 **The Reality:**
 
 - Transcription scrapers kept breaking
-- YouTube actively blocked them
+- <mark>YouTube</mark> actively blocked them
 - The AI couldn't understand video content directly
 - Eight months of work, unusable
 
@@ -38,7 +38,7 @@ Eight months of mistakes taught me what not to do.
 
 ## Rebuild
 
-By early 2026, the technology had caught up. New models like the Gemini 3 series became capable of watching and understanding video content directly. I rebuilt everything from scratch to use this new architecture.
+By early 2026, the technology had caught up. New models like the <mark>Gemini</mark> 3 series became capable of watching and understanding video content directly. I rebuilt everything from scratch to use this new architecture.
 
 **What Changed:**
 

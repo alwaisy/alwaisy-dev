@@ -104,6 +104,21 @@ html.dark {
         content: "" !important;
     }
 
+    /* Named entities, brands, and company highlights */
+    .prose mark,
+    .prose .entity {
+        @apply font-medium rounded-sm px-1 py-0.5 mx-0.5 tracking-tight transition-colors duration-150;
+        background-color: color-mix(in srgb, #d97706 14%, var(--bg-muted));
+        color: var(--text-color-main);
+        border-bottom: 1.5px solid color-mix(in srgb, #d97706 45%, transparent);
+    }
+
+    .prose mark:hover,
+    .prose .entity:hover {
+        background-color: color-mix(in srgb, #d97706 24%, var(--bg-muted));
+        border-bottom-color: #d97706;
+    }
+
     .prose blockquote {
         @apply border-none pl-0 font-serif text-[1.375em] leading-snug font-normal italic sm:text-[1.66667em];
     }
