@@ -92,6 +92,18 @@ html.dark {
         @apply font-medium;
     }
 
+    /* Inline backtick code styling (excluding pre code blocks) */
+    .prose :not(pre) > code {
+        @apply px-1.5 py-0.5 mx-0.5 rounded text-[0.875em] font-mono font-medium;
+        background-color: var(--bg-muted);
+        border: 1px solid color-mix(in srgb, var(--border-main) 18%, transparent);
+    }
+
+    .prose :not(pre) > code::before,
+    .prose :not(pre) > code::after {
+        content: "" !important;
+    }
+
     .prose blockquote {
         @apply border-none pl-0 font-serif text-[1.375em] leading-snug font-normal italic sm:text-[1.66667em];
     }
