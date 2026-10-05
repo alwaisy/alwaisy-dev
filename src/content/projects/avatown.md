@@ -70,9 +70,9 @@ What Changed:
 The new stack made everything faster. Writing code felt easier. Shipping features took less time.
 
 ## What I Learned
-
-Sometimes you need someone to tell you you're wrong. The senior engineer didn't just criticize. He showed me better ways to build.
-
-I spent 8 months doing things the hard way. The next phase took half the time and produced better results. That's the difference experience makes.
-
-Now I know: Atomic Design isn't always the answer. MUI isn't always worth the customization pain. And being wrong early is better than being wrong late.
+ 
+> Sometimes you need someone to tell you you're wrong. The senior engineer didn't just criticize. He showed me better ways to build.
+ 
+ I spent 8 months doing things the hard way. The next phase took half the time and produced better results. That's the difference experience makes.
+ 
+> Atomic Design isn't always the answer. MUI isn't always worth the customization pain. And being wrong early is better than being wrong late.

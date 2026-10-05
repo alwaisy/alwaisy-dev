@@ -55,8 +55,8 @@ Moving to the browser made everything simpler. Modern browsers already have depe
 
 When I look at the telemetry across all 17 agent coding sessions on this project, the numbers look tidy: 29.43 active hours and 7,493 interactive messages over 56 calendar days. The web version took less than 11 active hours to build once the desktop dead-ends were cleared out.
 
-What those logs never show is the time between prompts. The minutes spent testing an audio input, checking a transcription output, and deciding whether an architectural direction was worth pursuing. Coding tools only record keystrokes and execution cycles; the hardest engineering decisions happen in the silence between messages.
+> Coding tools only record keystrokes and execution cycles; the hardest engineering decisions happen in the silence between messages.
 
 Maina Voice solved my personal problem. Whenever I need to feed a long prompt or instruction into my terminal, I open the site, dictate for thirty seconds, grab the text, and get back to work.
 
-I am not going to pretend this is an actively maintained business. I got it to the point where it scratched my personal itch, open-sourced the repository, and moved on. I no longer push new features, but the web version is live, free, and does its job without any subscription nonsense.
+> I got it to the point where it scratched my personal itch, open-sourced the repository, and moved on. I no longer push new features, but the web version is live, free, and does its job without any subscription nonsense.

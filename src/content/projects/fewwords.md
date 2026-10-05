@@ -87,14 +87,14 @@ The architecture matters here. When you're processing 3-hour videos, you can't b
 - Queue system handles spikes without crashing
 
 ## What I Learned
-
-Sometimes the technology just isn't ready. Key-Insights failed because I was building against the limits of 2025 AI models. I could have kept fighting scrapers and workarounds. But I would say it made more sense to wait for the technology to catch up.
-
-The second build took a fraction of the time and produced something actually usable. That's the difference between fighting constraints and building with them.
-
-Content classification isn't a nice-to-have. It's the core feature. A tutorial needs different extraction than a research paper. An opinion piece needs different framing than a product review. The generic "summarize this" prompt produces generic garbage. Versioned, content-specific prompts produce something useful.
-
-I'm not going to lie, I haven't fully validated the demand for this yet. I built it because I needed it. If it helps you close even one tab today, then it was worth the effort.
+ 
+> Sometimes the technology just isn't ready. Key-Insights failed because I was building against the limits of 2025 AI models. I could have kept fighting scrapers and workarounds. But it made more sense to wait for the technology to catch up.
+ 
+ The second build took a fraction of the time and produced something actually usable. That's the difference between fighting constraints and building with them.
+ 
+> Content classification isn't a nice-to-have. It's the core feature. The generic "summarize this" prompt produces generic garbage. Versioned, content-specific prompts produce something useful.
+ 
+ I'm not going to lie, I haven't fully validated the demand for this yet. I built it because I needed it. If it helps you close even one tab today, then it was worth the effort.
 
 Questions or feedback? [Reach out](https://fewwords.app/contact).
 

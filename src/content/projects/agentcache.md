@@ -13,13 +13,13 @@ seo:
 
 <a href="https://agentcache.run" target="_blank" rel="dofollow">Visit Agent Cache</a>
 
-AI coding agents work best when you give them plain local files.
+> AI coding agents work best when you give them plain local files.
 
 There has been a lot of hype around remote documentation tools like <mark>Context7</mark>. People talk about them constantly, but in my experience, having an agent make remote network calls across the internet every single time it needs an API definition is slow and brittle. <mark>Context7</mark> treats documentation as a metered query stream ($10 per seat per month for 5,000 queries, plus overage charges). Why pay a monthly subscription and make repeated API requests across the wire just to look up a function signature that rarely changes?
 
 <mark>Firecrawl</mark> takes another angle, but charges $19 to $99 per month on a credit meter (charging you even on 404s and 403 blocks) while producing raw, unstructured page dumps without native documentation hierarchy. And while `llms.txt` is useful, it is usually just a list of links. It forces agents to fetch individual URLs on the fly into temporary scratchpads, leaving you with fragmented, incomplete context.
 
-My itch was much simpler: when I am building a feature in my editor, I want my agent to focus on that single feature using clean local documentation already sitting on my disk. No network hops, no waiting on third-party servers, and no token waste.
+> When I am building a feature in my editor, I want my agent to focus on that single feature using clean local documentation already sitting on my disk. No network hops, no waiting on third-party servers, and no token waste.
 
 So I built Agent Cache. You paste any documentation URL, and it packages the entire site into a clean, structured ZIP of Markdown files that you drop straight into your repository.
 
@@ -65,7 +65,7 @@ Instead of monolithic loading bars, I built Server-Sent Events (SSE) streaming a
 - **Open Source:** Available on GitHub at [osspakistan/agent-cache-web](https://github.com/osspakistan/agent-cache-web)
 
 ## Reality Check
-
-In the first 48 hours after launching at <a href="https://agentcache.run" target="_blank" rel="dofollow">agentcache.run</a>, the site logged 848 unique visitor sessions and 110 real documentation crawl jobs in the Turso database.
-
-It is not an over-engineered enterprise platform. It simply solves one real problem: giving your coding agent clean, authoritative Markdown documentation on your local disk so it stops hallucinating APIs.
+ 
+ In the first 48 hours after launching at <a href="https://agentcache.run" target="_blank" rel="dofollow">agentcache.run</a>, the site logged 848 unique visitor sessions and 110 real documentation crawl jobs in the Turso database.
+ 
+> It is not an over-engineered enterprise platform. It simply solves one real problem: giving your coding agent clean, authoritative Markdown documentation on your local disk so it stops hallucinating APIs.

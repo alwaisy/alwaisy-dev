@@ -13,7 +13,7 @@ seo:
 
 <a href="https://outbidwatch.lol" target="_blank">Visit OutbidWatch</a>
 
-Most silly internet projects end up making actual money.
+> Most silly internet projects end up making actual money.
 
 In early 2026, my feed was suddenly taken over by these weird bidding platforms. It was not pay-to-list. It was pay-to-rank. You paid five dollars to push your project to the top spot on a homepage, and ten minutes later someone paid six dollars to outbid you. Clones were launching every few hours: thinktime, cuntent, takefirst, outplanet.
 
@@ -68,7 +68,7 @@ Once I stripped out the over-engineered real-time scraper, the stack became lean
 - **Open Source:** Available on GitHub at [osspakistan/outbidwatch-lol](https://github.com/osspakistan/outbidwatch-lol)
 
 ## What I Learned
-
-Sometimes you have to kill your favorite feature just to get a project shipped. If I had stayed stubborn about building an automated 30-minute bidding crawler across 300 unstable websites, OutbidWatch would still be stuck on my local machine.
-
+ 
+> Sometimes you have to kill your favorite feature just to get a project shipped. If I had stayed stubborn about building an automated 30-minute bidding crawler across 300 unstable websites, OutbidWatch would still be stuck on my local machine.
+ 
 Cutting that feature and doing the hard manual verification gave me a directory that was actually useful while the trend was at its peak.
