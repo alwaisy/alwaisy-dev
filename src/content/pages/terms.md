@@ -2,51 +2,47 @@
 title: Terms of Service
 seo:
   title: Terms of Service
-  description: Explore the terms and conditions of Dante website for a clear understanding of guidelines and responsibilities.
+  description: The terms and conditions governing your access and use of alwaisy.dev.
 ---
 
-**Last updated on January 11, 2024**
+**Last updated on October 5, 2026**
 
-These Terms of Service ("Terms") govern your access to and use of [Website Name] ("the Website") and any related services provided by [Website Owner/Company] ("we," "us," or "our"). Please read these Terms carefully before using the Website.
+These Terms of Service ("Terms") govern your access to and use of alwaisy.dev ("the Website") provided by Awais Alwaisy ("we," "us," or "our"). Please read these Terms carefully before using the Website.
 
 **1. Acceptance of Terms**
 
-By accessing or using the Website, you agree to be bound by these Terms and our Privacy Policy. If you do not agree to these Terms or the Privacy Policy, please do not use the Website.
+By accessing or using the Website, you agree to be bound by these Terms and our Privacy Policy. If you do not agree to these Terms, please do not use the Website.
 
 **2. Changes to Terms**
 
-We reserve the right to modify, amend, or update these Terms at any time. Such changes will be effective upon posting on the Website. It is your responsibility to review these Terms regularly. Your continued use of the Website after any changes indicates your acceptance of the revised Terms.
+We reserve the right to modify or update these Terms at any time. Any changes become effective once posted on the Website. Your continued use of the Website after updates are posted indicates your acceptance of the revised Terms.
 
 **3. Use of the Website**
 
-You agree to use the Website for lawful purposes and in a manner consistent with these Terms. You are responsible for any content you post or submit on the Website.
+You agree to use the Website for lawful purposes and in a manner consistent with these Terms. You are responsible for any content you post or submit through the Website.
 
-**4. Registration and Account**
+**4. Intellectual Property**
 
-Certain areas of the Website may require registration or the creation of an account. You agree to provide accurate, current, and complete information during the registration process and to update such information to keep it accurate, current, and complete. You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account.
+All original content, articles, and media on alwaisy.dev are authored by Awais Alwaisy unless otherwise attributed. Code snippets and open-source packages mentioned remain licensed under their respective open-source licenses (such as MIT or Apache 2.0).
 
-**5. Content and Intellectual Property**
+**5. Third-Party Links**
 
-The content on the Website, including text, graphics, logos, images, audio, video, software, and other materials, is owned or licensed by us and is protected by copyright and other intellectual property laws. You may not use, reproduce, or distribute the content without our prior written consent.
+The Website contains links to third-party websites, repositories, and resources. We do not endorse and are not responsible for the content, privacy practices, or services of third parties. Visiting external links is at your own discretion.
 
-**6. Third-Party Links**
+**6. Termination**
 
-The Website may contain links to third-party websites or resources. We do not endorse and are not responsible for the content, products, or services provided by third parties. Your use of such websites is at your own risk.
+We reserve the right to terminate or suspend access to the Website or any part thereof at any time, without prior notice.
 
-**7. Termination**
+**7. Disclaimer of Warranties**
 
-We may, at our sole discretion, terminate or suspend your access to the Website at any time and for any reason, without notice.
+The Website and its content are provided on an "as is" and "as available" basis without warranties of any kind. While we strive to provide accurate technical write-ups and case studies, we make no guarantees regarding accuracy, completeness, or ongoing availability.
 
-**8. Disclaimer**
+**8. Limitation of Liability**
 
-The Website and its content are provided on an "as is" and "as available" basis. We make no warranties or representations about the accuracy or completeness of the content. We do not guarantee that the Website will be error-free or uninterrupted.
+To the fullest extent permitted by law, we shall not be liable for any direct, indirect, incidental, special, or consequential damages resulting from your use of or inability to use the Website.
 
-**9. Limitation of Liability**
+**9. Governing Law**
 
-To the fullest extent permitted by law, we shall not be liable for any direct, indirect, incidental, special, consequential, or exemplary damages, including but not limited to damages for loss of profits, goodwill, use, data, or other intangible losses, arising out of or in connection with the use or inability to use the Website.
+These Terms are governed by and construed in accordance with applicable laws, without regard to conflict of law provisions.
 
-**10. Governing Law**
-
-These Terms are governed by and construed in accordance with the laws of [Your Jurisdiction], without regard to its conflict of laws principles. Any disputes arising under these Terms shall be subject to the exclusive jurisdiction of the courts of [Your Jurisdiction].
-
-_Thank you for reading our Terms of Service. By using the Website, you agree to be bound by these Terms._
+_Thank you for reading our Terms of Service._

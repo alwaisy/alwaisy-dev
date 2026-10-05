@@ -132,4 +132,4 @@ The idea doesn't come first. The complaint does.
 
 Go find your 20 pain statements. Don't open VS Code until you've talked to 15 people.
 
-*This playbook was originally written for a developer in [...] who was about to give up. If you're in the same spot, I hope this helps you find your way back. [Let me know how it goes.](/contact)*
+*This playbook was originally written for a developer in our community who was about to give up. If you're in the same spot, I hope this helps you find your way back. [Let me know how it goes.](/contact)*

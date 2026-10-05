@@ -45,9 +45,9 @@ flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flat
 
 **Now we need to restart our computer.**
 
-### Step 3: Software Flatpak Plugin
+### Step 4: Software Flatpak Plugin
 
-Last step is to install Software Flatpak plugin
+The next step is to install the Software Flatpak plugin:
 
 ```bash
 sudo apt install gnome-software-plugin-flatpak
@@ -61,9 +61,9 @@ sudo apt install gnome-software-plugin-flatpak
 
 ![Software Flatpak plugin installation completed successfully](/media/blog/install-flatpak-ubuntu/images/05-plugin-install-complete.png)
 
-### Step 4: Optional
+### Step 5: Troubleshooting (Optional)
 
-Some users may face following error. It is due to repository of packages was not correctly added.
+Some users may face the following error if the package repository was not correctly added.
 
 **Problem**
 

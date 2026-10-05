@@ -47,7 +47,7 @@ If you aren't sure who your target audience is, look at the AI search queries. T
 
 ![AI search results example](/media/blog/marketing-reality-shift/images/ai-search-example.png)
 
-You don't need expensive enterprise tools for this. You can leverage the free versions of Claude or Perplexity to understand the distribution landscape. Use them to see where your customers are already searching and build visibility right in their path.
+You don't need expensive enterprise tools for this. You can use the free versions of Claude or Perplexity to understand the distribution landscape. Use them to see where your customers are already searching and build visibility right in their path.
 
 ## Shortening the Sales Cycle
 
@@ -55,7 +55,7 @@ The old way of cold outreach is a grind. It leads to long, painful sales cycles.
 
 ## The Mental Shift: Stop Treating News Like Homework
 
-There is a lot of noise out there. Every Monday there is a new "game-changing" tool. My advice? Stop treating every tech update like required homework. You don't need to master every single new AI feature by Tuesday.
+There is a lot of noise out there. Every Monday there is a heavily hyped tool. My advice? Stop treating every tech update like required homework. You don't need to master every single new AI feature by Tuesday.
 
 The startups that win in 2026 will be the ones that:
 

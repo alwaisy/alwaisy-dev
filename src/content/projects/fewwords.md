@@ -44,18 +44,18 @@ By early 2026, the technology had caught up. New models like the Gemini 3 series
 
 **What Changed:**
 
-1. **Native video understanding** — No more transcription scrapers. The AI watches the video directly.
+1. **Native video understanding**: No more transcription scrapers. The AI watches the video directly.
 
-2. **Multi-stage classification engine** — It doesn't just "summarize." It classifies content type and picks the right strategy:
+2. **Multi-stage classification engine**: It doesn't just "summarize." It classifies content type and picks the right strategy:
    - **Structured:** Essays, research, analysis
    - **Data Shot:** Specs, tutorials, how-tos
    - **Decision Brief:** News, reviews, updates
 
-3. **Three distinct pipelines** — One for articles, one for short videos, one for long-form content up to 3 hours
+3. **Three distinct pipelines**: Dedicated paths for articles, short clips, and long-form video up to 3 hours.
 
-4. **Versioned prompt strategy** — Different prompts for different content types, iterated based on real output quality
+4. **Versioned prompt strategy**: Custom prompts tuned for each content type, iterated against real outputs.
 
-5. **Real-time progress** — Server-Sent Events (SSE) so users see progress as the AI works through long content
+5. **Real-time progress**: Server-Sent Events (SSE) so users see progress as the AI processes long content.
 
 ## Technical Stack
 

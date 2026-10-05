@@ -11,9 +11,9 @@ seo:
   description: "The beginner's guide to installing software on Ubuntu 24.04. Covers App Center, apt, snap, Flatpak, and manual .deb installations for Linux new users."
 ---
 
-Hi in this article I'll explain how to install software on Ubuntu 24.04. In Windows or Mac, software installation is not difficult; it is seamless but rough in Linux and Unix operating systems. But I'll make it easy.
+Installing software on Ubuntu 24.04 doesn't have to be intimidating. On Windows or macOS, you click an installer and move on. On Linux, people often get overwhelmed by multiple package formats and terminal commands. But once you know the main methods, it becomes straightforward.
 
-There are various ways to install Software and packages in Ubuntu.
+There are four primary ways to install software and packages on Ubuntu:
 
 1. Using GUI Tools
 2. Using Package managers
@@ -45,11 +45,11 @@ Search your favorite Software in from the search bar.
 
 ## Using Package manager
 
-There are multiple package managers for Ubuntu but I'll discuss 2 in this section _apt,_ and _snap. apt_ is the default one comes along the installation. Here is the usage,
+There are multiple package managers available on Ubuntu, but we will focus on the two official ones: `apt` and `snap`. `apt` is the default tool included with the system. Here is how to use it:
 
 ### Step 1:
 
-Open the terminal using CTRL + ALT + A
+Open the terminal using `Ctrl + Alt + T`.
 
 ![Terminal window opened with keyboard shortcut](/media/blog/install-software-ubuntu/images/02-open-terminal.png)
 
@@ -217,12 +217,12 @@ And it'll open the program.
 It was a bit complicated but interesting too. Usually, this format is usable for a single run. Because by default it doesn't add the Software to Applications.
 
 ## Choosing the Right Method
+ 
+Which method should you pick? It depends on the application and what you are comfortable with:
+ 
+- For beginners, the Ubuntu App Center is the easiest starting point.
+- For developers and terminal users, `apt` and `snap` provide fast installs and clear logging if something goes wrong.
+- Flatpak is a solid alternative when an application isn't available in the standard repositories or Snap Store.
+- Manual installation (`dpkg` or `tar.gz`) gives you full control, but requires handling dependencies and desktop launcher shortcuts manually.
 
-Hmm! The question is valid and the answer needs to be simple. Okay, it depends on the Software and person-to-person.
-
-- For most of the users, Ubuntu App Center is the go-to option.
-- But some people like the terminal way, they are very fluent with commands. And using commands we can see the logs if there's anything go wrong I can see and find the fix
-- Snap and Flatpaks are single command solutions in easy to complex rating it is 2nd option.
-- Manual installation is the most complex one especially the tar.gz one. And most of the time they need some peer dependencies to run software properly.
-
-My favorite ones are dpkg, and snap. I don't like flatpak personally but it is similar to snapcraft. Tell me what's your favorite.
+I tend to reach for `apt` and `dpkg` first. Whichever route you take, Ubuntu gives you plenty of flexibility to manage your workstation.

@@ -1,6 +1,6 @@
 ---
 title: From Paddle Rejection to Polar Approval
-excerpt: A solo founder story from late nights, forms, and a reality check. How I went from "we are unable to complete verification" to approved in 30 minutes — and what I learned about selling your own thing.
+excerpt: A solo founder story from late nights, forms, and a reality check. How I went from "we are unable to complete verification" to approved in 30 minutes, and what I learned about selling your own thing.
 publishDate: 'Apr 19 2026'
 tags:
   - Founder Story

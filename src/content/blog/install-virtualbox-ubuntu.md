@@ -14,15 +14,15 @@ seo:
 
 **VirtualBox** is a software program that lets you run multiple operating systems on a single computer. It's a type of software called a **hosted hypervisor**. It allows us to create Virtual Machines (VMs). Each VM is a separate computer with its operating system but with shared resources from our Physical system. Depending on Computer / Laptop resources multiple VMs can be created with different Operating Systems for each on the same machine.
 
-## VMware Workstation & Usage
+## Why Use a Virtual Machine?
 
-From running multiple operating systems to managing them, allocating resources, and allowing complex network configuration VMware does all these things. For whom VMware works perfectly are;
+From running multiple operating systems to allocating resources and testing complex network setups, virtual machines give you an isolated sandbox on your local computer. They are commonly used by:
 
-- **IT professionals** use it for testing, development, and deploying the Software. eg; VPS
-- **Developers** use it to create an isolated development environment, eg; CodeSandBox, Blitz
-- **Educators** use it to teach, and students use it to explore different Operating systems.
+- **IT professionals** for testing, staging, and software validation.
+- **Developers** to create clean, isolated environments without polluting their host system.
+- **Students and educators** to experiment with different Linux distributions safely.
 
-As I have discussed how virtual machine makes our work easy. Do you need it on your Laptop / Computer? Let's do it.
+If you need an isolated environment on your Ubuntu 24.04 workstation, VirtualBox is one of the most reliable free options available. Let's get it installed.
 
 There are initial system requirements and a few steps to install **VirtualBox** on Ubuntu 24.04.
 
@@ -40,10 +40,10 @@ Before I begin, I need to install a few peer dependencies and update our system.
 
 ### Update the System Packages
 
-Update the system using the following command.
+Update your system using the following command:
 
 ```bash
-sudo apt upgrade && sudo apt update
+sudo apt update && sudo apt upgrade -y
 ```
 
 ![Terminal showing sudo apt upgrade and update commands](/media/blog/install-virtualbox-ubuntu/images/01-system-update.png)
@@ -68,15 +68,15 @@ Okay, so the initial step is downloading **VirtualBox** from their official webs
 
 ### Step 1: Open the Terminal
 
-Open the terminal using the command _CTRL+ALT+A._
+Open the terminal using `Ctrl + Alt + T`.
 
-Update the system, again, yes, I have installed the peer dependencies therefore I need to update the system again.
+Update package lists after adding the peer dependencies:
 
 ```bash
 sudo apt update
 ```
 
-Change the directory using the following command.
+Change to your Downloads directory:
 
 ```bash
 cd Downloads
@@ -112,6 +112,6 @@ sudo dpkg -i virtualbox-7.0_7.0.18-162988\~Ubuntu\~noble_amd64.deb
 
 ![Oracle VM VirtualBox application running on Ubuntu 24.04](/media/blog/install-virtualbox-ubuntu/images/08-virtualbox-running.png)
 
-I have explained how to install Oracle VM VirtualBox. Normally the flow goes as I did, but exceptions are there, _deb_ file may break so always install the latest one. Sometimes you may face an error on step 2, you better restart your system can fix the problem.
+That covers the full installation of Oracle VM VirtualBox on Ubuntu 24.04. If you hit any errors during the `dpkg` step, ensure that all peer dependencies were installed properly or run `sudo apt --fix-broken install` to resolve missing libraries.
 
-By the way, I enjoyed exploring this topic, I was stuck too, yes, I had to uninstall Virtualbox, I had to remove everything then I installed it again. I hope it is easy for you as I explained it in step by step.
+I ran into a few snags with missing packages during my initial setup and had to clean them up before getting it to run smoothly. Following these steps will save you that trial and error.

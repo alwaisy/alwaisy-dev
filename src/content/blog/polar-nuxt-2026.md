@@ -1,6 +1,6 @@
 ---
 title: 'How to Integrate Polar with Nuxt in 2026: The Complete Guide'
-excerpt: 'I built a full subscription SaaS with Polar and Nuxt 4. Here is exactly how the checkout flow, webhooks, customer portal, and dashboard work together — with the gotchas nobody tells you about.'
+excerpt: 'I built a full subscription SaaS with Polar and Nuxt 4. Here is exactly how the checkout flow, webhooks, customer portal, and dashboard work together, complete with the gotchas nobody tells you about.'
 publishDate: 'Apr 24 2026'
 tags:
   - Tutorial
@@ -68,7 +68,7 @@ Test products. Fake checkouts. No real money.
 
 Once it works, switching to production is basically a config change.
 
-## Step 1 — Create your Polar products
+## Step 1: Create your Polar products
 
 This part happens in the Polar dashboard.
 
@@ -81,7 +81,7 @@ I set up three tiers: Starter at $9, Pro at $29, Team at $79.
 
 You do you.
 
-## Step 2 — Install dependencies
+## Step 2: Install dependencies
 
 Inside your Nuxt project:
 
@@ -101,7 +101,7 @@ Two packages matter here.
 
 Zod gets pulled in automatically because the module uses it for validation. I list it explicitly so I know what is in my dependency tree.
 
-## Step 3 — Configure Nuxt
+## Step 3: Configure Nuxt
 
 Add the module in `nuxt.config.ts`:
 
@@ -124,7 +124,7 @@ The `runtimeConfig` fields are server-side only by default. This is exactly what
 
 I am using `@nuxt/ui` for styling, but that is optional. Use whatever you prefer. The Polar integration has no UI opinions.
 
-## Step 4 — Environment variables
+## Step 4: Environment variables
 
 Create a `.env` file:
 
@@ -148,7 +148,7 @@ One warning. Polar validates redirect URLs strictly.
 
 Register both if you switch between them. Otherwise the checkout fails on redirect with no helpful error.
 
-## Step 5 — Create the Polar client
+## Step 5: Create the Polar client
 
 The module handles a lot, but for direct API calls you need a Polar client.
 
@@ -177,7 +177,7 @@ Now any server route can call `usePolar()` and get a configured client.
 
 At this point you can start hitting the Polar API from your server. Pretty straightforward.
 
-## Step 6 — Fetch and display products
+## Step 6: Fetch and display products
 
 Here is where it gets fun.
 
@@ -239,7 +239,7 @@ In my actual project I added skeleton loaders, styled cards with Tailwind, and a
 
 But the core is the same. Fetch products. Render them. Let the user pick one.
 
-## Step 7 — Create checkout sessions
+## Step 7: Create checkout sessions
 
 This is where `@polar-sh/nuxt` earns its keep.
 
@@ -290,7 +290,7 @@ I use a form submission instead of `fetch` because the checkout endpoint returns
 
 You want the browser to follow that redirect, not your JavaScript.
 
-## Step 8 — Handle the success page
+## Step 8: Handle the success page
 
 After checkout, Polar redirects to your success URL with a checkout ID.
 
@@ -350,13 +350,13 @@ The checkout status on the success page is `confirmed`, not `succeeded`.
 
 The actual payment confirmation happens asynchronously through webhooks.
 
-Do not unlock premium features the moment the user lands on the success page.
+Do not grant premium access the moment the user lands on the success page.
 
 Wait for the webhook.
 
 I mean, you can show them a welcome message. But the real access grant should happen through the webhook handler.
 
-## Step 9 — Set up webhooks (this is the important part)
+## Step 9: Set up webhooks (this is the important part)
 
 Webhooks are how Polar tells your app that something actually happened.
 
@@ -451,7 +451,7 @@ The actual removal happens through `subscription.revoked`.
 
 Your access control logic needs three states: active, canceled-but-still-active, and fully revoked.
 
-## Step 10 — Build the customer portal
+## Step 10: Build the customer portal
 
 Users need to manage their own subscription.
 
@@ -512,7 +512,7 @@ In a real app with authentication, you would pass a session token and look up th
 
 For testing, passing the email works fine.
 
-## Step 11 — Build the subscription dashboard
+## Step 11: Build the subscription dashboard
 
 The final piece is a dashboard that shows the user's current subscription status.
 
@@ -589,7 +589,7 @@ They can see if they are active, if they canceled but still have time left, or i
 
 No confusion. No support tickets asking "did my cancel go through?"
 
-## Step 12 — Testing your integration
+## Step 12: Testing your integration
 
 All right, so you have the code written. Now verify it actually works.
 

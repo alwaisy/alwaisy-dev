@@ -1,6 +1,6 @@
 ---
-title: "Avatown - World's best Avatar Marketplace"
-description: A dedicated marketplace for virtual avatars. Buy, sell and discover avatars, clothes and accessories across platforms like VRChat, Spatial, and Neos VR.
+title: 'Avatown - Virtual Avatar Marketplace'
+description: A marketplace for virtual avatars. Buy, sell, and discover avatars, clothes, and accessories across platforms like VRChat, Spatial, and Neos VR.
 publishDate: 'May 06 2023'
 seo:
   image:
