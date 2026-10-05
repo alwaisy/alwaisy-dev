@@ -12,7 +12,6 @@ seo:
 
 <a href="https://goavatown.com" target="_blank">Visit Avatown</a>
 
-**Project Overview:**
 I joined Dolamni Inc. in 2023 as a founding engineer. On May 6, 2023, I started building Avatown from scratch. Zero pages, zero users, just an idea. This marketplace would let people buy and sell virtual avatars across different platforms.
 
 ## Technical Decisions (The Hard Way)
@@ -25,7 +24,6 @@ I joined Dolamni Inc. in 2023 as a founding engineer. On May 6, 2023, I started 
 - Atomic Design Pattern
 - Server Components
 
-**The Reality:**
 We spent 8 months to launch beta. Three developers. Eight months for a beta. Why?
 
 - MUI was difficult to customize
@@ -35,11 +33,11 @@ We spent 8 months to launch beta. Three developers. Eight months for a beta. Why
 
 Eight months of mistakes taught us what not to do.
 
-## The Transition
+## Transition
 
 After beta, I asked for a senior frontend engineer. The company hired one, and he changed everything. He showed me how shallow my understanding was, how many wrong choices I'd made. I'm grateful for that.
 
-**What Changed:**
+What Changed:
 
 1. **Server Functions → React Query**
    - I resisted this at first

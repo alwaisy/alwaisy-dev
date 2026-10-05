@@ -13,8 +13,6 @@ seo:
 
 <a href="https://outbidwatch.lol" target="_blank">Visit OutbidWatch</a>
 
-**Project Overview:**
-
 Most silly internet projects end up making actual money.
 
 In early 2026, my feed was suddenly taken over by these weird bidding platforms. It was not pay-to-list. It was pay-to-rank. You paid five dollars to push your project to the top spot on a homepage, and ten minutes later someone paid six dollars to outbid you. Clones were launching every few hours: thinktime, cuntent, takefirst, outplanet.
@@ -23,7 +21,7 @@ It was chaotic, absurd, and fascinating. I decided to build OutbidWatch to catal
 
 It turned out to be a massive engineering headache.
 
-## The 30-Minute Scraper I Had to Kill
+## 30-Minute Scraper I Had to Kill
 
 When I started, I had an ambitious plan. I wanted a live leaderboard that stayed updated in real time.
 
@@ -33,7 +31,7 @@ I tried building it multiple ways: lightweight fetch parsers, headless browser s
 
 I failed to make real-time updates reliable. It was eating up all my time and blocking the entire launch. To remove the blocker, I had to be realistic and kill that feature completely. I simplified the scope to focus on what actually mattered: a dependable, high-integrity chronological directory and timeline.
 
-## The Launch Date Engineering Odyssey
+## Launch Date Engineering Odyssey
 
 Determining the true launch order of over 300 platforms was another rabbit hole.
 
@@ -47,7 +45,7 @@ Even then, certificate logs had a flaw: builders had generated pre-existing wild
 
 In the end, I had to do it the hard way: manual OSINT detective work. I dug through Twitter, searched for the original launch tweets from founders, and cross-referenced their earliest announcement posts. Finding the actual maker behind each platform, and then trying to verify where they were located, was a massive pain. But it gave the directory real integrity.
 
-## The Ingestion Pipeline
+## Ingestion Pipeline
 
 To manage over 300 platforms without drowning in manual database entries, I built a modular Unix-style pipeline:
 

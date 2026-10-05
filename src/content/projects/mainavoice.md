@@ -13,8 +13,6 @@ seo:
 
 <a href="https://mainavoice.lat" target="_blank">Visit Maina Voice</a>
 
-**Project Overview:**
-
 I wanted a free, lightweight alternative to tools like Wispr Flow.
 
 My actual friction was simple: I spend hours every day inside terminal sessions and coding agent environments. Typing out multi-paragraph instructions or detailed context by hand is slow and breaks focus. I wanted a quick tool where I could speak, get accurate text in seconds, and paste it straight into my terminal, without paying a $15 monthly subscription or sending my voice recordings to a random server.
@@ -23,7 +21,7 @@ I named the project after the Maina (or Myna), the famous South Asian talking bi
 
 Getting it to work took over twenty-nine hours of active agent coding sessions, plus countless unrecorded hours of staring at crash logs.
 
-## The Desktop App Rabbit Hole
+## Desktop App Rabbit Hole
 
 I did not start with a web app. I wanted a native desktop utility that would sit quietly in my system tray.
 
@@ -35,7 +33,7 @@ My session telemetry shows 16.8 hours of active terminal work across more than 4
 
 I had to stop and be honest with myself. Fighting native audio drivers and desktop operating system permissions was a massive sinkhole. I decided to scrap the native desktop code and build a clean, local-first web app instead.
 
-## The Web Pivot and How It Works
+## Web Pivot and How It Works
 
 Moving to the browser made everything simpler. Modern browsers already have dependable audio APIs, and you do not need to compile native binaries just to turn voice into text.
 
@@ -53,7 +51,7 @@ Moving to the browser made everything simpler. Modern browsers already have depe
 - **Storage:** IndexedDB (`mainavoice_indexeddb`) for client-side privacy
 - **Open Source:** Available on GitHub at [osspakistan/mainavoice-web](https://github.com/osspakistan/mainavoice-web)
 
-## The Unrecorded Hours and the Reality Check
+## Unrecorded Hours and the Reality Check
 
 When I look at the telemetry across all 17 agent coding sessions on this project, the numbers look tidy: 29.43 active hours and 7,493 interactive messages over 56 calendar days. The web version took less than 11 active hours to build once the desktop dead-ends were cleared out.
 

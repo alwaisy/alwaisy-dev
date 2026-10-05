@@ -13,8 +13,6 @@ seo:
 
 <a href="https://agentcache.run" target="_blank">Visit Agent Cache</a>
 
-**Project Overview:**
-
 AI coding agents work best when you give them plain local files.
 
 There has been a lot of hype around remote documentation tools like Context7. People talk about them constantly, but in my experience, having an agent make remote network calls across the internet every single time it needs an API definition is slow and brittle. Context7 treats documentation as a metered query stream ($10 per seat per month for 5,000 queries, plus overage charges). Why pay a monthly subscription and make repeated API requests across the wire just to look up a function signature that rarely changes?
@@ -25,18 +23,19 @@ My itch was much simpler: when I am building a feature in my editor, I want my a
 
 So I built Agent Cache. You paste any documentation URL, and it packages the entire site into a clean, structured ZIP of Markdown files that you drop straight into your repository.
 
-## The Cloudflare Workers Failure and VPS Pivot
+## Cloudflare Workers Failure and VPS Pivot
 
 I did not start with a traditional server. Like many developers, I initially tried to build the extraction engine on Cloudflare Workers.
 
 It failed almost immediately:
-1. **The 50-Subrequest Limit**: Cloudflare free workers enforce a hard ceiling of 50 subrequests per execution. A crawler evaluating six origins across five subpaths exhausted worker quotas before extraction even began.
+
+1. **50-Subrequest Limit**: Cloudflare free workers enforce a hard ceiling of 50 subrequests per execution. A crawler evaluating six origins across five subpaths exhausted worker quotas before extraction even began.
 2. **Cloudflare-to-Cloudflare Blocks**: When the worker tried to fetch documentation from domains protected by Cloudflare WAF (like `chatgpt.com`), requests were instantly blocked with `403 Forbidden` and challenge tokens.
 3. **Ephemeral State**: Because workers are stateless, clicking download on the frontend triggered a full re-scrape instead of serving the cached result.
 
 I abandoned serverless workers and locked in a dedicated VPS monolith running Bun and Hono, backed by Turso for job state, Caddy for reverse proxying, and Cloudflare R2 for storing completed ZIP bundles. Having persistent disk access meant deterministic job folders, retained markdown trees, and instant 5-millisecond downloads.
 
-## The 3-Tier Acquisition Ladder and the 100-Startup Benchmark
+## 3-Tier Acquisition Ladder and the 100-Startup Benchmark
 
 To prove the pipeline could handle real documentation quirks, I ran a benchmark across 71 Silicon Valley and YC developer tools (including PostHog, Clerk, Airbyte, Stytch, WorkOS, Upstash, Neon, and Nango).
 
@@ -65,7 +64,7 @@ Instead of monolithic loading bars, I built Server-Sent Events (SSE) streaming a
 - **Deployment:** Docker with Caddy reverse proxy and Cloudflare edge caching
 - **Open Source:** Available on GitHub at [osspakistan/agent-cache-web](https://github.com/osspakistan/agent-cache-web)
 
-## The Reality Check
+## Reality Check
 
 In the first 48 hours after launching at [agentcache.run](https://agentcache.run), the site logged 848 unique visitor sessions and 110 real documentation crawl jobs in the Turso database.
 
