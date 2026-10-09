@@ -1,12 +1,12 @@
 ---
-title: 'Fewwords - AI content summarization that actually works'
+title: 'Fewwords V1 (Old) - AI content summarization that actually works'
 description: Articles, YouTube videos, Reddit threads. I built this because I couldn't sit through 2-hour videos and my browser was a graveyard of tabs I'd never read.
 publishDate: 'Jan 28 2026'
 seo:
   image:
     src: '/media/projects/fewwords.png'
     alt: Fewwords - AI content summarization tool
-isFeatured: true
+isFeatured: false
 ---
 
 ![Project preview](/media/projects/fewwords.png)
