@@ -8,7 +8,7 @@ import PostPreview from '../components/post-preview.astro';
 import ProjectPreview from '../components/project-preview.astro';
 import siteConfig from '../data/site-config';
 import BaseLayout from '../layouts/base-layout.astro';
-import { prefersMarkdown } from '../utils/agent-utils';
+import { prefersMarkdown, withAgentDiscoveryLinkHeaders } from '../utils/agent-utils';
 import { sortItemsByDateDesc } from '../utils/data-utils';
 
 const accept = Astro.request.headers.get('accept');
@@ -16,16 +16,19 @@ if (prefersMarkdown(accept)) {
     const siteUrl = Astro.site || 'https://alwaisy.dev';
     const llmsRes = await fetch(new URL('/llms.txt', siteUrl));
     const markdownBody = llmsRes.ok ? await llmsRes.text() : `# ${siteConfig.title}\n\n${siteConfig.description}\n\nhttps://alwaisy.dev/llms.txt\n`;
+    const headers = new Headers({
+        'Content-Type': 'text/markdown; charset=utf-8',
+        'Vary': 'Accept'
+    });
+    withAgentDiscoveryLinkHeaders(headers);
     return new Response(markdownBody, {
         status: 200,
-        headers: {
-            'Content-Type': 'text/markdown; charset=utf-8',
-            'Vary': 'Accept'
-        }
+        headers
     });
 }
 
 Astro.response.headers.set('Vary', 'Accept');
+withAgentDiscoveryLinkHeaders(Astro.response.headers);
 
 const posts = (await getCollection('blog')).sort(sortItemsByDateDesc);
 const featuredPosts = posts.filter(({ data }) => data.isFeatured);

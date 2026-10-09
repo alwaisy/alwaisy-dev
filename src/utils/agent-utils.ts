@@ -48,3 +48,14 @@ export function withVaryAccept(headers: Headers): Headers {
     }
     return headers;
 }
+
+export function withAgentDiscoveryLinkHeaders(headers: Headers): Headers {
+    headers.set(
+        'Link',
+        '</.well-known/api-catalog>; rel="api-catalog", ' +
+        '</about>; rel="service-doc", ' +
+        '</.well-known/ai-catalog.json>; rel="ai-catalog", ' +
+        '</llms.txt>; rel="describedby"'
+    );
+    return headers;
+}

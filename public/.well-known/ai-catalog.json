@@ -1,0 +1,42 @@
+{
+  "specVersion": "1.0",
+  "host": {
+    "displayName": "Awais Alwaisy - Solo Founder Media",
+    "identifier": "did:web:alwaisy.dev"
+  },
+  "entries": [
+    {
+      "identifier": "urn:air:alwaisy.dev:publication:archive",
+      "displayName": "Solo Founder Media Archive",
+      "type": "text/markdown",
+      "url": "https://alwaisy.dev/llms-full.txt",
+      "representativeQueries": [
+        "solo founder idea validation playbook",
+        "integrating Polar with Nuxt in 2026",
+        "bootstrapping from zero to 1k MRR",
+        "Awais Alwaisy projects and background"
+      ]
+    },
+    {
+      "identifier": "urn:air:alwaisy.dev:mcp:server",
+      "displayName": "Awais Alwaisy MCP Server",
+      "type": "application/mcp-server-card+json",
+      "url": "https://alwaisy.dev/.well-known/mcp/server-card.json",
+      "representativeQueries": [
+        "discover MCP tools for alwaisy dev",
+        "connect to alwaisy dev MCP server",
+        "search solo founder articles via MCP"
+      ]
+    },
+    {
+      "identifier": "urn:air:alwaisy.dev:skills:discovery",
+      "displayName": "Solo Founder Skills Index",
+      "type": "application/json",
+      "url": "https://alwaisy.dev/.well-known/agent-skills/index.json",
+      "representativeQueries": [
+        "agent skills for solo founder media",
+        "research tools for indie hackers"
+      ]
+    }
+  ]
+}

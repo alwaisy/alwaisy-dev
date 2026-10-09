@@ -74,6 +74,45 @@ function formatCanonicalURL(url: string | URL) {
 <link rel="sitemap" href="/sitemap-index.xml" />
 <link rel="alternate" type="application/rss+xml" href="/rss.xml" title="RSS" />
 <link rel="alternate" type="text/plain" href="/llms.txt" title="LLMs.txt" />
+<link rel="ai-catalog" href="/.well-known/ai-catalog.json" />
+<link rel="api-catalog" href="/.well-known/api-catalog" />
+<link rel="service-doc" href="/about" />
+
+<!-- WebMCP Browser Tool Exposure -->
+<script is:inline>
+    (function () {
+        const mc = document.modelContext || (typeof navigator !== 'undefined' && navigator.modelContext);
+        if (mc && typeof mc.registerTool === 'function') {
+            try {
+                mc.registerTool({
+                    name: 'search_articles',
+                    description: 'Search articles and case studies published on alwaisy.dev',
+                    inputSchema: {
+                        type: 'object',
+                        properties: {
+                            query: { type: 'string', description: 'Search keywords or topic' }
+                        },
+                        required: ['query']
+                    },
+                    execute: async (params) => {
+                        const res = await fetch('/llms.txt');
+                        const text = await res.text();
+                        if (params?.query) {
+                            const filtered = text
+                                .split('\n')
+                                .filter((line) => line.toLowerCase().includes(String(params.query).toLowerCase()))
+                                .join('\n');
+                            return { text: filtered || text };
+                        }
+                        return { text };
+                    }
+                });
+            } catch {
+                // Ignore registration errors gracefully
+            }
+        }
+    })();
+</script>
 
 <!-- Page Metadata -->
 <link rel="canonical" href={formatCanonicalURL(canonicalURL)} />

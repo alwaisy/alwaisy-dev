@@ -1,0 +1,19 @@
+{
+  "serverInfo": {
+    "name": "alwaisy-dev",
+    "version": "1.0.0"
+  },
+  "endpoint": "https://alwaisy.dev/mcp",
+  "capabilities": {
+    "tools": {
+      "listChanged": false
+    },
+    "resources": {
+      "subscribe": false,
+      "listChanged": false
+    },
+    "prompts": {
+      "listChanged": false
+    }
+  }
+}

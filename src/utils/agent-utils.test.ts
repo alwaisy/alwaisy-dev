@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test';
-import { formatMarkdown404, prefersMarkdown, withVaryAccept } from './agent-utils';
+import { formatMarkdown404, prefersMarkdown, withAgentDiscoveryLinkHeaders, withVaryAccept } from './agent-utils';
 
 describe('agent content negotiation and 404 utilities', () => {
     describe('prefersMarkdown', () => {
@@ -53,6 +53,18 @@ describe('agent content negotiation and 404 utilities', () => {
             withVaryAccept(headers);
             expect(headers.get('Vary')).toContain('Accept');
             expect(headers.get('Vary')).toContain('Encoding');
+        });
+    });
+
+    describe('withAgentDiscoveryLinkHeaders', () => {
+        it('sets Link header pointing to api-catalog, service-doc, ai-catalog, and describedby', () => {
+            const headers = new Headers();
+            withAgentDiscoveryLinkHeaders(headers);
+            const link = headers.get('Link');
+            expect(link).toContain('rel="api-catalog"');
+            expect(link).toContain('rel="service-doc"');
+            expect(link).toContain('rel="ai-catalog"');
+            expect(link).toContain('rel="describedby"');
         });
     });
 });

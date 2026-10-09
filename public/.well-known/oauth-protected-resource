@@ -1,0 +1,13 @@
+{
+  "resource": "https://alwaisy.dev",
+  "authorization_servers": [
+    "https://alwaisy.dev"
+  ],
+  "scopes_supported": [
+    "read",
+    "write"
+  ],
+  "bearer_methods_supported": [
+    "header"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "linkset": [
+    {
+      "anchor": "https://alwaisy.dev/api",
+      "service-desc": [
+        {
+          "href": "https://alwaisy.dev/api/openapi.json",
+          "type": "application/vnd.oai.openapi+json"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://alwaisy.dev/about",
+          "type": "text/html"
+        }
+      ],
+      "status": [
+        {
+          "href": "https://alwaisy.dev/api/health",
+          "type": "application/json"
+        }
+      ]
+    }
+  ]
+}

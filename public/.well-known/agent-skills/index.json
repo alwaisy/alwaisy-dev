@@ -1,0 +1,12 @@
+{
+  "$schema": "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
+  "skills": [
+    {
+      "name": "solo-founder-archive",
+      "type": "skill-md",
+      "description": "Search and retrieve case studies, playbooks, and architectural essays from Awais Alwaisy's solo founder publication.",
+      "url": "https://alwaisy.dev/.well-known/agent-skills/solo-founder-archive/SKILL.md",
+      "digest": "sha256:940422d440a96c9b176804e075b063d812e84e7c5662df2372e28d00c387eb01"
+    }
+  ]
+}
