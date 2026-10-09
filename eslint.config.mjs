@@ -38,7 +38,12 @@ export default tseslint.config(
   },
   {
     // Ignore Astro dynamic routes with [brackets] and error pages (404.astro)
-    files: ['src/pages/**/\\[*\\].astro', 'src/pages/**/\\[*\\].astro/**', 'src/pages/404.astro'],
+    files: [
+      'src/pages/**/\\[*\\].astro',
+      'src/pages/**/\\[*\\].astro/**',
+      'src/pages/**/\\[*\\].*',
+      'src/pages/404.astro'
+    ],
     rules: {
       'check-file/filename-naming-convention': 'off',
       'check-file/folder-naming-convention': 'off',
