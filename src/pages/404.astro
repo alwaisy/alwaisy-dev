@@ -1,0 +1,46 @@
+---
+export const prerender = false;
+
+import BaseLayout from '../layouts/base-layout.astro';
+import { formatMarkdown404, prefersMarkdown } from '../utils/agent-utils';
+
+const accept = Astro.request.headers.get('accept');
+const pathname = Astro.url.pathname;
+
+if (prefersMarkdown(accept)) {
+    return new Response(formatMarkdown404(pathname), {
+        status: 404,
+        statusText: 'Not Found',
+        headers: {
+            'Content-Type': 'text/markdown; charset=utf-8',
+            'Vary': 'Accept'
+        }
+    });
+}
+
+Astro.response.status = 404;
+Astro.response.headers.set('Vary', 'Accept');
+---
+
+<BaseLayout title="Page Not Found" description="The page you were looking for could not be found." showHeader={true}>
+    <article class="mb-16 sm:mb-24">
+        <header class="mb-8">
+            <h1 class="font-serif text-3xl leading-tight font-medium sm:text-5xl sm:leading-tight">404 - Not Found</h1>
+        </header>
+        <div class="prose sm:prose-lg max-w-none text-main">
+            <p>
+                The requested URL <code>{pathname}</code> was not found on this server.
+            </p>
+            <p class="mt-4">
+                Looking for something specific? Here are helpful starting points:
+            </p>
+            <ul>
+                <li><a href="/">Return to Homepage</a></li>
+                <li><a href="/blog">Browse All Articles</a></li>
+                <li><a href="/projects">View Projects & Case Studies</a></li>
+                <li><a href="/llms.txt">LLMs Index (llms.txt)</a></li>
+                <li><a href="/sitemap-index.xml">XML Sitemap</a></li>
+            </ul>
+        </div>
+    </article>
+</BaseLayout>
