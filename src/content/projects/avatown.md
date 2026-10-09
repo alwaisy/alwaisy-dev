@@ -1,7 +1,8 @@
 ---
 title: 'Avatown - Virtual Avatar Marketplace'
-description: A marketplace for virtual avatars. Buy, sell, and discover avatars, clothes, and accessories across platforms like VRChat, Spatial, and Neos VR.
+description: A marketplace for virtual avatars across VRChat, Spatial, and Neos VR. Built from scratch as founding frontend engineer, and lessons learned after Dolami shut down.
 publishDate: 'May 06 2023'
+isFeatured: false
 seo:
   image:
     src: '/media/projects/avatown.png'
@@ -10,9 +11,9 @@ seo:
 
 ![Project preview](/media/projects/avatown.png)
 
-<a href="https://goavatown.com" target="_blank">Visit Avatown</a>
+*(Note: Dolami, Inc. and the Avatown service have officially shut down.)*
 
-I joined <mark>Dolamni Inc.</mark> in 2023 as a founding engineer. On May 6, 2023, I started building Avatown from scratch. Zero pages, zero users, just an idea. This marketplace would let people buy and sell virtual avatars across different platforms like <mark>VRChat</mark>, <mark>Spatial</mark>, and <mark>Neos VR</mark>.
+I joined <mark>Dolami, Inc.</mark> in 2023 as a founding engineer. On May 6, 2023, I started building Avatown from scratch. Zero pages, zero users, just an ambitious idea. The marketplace was designed to let 3D creators buy, sell, and discover virtual avatars, wearables, and accessories across platforms like <mark>VRChat</mark>, <mark>Spatial</mark>, and <mark>Neos VR</mark>.
 
 ## Technical Decisions (The Hard Way)
 
@@ -24,55 +25,67 @@ I joined <mark>Dolamni Inc.</mark> in 2023 as a founding engineer. On May 6, 202
 - Atomic Design Pattern
 - Server Components
 
-We spent 8 months to launch beta. Three developers. Eight months for a beta. Why?
+I spent 8 months working with the team to launch the initial beta. Three developers, eight months for a beta. Why did it take so long?
 
-- MUI was difficult to customize
-- Atomic Design created a rigid system
-- Next.js 13 App Router had a steep learning curve
-- We were learning while building
+- MUI was difficult to customize and fight against
+- Atomic Design created an overly rigid component hierarchy
+- Next.js 13 App Router had a steep learning curve back then
+- I was learning architectural patterns while trying to ship under pressure
 
-Eight months of mistakes taught us what not to do.
+Those eight months of mistakes taught me firsthand what not to do.
 
-## Transition
+## The Senior Engineer Reset
 
-After beta, I asked for a senior frontend engineer. The company hired one, and he changed everything. He showed me how shallow my understanding was, how many wrong choices I'd made. I'm grateful for that.
+After beta, I advocated for bringing in a senior frontend engineer. Dolami hired one, and working alongside him reshaped how I approach web software. He showed me where my architectural decisions were brittle and where simpler choices would make iterating much faster.
 
-What Changed:
+What changed in our stack:
 
-1. **Server Functions → React Query**
-   - I resisted this at first
-   - Now I understand why it works better
+1. **Server Functions to React Query**
+   - I resisted this at first because I wanted everything in pure server components
+   - I quickly realized why client-side caching and mutation states work better for interactive web apps
 
-2. **MUI → shadcn/ui + Full Tailwind**
-   - Removed the `av` prefix mess
-   - Much faster to work with
+2. **MUI to shadcn/ui and Native Tailwind**
+   - Removed bloated style wrappers and custom class prefixes
+   - Iteration speed doubled almost immediately
 
-3. **Killed Atomic Design**
-   - Too rigid for our needs
-   - Slowed us down more than it helped
+3. **Retiring Atomic Design**
+   - Atoms, molecules, and organisms sound clean in theory, but they slowed down day-to-day feature development
+   - We switched to feature-based domain folders that matched real workflows
 
-4. **New Project Architecture**
-   - Designed together with the team
-   - Actually makes sense for our workflow
+4. **Cleaner Project Architecture and i18n**
+   - Clean separation of concerns designed with the team
+   - Proper internationalization (English and Japanese) to serve creator communities worldwide
 
-5. **i18n Integration**
-   - Started before the senior engineer joined
-   - Completed during the transition
+## Results and Velocity
 
-## Results
+Once the new stack was in place:
 
-**Performance:**
+- Development velocity increased by roughly 50%
+- Bundle sizes and page performance improved by 40%
+- Developer experience was night and day compared to the early months
 
-- Development speed increased by 50%
-- Project performance improved by 40%
-- Developer experience improved by 30%
+Writing code felt effortless again, and shipping features took days instead of weeks.
 
-The new stack made everything faster. Writing code felt easier. Shipping features took less time.
+## The Shutdown and Founder Retrospective
 
-## What I Learned
- 
-> Sometimes you need someone to tell you you're wrong. The senior engineer didn't just criticize. He showed me better ways to build.
- 
- I spent 8 months doing things the hard way. The next phase took half the time and produced better results. That's the difference experience makes.
- 
-> Atomic Design isn't always the answer. MUI isn't always worth the customization pain. And being wrong early is better than being wrong late.
+Dolami, Inc. has officially closed its doors.
+
+After Avatown, the team spent about a year developing Pier, an augmented reality app, testing different hypotheses across the AR and avatar ecosystems. Despite gaining hundreds of early users, the core hypotheses needed to scale into a venture-scale business did not pan out.
+
+Looking back, the founder shared an honest retrospective that stuck with me: the biggest hurdle was **underestimating platform risk**.
+
+Building on top of third-party platforms like VRChat meant Avatown was tethered to ecosystems it could not control:
+
+- Closed avatar pipeline changes and ecosystem friction
+- Reliance on game updates and platform policies
+- Difficulty creating a standalone economic moat outside the host games
+
+Even though the company is closed, the team landed on its feet. Fahrezi, who worked closely alongside me on the codebase, leveled up tremendously throughout the project and moved to New York for an engineering role with full visa sponsorship. The founder took the hard lessons in stride to build skills before his next chapter, and sent a warm note thanking me for building the frontend foundation from day one.
+
+## Core Lessons
+
+> Sometimes you need a more experienced engineer to look at your code and tell you you are wrong. It saves you months of stubborn wheel-spinning.
+
+> Never build an entire business model on top of someone else's walled garden without pricing in platform risk. If the host platform shifts, your entire distribution layer shifts with it.
+
+> Atomic Design is rarely worth the ceremony for fast-moving startups, and being wrong early is far cheaper than being wrong late.
