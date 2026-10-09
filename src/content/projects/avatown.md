@@ -70,7 +70,7 @@ Writing code felt effortless again, and shipping features took days instead of w
 
 Dolami, Inc. has officially closed its doors.
 
-After Avatown, the team spent about a year developing Pier, an augmented reality app, testing different hypotheses across the AR and avatar ecosystems. Despite gaining hundreds of early users, the core hypotheses needed to scale into a venture-scale business did not pan out.
+After Avatown, the founder spent about a year testing alternative hypotheses across the augmented reality space. Despite gaining hundreds of early users, the core hypotheses needed to scale into a venture-scale business did not pan out.
 
 Looking back, the founder shared an honest retrospective that stuck with me: the biggest hurdle was **underestimating platform risk**.
 
@@ -80,7 +80,7 @@ Building on top of third-party platforms like VRChat meant Avatown was tethered 
 - Reliance on game updates and platform policies
 - Difficulty creating a standalone economic moat outside the host games
 
-Even though the company is closed, the team landed on its feet. Fahrezi, who worked closely alongside me on the codebase, leveled up tremendously throughout the project and moved to New York for an engineering role with full visa sponsorship. The founder took the hard lessons in stride to build skills before his next chapter, and sent a warm note thanking me for building the frontend foundation from day one.
+The founder took the hard lessons in stride to build skills before his next chapter, and sent a warm note thanking me for building the frontend foundation from day one.
 
 ## Core Lessons
 
