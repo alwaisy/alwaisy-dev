@@ -44,6 +44,10 @@ const siteConfig: SiteConfig = {
         {
             text: "Let's Talk",
             href: '/contact'
+        },
+        {
+            text: 'Privacy',
+            href: '/privacy'
         }
     ],
     socialLinks: [

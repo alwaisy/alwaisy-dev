@@ -73,6 +73,7 @@ function formatCanonicalURL(url: string | URL) {
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <link rel="sitemap" href="/sitemap-index.xml" />
 <link rel="alternate" type="application/rss+xml" href="/rss.xml" title="RSS" />
+<link rel="alternate" type="text/plain" href="/llms.txt" title="LLMs.txt" />
 
 <!-- Page Metadata -->
 <link rel="canonical" href={formatCanonicalURL(canonicalURL)} />
@@ -93,3 +94,71 @@ function formatCanonicalURL(url: string | URL) {
 {description && <meta name="twitter:description" content={description} />}
 {resolvedImage?.src && <meta name="twitter:image" content={resolvedImage.src} />}
 {resolvedImage?.alt && <meta name="twitter:image:alt" content={resolvedImage.alt} />}
+
+<!-- JSON-LD Structured Data -->
+<script
+    is:inline
+    type="application/ld+json"
+    set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@graph': [
+            {
+                '@type': 'WebSite',
+                '@id': 'https://alwaisy.dev/#website',
+                url: 'https://alwaisy.dev',
+                name: siteConfig.title,
+                description: siteConfig.description,
+                publisher: {
+                    '@id': 'https://alwaisy.dev/#organization'
+                }
+            },
+            {
+                '@type': 'Person',
+                '@id': 'https://alwaisy.dev/#person',
+                name: 'Awais Alwaisy',
+                url: 'https://alwaisy.dev',
+                jobTitle: 'Software Engineer & Founder Journalist',
+                description: siteConfig.description,
+                image: resolvedImage?.src || 'https://alwaisy.dev/media/avatar.png',
+                sameAs: [
+                    'https://linkedin.com/in/alwaisy',
+                    'https://github.com/alwaisy',
+                    'https://x.com/alvaisy'
+                ],
+                worksFor: {
+                    '@id': 'https://alwaisy.dev/#organization'
+                }
+            },
+            {
+                '@type': 'Organization',
+                '@id': 'https://alwaisy.dev/#organization',
+                name: 'Awais Alwaisy - Solo Founder Media',
+                url: 'https://alwaisy.dev',
+                logo: 'https://alwaisy.dev/og.png',
+                description: siteConfig.description,
+                founder: {
+                    '@id': 'https://alwaisy.dev/#person'
+                },
+                contactPoint: [
+                    {
+                        '@type': 'ContactPoint',
+                        contactType: 'editorial and business inquiries',
+                        email: 'hello@alwaisy.dev',
+                        url: 'https://alwaisy.dev/contact'
+                    }
+                ],
+                address: {
+                    '@type': 'PostalAddress',
+                    addressLocality: 'Islamabad',
+                    addressCountry: 'PK'
+                },
+                sameAs: [
+                    'https://linkedin.com/in/alwaisy',
+                    'https://github.com/alwaisy',
+                    'https://x.com/alvaisy'
+                ]
+            }
+        ]
+    })}
+/>
+

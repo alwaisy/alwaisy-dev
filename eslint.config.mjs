@@ -10,6 +10,8 @@ export default tseslint.config(
       '.astro/*',
       'dist/*',
       'node_modules/*',
+      '.wrangler/*',
+      'bench/*',
     ],
   },
   {

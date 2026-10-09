@@ -65,7 +65,7 @@ Instead of monolithic loading bars, I built Server-Sent Events (SSE) streaming a
 - **Open Source:** Available on GitHub at [osspakistan/agent-cache-web](https://github.com/osspakistan/agent-cache-web)
 
 ## Reality Check
- 
- In the first 48 hours after launching at <a href="https://agentcache.run" target="_blank" rel="dofollow">agentcache.run</a>, the site logged 848 unique visitor sessions and 110 real documentation crawl jobs in the Turso database.
- 
+
+In the first 48 hours after launching at <a href="https://agentcache.run" target="_blank" rel="dofollow">agentcache.run</a>, the site logged 848 unique visitor sessions and 110 real documentation crawl jobs in the Turso database.
+
 > It is not an over-engineered enterprise platform. It simply solves one real problem: giving your coding agent clean, authoritative Markdown documentation on your local disk so it stops hallucinating APIs.

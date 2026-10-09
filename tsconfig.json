@@ -2,11 +2,13 @@
   "extends": "astro/tsconfigs/strict",
   "include": [
     ".astro/types.d.ts",
-    "**/*",
+    "src/**/*",
+    "worker/**/*",
     "./worker-configuration.d.ts"
   ],
   "exclude": [
-    "dist"
+    "dist",
+    "bench"
   ],
   "compilerOptions": {
     "strictNullChecks": true

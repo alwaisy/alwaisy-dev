@@ -5,13 +5,15 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/inject-worker.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "check": "bun run lint:fix && astro check",
+    "test": "bun test",
     "format": "prettier --write .",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "deploy": "bun run build && wrangler deploy",
     "generate-types": "wrangler types"
   },
   "dependencies": {
