@@ -21,3 +21,6 @@ pnpm-debug.log*
 .DS_Store
 
 bench
+
+# wrangler temporary files and cache
+.wrangler/
