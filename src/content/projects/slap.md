@@ -62,7 +62,9 @@ From day one, I set a hard rule: if a post has fewer than 30 comments, SLAP stay
 
 When I first discussed the generation format, the AI initially proposed spitting out 3 variations for every angle, which would mean 9 comments.
 
-I killed that immediately. Giving someone 9 comments is garbage. More options just create decision fatigue, and you end up spending more time reading AI variations than actually engaging. The codebase enforces a strict rule: exactly 1 comment per angle across 3 distinct angles. That is 3 comments total, period. You pick the perspective you want (data proof, contrarian caveat, or a pragmatic alternative), copy it, and move on.
+> More options just create decision fatigue. You end up spending more time proofreading AI variations than actually engaging.
+
+I killed that immediately. Giving someone 9 comments is garbage. The codebase enforces a strict rule: exactly 1 comment per angle across 3 distinct angles. That is 3 comments total, period. You pick the perspective you want (data proof, contrarian caveat, or a pragmatic alternative), copy it, and move on.
 
 ## The MicroVM Dead End and R2 as Disk
 
@@ -71,6 +73,8 @@ When I started prototyping the backend, I tried using isolated Linux KVM microVM
 It was a total dead end. Spinning up microVMs for a fast in-feed tool was way too slow and expensive per machine-second. More importantly, <mark>Cloudflare</mark> Workers run on V8 isolates. They cannot spawn child processes or run bash commands.
 
 So I took a different route: treating <mark>Cloudflare</mark> R2 object storage directly as the agent's virtual hard drive.
+
+> By treating R2 storage as an agent's virtual disk, each generation gets a dedicated file session in plain TOML and Markdown without multi-second container boot times or database bloat.
 
 Using lightweight primitive tools (`read_file`, `write_file`, `list_dir`, `http_call`), each generation session created a clean folder tree under `sessions/{userId}/{sessionId}/`. It held the target post, author profile, top 30 thread replies, user voice rules, and final outputs in plain TOML and Markdown. It gave me zero container boot latency, instant debugging from R2 session dumps, and prevented multi-kilobyte tweet payloads from bloating my <mark>Cloudflare</mark> D1 SQLite database.
 
@@ -93,7 +97,9 @@ It turned a parallel workflow into a slow sequential line: wait for the tweet, w
 
 I stripped the extra LLM call out and returned to deterministic query extraction. But even then, LLM response times would randomly spike back up to 59 seconds or 1 minute and 10 seconds during peak hours.
 
-The real fix came down to infrastructure and provider routing: switching synthesis to Nebius. While generic providers crawled along with unpredictable queues, Nebius pushed incredible throughput, hitting anywhere from 300 to over 800 tokens per second on DeepSeek V4.1 Flash (and over 190 tokens per second on GLM-5.3-Flash Nitro). That level of raw speed pulled the final synthesis down to just 2 to 3 seconds, proving that model latency is often an infrastructure and provider problem rather than a pipeline flaw.
+> Model latency is often an infrastructure and provider problem rather than a prompt pipeline flaw.
+
+The real fix came down to infrastructure and provider routing: switching synthesis to Nebius. While generic providers crawled along with unpredictable queues, Nebius pushed incredible throughput, hitting anywhere from 300 to over 800 tokens per second on DeepSeek V4.1 Flash (and over 190 tokens per second on GLM-5.3-Flash Nitro). That level of raw speed pulled the final synthesis down to just 2 to 3 seconds, proving that the prompt pipeline was not the issue.
 
 ## Technical Stack
 
@@ -115,6 +121,8 @@ And that is when the core product reality hit me:
 
 Every generated comment sounded like unsolicited advice.
 
+> When a real human leaves a great comment on social media, they share lived experience. Advice without personal experience always reads like synthetic spam.
+
 When a real human reads a post and leaves a great comment, they do not hand down generic advice like an expert consultant. They share a personal experience. They say what happened to them when they tried that approach. Advice without lived experience looks fake and robotic, no matter how much you tune the prompt.
 
 For a post about cold email, I personally knew nothing about the topic. And if I knew nothing, the AI had no personal experience to draw from. It defaulted to polished advice because it had no authentic thoughts from me to work with.
@@ -132,5 +140,7 @@ So where does this leave SLAP?
 The project is currently shelved, but it is not dead code. 
 
 The future of SLAP depends entirely on solving the personal context problem first. If I build the dedicated thoughts engine, where an agent continuously accumulates my real work notes, life experiences, and unpolished beliefs, then SLAP becomes a natural distribution plugin on top of that system.
+
+> Pausing a flawed product before pushing it onto users is not a failure. It is the only honest way to build software.
 
 Until then, keeping it paused was the honest choice. I spent 45.64 active hours building it across 59 coding sessions. The engineering in `@slap/engine`, the R2-as-disk model, and the Turborepo setup were great wins that I will carry forward into every future project.
