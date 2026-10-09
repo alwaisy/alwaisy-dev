@@ -91,9 +91,9 @@ That single decision ruined the system.
 
 It turned a parallel workflow into a slow sequential line: wait for the tweet, wait 15 seconds for an LLM to write search queries, wait for Tavily, wait for vision, and then wait 40 seconds for the main synthesis call. Runtimes exploded from 18 seconds to over 100 seconds, crashing straight into <mark>Cloudflare</mark> Workers' execution limits.
 
-On top of that, running multi-turn agent environments burned tokens at an alarming rate. When testing agent skills across different runner setups, an autonomous loop easily burned 40,000 to 100,000 tokens per run just to output 3 short comments, compared to 5,000 tokens in a direct TypeScript pipeline.
+I stripped the extra LLM call out and returned to deterministic query extraction. But even then, LLM response times would randomly spike back up to 59 seconds or 1 minute and 10 seconds during peak hours.
 
-I stripped the extra LLM call out, returned to deterministic query extraction, and benchmarked GLM-5.3-Flash on OpenRouter Nitro, which brought generation down to 3 seconds at 190 tokens per second.
+The real fix came down to infrastructure and provider routing: switching synthesis to Nebius. While generic providers crawled along with unpredictable queues, Nebius pushed incredible throughput, hitting anywhere from 300 to over 800 tokens per second on DeepSeek V4.1 Flash (and over 190 tokens per second on GLM-5.3-Flash Nitro). That level of raw speed pulled the final synthesis down to just 2 to 3 seconds, proving that model latency is often an infrastructure and provider problem rather than a pipeline flaw.
 
 ## Technical Stack
 
