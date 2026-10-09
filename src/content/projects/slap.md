@@ -1,7 +1,7 @@
 ---
 title: 'SLAP - In-Feed Context Engine and Lessons on Genuine AI Voice'
 description: An in-feed Chrome Extension and SvelteKit edge app that tested whether an AI context engine could solve the daily commenting grind on X.
-publishDate: 'Oct 2026'
+publishDate: 'Oct 08 2026'
 isFeatured: false
 seo:
   image:

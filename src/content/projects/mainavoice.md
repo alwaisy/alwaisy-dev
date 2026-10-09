@@ -1,7 +1,7 @@
 ---
 title: 'Maina Voice - Free Speech-to-Text Dictation Born from a Failed Desktop App'
 description: A local-first speech-to-text workbench built after 29 hours of agent coding sessions and failed desktop experiments.
-publishDate: 'Aug 2026'
+publishDate: 'Aug 15 2026'
 isFeatured: false
 seo:
   image:

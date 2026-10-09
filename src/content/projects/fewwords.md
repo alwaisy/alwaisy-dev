@@ -1,7 +1,7 @@
 ---
 title: 'Fewwords - AI content summarization that actually works'
 description: Articles, YouTube videos, Reddit threads. I built this because I couldn't sit through 2-hour videos and my browser was a graveyard of tabs I'd never read.
-publishDate: 'Jan 2026'
+publishDate: 'Jan 28 2026'
 seo:
   image:
     src: '/media/projects/fewwords.png'

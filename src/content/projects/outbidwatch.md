@@ -1,7 +1,7 @@
 ---
 title: 'OutbidWatch - Cataloging the Wild Pay-to-Rank Bidding Craze'
 description: A chronological observatory tracking over 330 pay-to-rank leaderboards, built with Cloudflare Workers, Hono, and D1.
-publishDate: 'Sep 2026'
+publishDate: 'Aug 30 2026'
 isFeatured: false
 seo:
   image:
