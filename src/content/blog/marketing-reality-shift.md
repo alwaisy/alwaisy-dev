@@ -8,7 +8,12 @@ tags:
   - AI Search
 seo:
   description: "Why your marketing isn't working. A shift from 'selling features' to 'solving problems' for solo founders who want to build a sustainable product business."
+  image:
+    src: '/media/blog/marketing-reality-shift/images/cover.png'
+    alt: The Startup Marketing Playbook Just Changed
 ---
+
+![The Startup Marketing Playbook Just Changed](/media/blog/marketing-reality-shift/images/cover.png)
 
 I wanted to start this by saying something you probably need to hear. You aren't behind. It just feels that way because the "rules" of marketing are shifting under our feet.
 

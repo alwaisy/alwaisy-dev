@@ -9,12 +9,12 @@ tags:
 seo:
   description: "A retrospective on building SLAP, solving latency with Nebius, using R2 as disk, and why commenting tools fall apart without personal experience."
   image:
-    src: '/media/projects/slap.png'
-    alt: SLAP project interface preview
+    src: '/media/blog/why-i-paused-my-ai-commenting-tool/images/cover.png'
+    alt: When the replies sound synthetic - SLAP project cover
 isFeatured: false
 ---
 
-![SLAP project interface preview](/media/projects/slap.png)
+![When the replies sound synthetic - SLAP project cover](/media/blog/why-i-paused-my-ai-commenting-tool/images/cover.png)
 
 Here is the thing nobody tells you about the "comment 30 times a day" growth strategy: by comment twelve, your brain is completely empty.
 
@@ -28,9 +28,9 @@ That insight is what killed the project. All the engineering work below ,  the m
 
 All right, so let me walk through what actually happened.
 
----
 
-## The Problem I Was Trying to Solve
+
+## Problem I Was Trying to Solve
 
 If you spend any time building in public on social feeds, you know the advice. Go to big accounts every morning. Leave 30 thoughtful comments. Borrow their audience. Drive people back to your profile.
 
@@ -42,7 +42,7 @@ I wanted something smarter. The idea for SLAP was an in-feed workflow that would
 
 Now, that was the dream. Here is what 45 hours of building actually looked like.
 
----
+
 
 ## Hitting the MicroVM Wall
 
@@ -58,9 +58,9 @@ Using small, deterministic read and write operations, each session created a fol
 
 That part worked pretty well. But then latency almost killed everything.
 
----
 
-## The Latency Crisis
+
+## Latency Crisis
 
 In early tests, the parallel pipeline finished in 15 to 18 seconds:
 
@@ -84,9 +84,9 @@ The real fix was switching synthesis to Nebius. Conventional API gateways backed
 
 At this point the pipeline was pretty fast. But I still had a design problem to fix.
 
----
 
-## The 3-Reply Rule
+
+## 3-Reply Rule
 
 Early on, the generation step proposed offering three variations per angle, so nine options total.
 
@@ -96,9 +96,9 @@ The codebase enforces one reply per angle across three distinct perspectives: a 
 
 Basically, less is more. That rule turned out to apply to the whole product too.
 
----
 
-## The Product Reality: Why I Paused
+
+## Product Reality: Why I Paused
 
 By early October 2026, the app and backend were deployed and functional.
 
@@ -118,7 +118,7 @@ I would say most AI comment tools fail for exactly this reason. They optimize fo
 
 Rather than shipping something I could not honestly recommend to myself, I put a pause notice directly on the site.
 
----
+
 
 ## What Happens Next
 
