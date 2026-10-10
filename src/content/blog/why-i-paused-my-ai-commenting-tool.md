@@ -1,6 +1,6 @@
 ---
 title: Why I Paused My AI Commenting Tool After 45 Hours
-excerpt: Everyone says to write 30 thoughtful replies a day on social feeds. I built an automated workflow to speed that up, wrestled with cloud isolates and token speeds, and then realized why the whole premise was flawed.
+excerpt: Everyone says to write 30 thoughtful replies a day on social feeds. I built a workflow to speed that up, hit some pretty ugly engineering walls, and then realized the whole premise was broken.
 publishDate: 'Oct 09 2026'
 tags:
   - Founder Story
@@ -16,117 +16,116 @@ isFeatured: false
 
 ![SLAP project interface preview](/media/projects/slap.png)
 
-> Engaging on social feeds is supposed to be the fastest way to grow, but writing 30 thoughtful replies every single day turns your head into mush.
+Here is the thing nobody tells you about the "comment 30 times a day" growth strategy: by comment twelve, your brain is completely empty.
 
-If you spend any time building projects in public, you already know the playbook. People repeat the same advice constantly: go to big accounts, leave 30 thoughtful comments every morning, borrow attention, and bring people back to your profile.
+I found this out the hard way. So I spent 45 hours and 59 coding sessions building **SLAP**, an in-feed context workspace for social feeds. Technically it worked. But once I sat down to use it on real threads, I hit a product problem that no amount of prompt tuning could fix.
 
-It sounds reasonable when people talk about it on podcasts. But sit down and actually try it. By reply number twelve, your focus is shot. You stare at a thread with forty opinions, start typing a response, erase it, second-guess your wording, and end up posting something hollow like "Great point" or a thumbs-up emoji.
+The problem was not the latency. It was not the architecture. The problem was that every single reply it generated sounded like unsolicited advice from someone who had never done the thing they were advising on.
 
-Generic AI reply tools make this worse. They flood timelines with hollow enthusiasm, irrelevant summaries, and robotic praise. Readers recognize them immediately, and the algorithm ignores them.
+> When a real person leaves a great comment, they share lived experience. Advice without personal experience reads like synthetic marketing noise.
 
-I wanted to fix that problem for myself. I called the project **SLAP**. The goal was a clean workflow that would inspect a post, evaluate attached charts, read through the top twenty to thirty existing comments so you never repeat what someone else already said, and offer three distinct angles with one human reply each. You could also record a quick audio note to establish your real stance before any model touched the phrasing.
+That insight is what killed the project. All the engineering work below ,  the microVM experiments, the Nebius provider switch, the 3-reply limit ,  that was all real and it was all pretty interesting. But none of it mattered once I understood the root flaw.
 
-I spent 45 hours and 59 coding sessions building it. Technically, the stack worked. But once I sat down to use it on real discussions, I ran into a product reality that no amount of prompt tuning could repair.
-
----
-
-## What Was Actually Built
-
-I wanted the software organized properly from day one, so I set it up as a Turborepo monorepo powered by Bun workspaces:
-
-- `apps/web`: A SvelteKit 5 web application running on Cloudflare Workers edge runtime.
-- `packages/pipeline`: The backend pipeline handling external APIs, web searches, image extraction, and text generation.
-- `packages/contracts`: Zod schemas and validation rules shared across the workspace.
-- `packages/logger`: Structured logging to track every step of the generation cycle.
-
-Separating the generation pipeline from the web frontend was one of the best technical decisions I made. It allowed me to run standalone terminal benchmarks against the pipeline without booting up a dev server or waiting on browser refreshes.
-
-### The Core Features That Reached Production
-
-1. **The Context Pipeline:** A workflow that fetches target posts and active comment trees through external APIs, gathers author background via Tavily web search, reads image charts with Gemini Flash Vision, and generates responses using Kimi k2.6 and GLM models.
-2. **The Mechanical Quality Gate:** An automated cleanup step. If any generated draft exceeds 160 characters, begins with generic articles ("The", "A", "An"), or includes awkward punctuation, a second pass trims it to under 145 characters.
-3. **The Web Dashboard (`/deck`):** An interface deployed on Cloudflare Workers using Better Auth (email OTP and GitHub login), Cloudflare D1 (SQLite) with Drizzle ORM, and Cloudflare R2 object storage. It tracks daily quotas, progress streaks, and custom user voice instructions.
-4. **The Live Runner (`/app`):** A place to paste any post link, enter an optional viewpoint, and watch live telemetry across every phase of generation.
+All right, so let me walk through what actually happened.
 
 ---
 
-## The MicroVM Wall and Treating R2 as a Disk
+## The Problem I Was Trying to Solve
 
-When I started sketching the backend, I considered spinning up isolated Linux microVMs to run headless scripts and shell utilities.
+If you spend any time building in public on social feeds, you know the advice. Go to big accounts every morning. Leave 30 thoughtful comments. Borrow their audience. Drive people back to your profile.
 
-That turned out to be a dead end. Booting virtual machines for a quick in-feed action was far too slow, and paying for idle machine seconds makes no sense for lightweight runs. Furthermore, Cloudflare Workers run on V8 isolates. They cannot fork child processes or execute shell scripts.
+It sounds reasonable on podcasts. But by comment twelve your focus is gone. You stare at a thread with forty opinions, type a response, erase it, second-guess the wording, and end up posting something hollow like "Great point" or a thumbs-up emoji.
 
-So I tried a different path: using Cloudflare R2 object storage directly as a virtual filesystem.
+Generic AI comment tools make this worse. They flood timelines with hollow enthusiasm and robotic praise. Readers spot them immediately, and the algorithm ignores them.
 
-> By treating R2 storage as a virtual disk, each generation gets a clean folder in plain text files without paying for container boot times or cluttering a database.
+I wanted something smarter. The idea for SLAP was an in-feed workflow that would inspect a post, evaluate attached charts, read through the top twenty to thirty existing comments so you never echo what someone else already said, and offer three distinct angles with one human reply each. You could also record a quick audio note to lock in your real stance before any model touched the phrasing.
 
-Using small, deterministic read and write operations, each session created a workspace folder under `sessions/{userId}/{sessionId}/`. It stored the target post, author profile, top replies, user voice rules, and final drafts in plain TOML and Markdown. It gave me zero startup delay, straightforward inspection during debugging, and kept multi-kilobyte payload dumps out of my SQLite database tables.
+Now, that was the dream. Here is what 45 hours of building actually looked like.
 
 ---
 
-## The Latency Crisis and Provider Throughput
+## Hitting the MicroVM Wall
 
-Latency almost ruined the project halfway through.
+When I started sketching the backend, I tried spinning up isolated Linux microVMs to run headless scripts and shell utilities.
 
-In early tests, the parallel steps finished in 15 to 18 seconds:
-- Fetching the post and active replies in parallel took 4 to 8 seconds.
-- Text parsing extracted company names in milliseconds.
-- Web search retrieved company background in 6 seconds.
-- Image processing extracted chart text in 8 seconds.
-- A single synthesis call drafted the three perspectives in 7 seconds.
+Dead end. Booting virtual machines for a fast in-feed action is way too slow, and paying for idle machine seconds makes no sense for lightweight runs. Cloudflare Workers run on V8 isolates. They cannot fork child processes or execute shell scripts. I mean, I knew this in theory, but I tried it anyway.
 
-Everything ran concurrently. But during experimentation, an extra intermediate model step was inserted into the middle of the workflow just to formulate search queries.
+So I took a different path: treating Cloudflare R2 object storage directly as a virtual filesystem.
+
+> By treating R2 as a virtual disk, each generation gets a clean workspace folder in plain text files ,  zero container boot times, no SQLite bloat.
+
+Using small, deterministic read and write operations, each session created a folder under `sessions/{userId}/{sessionId}/`. It stored the target post, author profile, top replies, user voice rules, and final drafts in plain TOML and Markdown. Zero startup delay. Straightforward to debug. And kept multi-kilobyte payloads out of my database tables.
+
+That part worked pretty well. But then latency almost killed everything.
+
+---
+
+## The Latency Crisis
+
+In early tests, the parallel pipeline finished in 15 to 18 seconds:
+
+- Fetching the post and active replies in parallel: 4 to 8 seconds
+- Text parsing to extract company names: milliseconds
+- Tavily web search for company background: 6 seconds
+- Gemini Flash Vision for chart images: 8 seconds
+- Final synthesis call to Kimi k2.6: 7 seconds
+
+Everything ran concurrently. Then someone added an extra intermediate model step to formulate the search queries before calling Tavily.
 
 That single change broke the entire flow.
 
-It converted a concurrent process into a slow sequence: wait for the post, wait 15 seconds for a model to write search terms, wait for web search, wait for image extraction, and then wait 40 seconds for the final synthesis. Total runtimes jumped past 100 seconds, running straight into execution timeouts on edge workers.
+It turned a parallel workflow into a slow sequence: wait for the post, wait 15 seconds for a model to write search terms, wait for web search, wait for image extraction, then wait 40 seconds for the final synthesis. Runtimes jumped past 100 seconds, running straight into Cloudflare Workers execution limits.
 
-I removed the extra model step and returned to deterministic text matching. Even then, generation times would randomly drift back up to a full minute during busy traffic windows.
+I stripped the extra step out and went back to deterministic text matching. But even then, generation times would randomly drift back up to a full minute during busy traffic windows.
 
 > Model latency is often an infrastructure and provider problem rather than a prompt pipeline flaw.
 
-The real solution was switching providers to Nebius. While conventional API gateways backed up with long queues, Nebius delivered sustained speeds between 300 and 800 tokens per second on DeepSeek V4.1 Flash, and over 190 tokens per second on GLM-5.3-Flash Nitro. That throughput pulled final synthesis down to roughly two to three seconds.
+The real fix was switching synthesis to Nebius. Conventional API gateways backed up with long queues. Nebius delivered 300 to 800 tokens per second on DeepSeek V4.1 Flash, and over 190 tokens per second on GLM-5.3-Flash Nitro. That pulled final synthesis down to roughly two to three seconds.
+
+At this point the pipeline was pretty fast. But I still had a design problem to fix.
 
 ---
 
-## The 3-Reply Limit
+## The 3-Reply Rule
 
-Early in development, the generation step suggested offering three variations for every perspective, totaling nine options.
+Early on, the generation step proposed offering three variations per angle, so nine options total.
 
-I dropped that idea immediately. Giving someone nine options creates decision fatigue. You spend more time reviewing AI suggestions than actually participating in the conversation.
+I killed that immediately. Nine options is garbage. Giving someone nine options means they spend more time reviewing AI suggestions than actually participating in the conversation.
 
-The codebase strictly enforces one reply per angle across three distinct perspectives: a data point, a counter-argument, or a pragmatic alternative. That means three choices total. You pick the perspective that fits, copy it, and keep moving.
+The codebase enforces one reply per angle across three distinct perspectives: a data-driven point, a counter-argument, or a pragmatic alternative. Three choices total. You pick the one that fits, copy it, move on.
+
+Basically, less is more. That rule turned out to apply to the whole product too.
 
 ---
 
 ## The Product Reality: Why I Paused
 
-By early October 2026, the application and backend were deployed and functional.
+By early October 2026, the app and backend were deployed and functional.
 
-Then I sat down to test it on real conversations across my feed, including a detailed debate on cold email software.
-
-That was when the real flaw became obvious:
+Then I sat down to test it on real conversations, including a detailed debate on cold email software.
 
 Every single generated reply sounded like unsolicited advice.
 
-> When a real person writes a great comment, they share lived experience. Advice without personal experience reads like synthetic marketing noise.
+Think about the comments you actually respect on social media. People rarely appreciate an anonymous account chiming in with polished consulting tips. They respect someone who says: *"I tried that three months ago. Here is where our numbers broke. Here is what we changed."*
 
-Think about the replies you actually respect on social media. People rarely appreciate an anonymous account chiming in with unsolicited consulting tips. They respect someone who says: *"I tried that three months ago, here is where our numbers broke, and here is what we changed."*
+On cold email, I had zero personal experience. Because I had no real experience to draw from, the model defaulted to smooth, polished advice. It had nothing authentic to work with.
 
-On a topic like cold email, I had no personal experience. Because I had no experience, the model had nothing authentic to draw from. It defaulted to smooth, polished advice because it lacked real context about my work.
+Now, to make an automated tool genuinely sound like you, it cannot just monitor incoming posts. It requires a continuous personal knowledge base: somewhere you dump your ongoing thoughts, real struggles, and daily notes, so a system actually knows what you believe and what you have been through.
 
-To make an automated tool genuinely sound like you, it cannot just monitor incoming posts. It requires a continuous personal knowledge base: a place where you record your ongoing thoughts, real struggles, and daily notes, so a system actually knows what you believe and what you have built.
+Building that knowledge base is a completely separate product. Without it, a reply tool will always sound synthetic, no matter how much you tune the instructions.
 
-Building that personal knowledge base is a completely separate product. Without it, an automated reply tool will always sound synthetic, no matter how much you tune the instructions.
+I would say most AI comment tools fail for exactly this reason. They optimize for the reply, not the person making it.
 
-Rather than publishing something I could not honestly recommend to myself, I placed a pause notice directly on the site: *"Development paused: This project is currently on hold with no plans to resume sooner."*
+Rather than shipping something I could not honestly recommend to myself, I put a pause notice directly on the site.
 
 ---
 
 ## What Happens Next
 
-The project is on hold, but the work was not wasted.
+The project is on hold. But the work was not wasted.
 
-The time spent building the pipeline, structuring the monorepo, and validating R2 as a lightweight workspace storage layer produced reusable patterns I will apply to future software.
+The R2-as-disk pattern, the Turborepo monorepo structure, and the Nebius provider routing are all things I will carry forward. The real output of those 45 hours is a much clearer understanding of where AI-assisted social tools actually break down.
 
-Pausing an idea when you discover a structural flaw is not a setback. It is the only sensible way to build software that respects both the builder and the user.
+At the very least, now I know: the hard problem is not generating good replies. The hard problem is capturing the personal context that makes them sound real.
+
+That is a different product. And I would rather build it right than ship something hollow.
