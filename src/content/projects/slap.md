@@ -11,7 +11,7 @@ seo:
 
 ![Project preview](/media/projects/slap.png)
 
-<a href="https://slap-web.awaisalwaisy.workers.dev" target="_blank">Visit SLAP</a>
+<a href="https://slap-web.awaisalwaisy.workers.dev" target="_blank">Visit SLAP</a> • <a href="/blog/why-i-paused-my-ai-commenting-tool">Read Full Retrospective</a>
 
 > Engaging on X is the fastest way to grow, but writing 30 comments every day turns your brain into mush.
 
