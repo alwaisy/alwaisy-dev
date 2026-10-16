@@ -11,7 +11,7 @@ seo:
 
 ![Project preview](/media/projects/agentcache.png)
 
-<a href="https://agentcache.run" target="_blank" rel="dofollow">Visit Agent Cache</a>
+<a href="https://agentcache.run" target="_blank" rel="dofollow">Visit Agent Cache</a> • <a href="https://agentcache.run/blog/retiring-agent-cache-v1" target="_blank" rel="noopener">Why I Am Retiring Agent Cache v1</a>
 
 > AI coding agents work best when you give them plain local files.
 
@@ -64,8 +64,12 @@ Instead of monolithic loading bars, I built Server-Sent Events (SSE) streaming a
 - **Deployment:** Docker with Caddy reverse proxy and Cloudflare edge caching
 - **Open Source:** Available on GitHub at [osspakistan/agent-cache-web](https://github.com/osspakistan/agent-cache-web)
 
-## Reality Check
+## Reality Check & Retiring v1
 
-In the first 48 hours after launching at <a href="https://agentcache.run" target="_blank" rel="dofollow">agentcache.run</a>, the site logged 848 unique visitor sessions and 110 real documentation crawl jobs in the Turso database.
+In the first 48 hours after launching at <a href="https://agentcache.run" target="_blank" rel="dofollow">agentcache.run</a>, the site logged 848 unique visitor sessions and 110 real documentation crawl jobs in the Turso database. Over the subsequent three weeks, traffic scaled to nearly 12,000 visitors and 23,900+ extracted pages across Cloudflare R2.
+
+However, asking developers to manually download and unpack ZIP archives created severe workflow friction and near-zero retention. For the full transparent breakdown of live telemetry, engineer feedback, and the pivot away from manual web ZIP downloads toward direct agent MCP tools and CLI interfaces, read the retrospective:
+
+👉 <a href="https://agentcache.run/blog/retiring-agent-cache-v1" target="_blank" rel="noopener">**11,974 Visitors, Zero Retention: Why I Am Retiring Agent Cache v1**</a>
 
 > It is not an over-engineered enterprise platform. It simply solves one real problem: giving your coding agent clean, authoritative Markdown documentation on your local disk so it stops hallucinating APIs.
