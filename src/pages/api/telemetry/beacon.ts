@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { verifyHumanRequest, normalizeSlug } from '../../../utils/view-counter';
-import { generateMiddlePersona } from '../../../utils/middle-persona';
+import { resolveIntelligentPersona, generateFallbackPersona } from '../../../utils/middle-persona';
 
 export const prerender = false;
 
@@ -65,21 +65,23 @@ export const POST: APIRoute = async ({ request, locals }) => {
         const now = Date.now();
 
         let db: D1Database | undefined;
-        let dbError: string | null = null;
+        let openRouterKey: string | undefined;
+
         try {
             const cfModule = await import('cloudflare:workers');
-            const workerEnv = cfModule?.env as unknown as { ANALYTICS_DB?: D1Database; PAGE_VIEWS?: KVNamespace } | undefined;
+            const workerEnv = cfModule?.env as unknown as { ANALYTICS_DB?: D1Database; PAGE_VIEWS?: KVNamespace; OPENROUTER_API_KEY?: string } | undefined;
             db = workerEnv?.ANALYTICS_DB;
+            openRouterKey = workerEnv?.OPENROUTER_API_KEY;
             if (!db) {
-                const runtime = locals as { runtime?: { env?: { ANALYTICS_DB?: D1Database; PAGE_VIEWS?: KVNamespace } } };
+                const runtime = locals as { runtime?: { env?: { ANALYTICS_DB?: D1Database; PAGE_VIEWS?: KVNamespace; OPENROUTER_API_KEY?: string } } };
                 db = runtime.runtime?.env?.ANALYTICS_DB;
+                if (!openRouterKey) openRouterKey = runtime.runtime?.env?.OPENROUTER_API_KEY;
             }
-        } catch (e) {
-            dbError = e instanceof Error ? e.message : String(e);
+        } catch {
             db = undefined;
         }
 
-        // Also increment legacy/unified PAGE_VIEWS KV counter if available
+        // Increment legacy/unified PAGE_VIEWS KV counter if available
         try {
             let kv: KVNamespace | undefined;
             const cfModule = await import('cloudflare:workers');
@@ -100,17 +102,49 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
 
         if (!db) {
-            // Return persona preview with diagnostic in response
-            const persona = generateMiddlePersona(visitorId);
-            return new Response(JSON.stringify({ ok: true, persona, debugDbMissing: true, dbError }), {
+            const persona = generateFallbackPersona(visitorId);
+            return new Response(JSON.stringify({ ok: true, persona }), {
                 status: 200,
                 headers: { 'Content-Type': 'application/json' }
             });
         }
 
-        const persona = generateMiddlePersona(visitorId);
+        // Check if visitor already has an assigned persona
+        const existing = await db
+            .prepare(`SELECT persona_name, persona_alias, persona_badge_color FROM visitors WHERE id = ?`)
+            .bind(visitorId)
+            .first<{ persona_name?: string; persona_alias?: string; persona_badge_color?: string }>();
 
-        // Atomic Upsert: Handles concurrent hits from the same visitor simultaneously without race conditions
+        let personaName = existing?.persona_name;
+        let personaAlias = existing?.persona_alias;
+        let personaBadgeColor = existing?.persona_badge_color;
+
+        // If new visitor, or previous persona had old tag "#", resolve smart persona with Jev
+        if (!personaName || personaName.includes('#')) {
+            const resolved = await resolveIntelligentPersona(
+                visitorId,
+                {
+                    path: `/${path}`,
+                    referrer,
+                    device,
+                    browser,
+                    dwellTimeSeconds: dwellTime,
+                    stepOrder
+                },
+                openRouterKey
+            );
+            personaName = resolved.name;
+            personaAlias = resolved.alias;
+            personaBadgeColor = resolved.badgeColor;
+        }
+
+        const activePersona = {
+            name: personaName,
+            alias: personaAlias || 'Visitor',
+            badgeColor: personaBadgeColor || 'indigo'
+        };
+
+        // Atomic Upsert: Preserves existing persona while updating visit stats
         await db
             .prepare(`
                 INSERT INTO visitors 
@@ -132,11 +166,11 @@ export const POST: APIRoute = async ({ request, locals }) => {
             `)
             .bind(
                 visitorId,
-                persona.name,
-                persona.alias,
+                activePersona.name,
+                activePersona.alias,
                 'Visitor',
                 '',
-                persona.badgeColor,
+                activePersona.badgeColor,
                 '',
                 now,
                 now,
@@ -156,7 +190,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             .bind(visitorId, sessionId, `/${path}`, title, referrer, stepOrder, dwellTime, now, country, city, device, browser)
             .run();
 
-        return new Response(JSON.stringify({ ok: true, persona }), {
+        return new Response(JSON.stringify({ ok: true, persona: activePersona }), {
             status: 200,
             headers: { 'Content-Type': 'application/json' }
         });
