@@ -1,30 +1,28 @@
 import type { APIRoute } from 'astro';
 import { verifyHumanRequest, getDailyVisitorHash, normalizeSlug } from '../../../utils/view-counter';
 
+import { env } from 'cloudflare:workers';
+
 export const prerender = false;
 
 // In-memory fallback for local development or when KV binding is not initialized
 const devMemoryCounts = new Map<string, number>();
 const devMemoryHashes = new Set<string>();
 
-interface CloudflareLocals {
-    runtime?: {
-        env?: {
-            PAGE_VIEWS?: KVNamespace;
-        };
-    };
+function getKvBinding(): KVNamespace | null {
+    // In Cloudflare Workers runtime (Astro v6), env is imported directly from 'cloudflare:workers'
+    try {
+        const workerEnv = (env as unknown as { PAGE_VIEWS?: KVNamespace });
+        return workerEnv?.PAGE_VIEWS || null;
+    } catch {
+        return null;
+    }
 }
 
-function getKvBinding(locals: App.Locals | unknown): KVNamespace | null {
-    // Cloudflare runtime bindings are provided on locals.runtime.env in Astro @astrojs/cloudflare
-    const cfLocals = locals as CloudflareLocals;
-    return cfLocals?.runtime?.env?.PAGE_VIEWS || null;
-}
-
-export const GET: APIRoute = async ({ params, locals }) => {
+export const GET: APIRoute = async ({ params }) => {
     const rawSlug = params.slug || 'home';
     const slug = normalizeSlug(rawSlug);
-    const kv = getKvBinding(locals);
+    const kv = getKvBinding();
 
     let views = 0;
     if (kv) {
@@ -47,7 +45,7 @@ export const GET: APIRoute = async ({ params, locals }) => {
     });
 };
 
-export const POST: APIRoute = async ({ params, request, locals }) => {
+export const POST: APIRoute = async ({ params, request }) => {
     const rawSlug = params.slug || 'home';
     const slug = normalizeSlug(rawSlug);
 
@@ -76,7 +74,7 @@ export const POST: APIRoute = async ({ params, request, locals }) => {
         });
     }
 
-    const kv = getKvBinding(locals);
+    const kv = getKvBinding();
     const visitorHash = await getDailyVisitorHash(request, slug);
 
     let views = 0;

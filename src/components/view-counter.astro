@@ -49,10 +49,11 @@ const { slug, class: className = '', trackOnly = false } = Astro.props;
             if (!slug) return;
 
             const isTrackOnly = counter.getAttribute('data-track-only') === 'true';
+            const cleanSlug = slug.replace(/^\/+|\/+$/g, '') || 'home';
 
             // 1. Fetch current view count immediately for display (unless trackOnly)
             if (!isTrackOnly) {
-                fetch(`/api/views/${encodeURIComponent(slug)}`)
+                fetch(`/api/views/${cleanSlug}`)
                     .then((r) => r.json() as Promise<ViewsApiResponse>)
                     .then((data) => {
                         if (data && typeof data.views === 'number') {
@@ -96,7 +97,7 @@ const { slug, class: className = '', trackOnly = false } = Astro.props;
                 // Send engagement beacon with proof payload
                 const payload = JSON.stringify({ engaged: true, t: Date.now() });
 
-                fetch(`/api/views/${encodeURIComponent(slug)}`, {
+                fetch(`/api/views/${cleanSlug}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: payload,
