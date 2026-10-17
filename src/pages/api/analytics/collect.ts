@@ -101,7 +101,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
         if (!db) {
             // Return persona preview with diagnostic in response
-            const persona = generateMiddlePersona(visitorId, 1);
+            const persona = generateMiddlePersona(visitorId);
             return new Response(JSON.stringify({ ok: true, persona, debugDbMissing: true, dbError }), {
                 status: 200,
                 headers: { 'Content-Type': 'application/json' }
@@ -123,7 +123,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             newVisitCount = isNewSession ? existingVisitor.visit_count + 1 : existingVisitor.visit_count;
             newTotalViews = existingVisitor.total_page_views + 1;
 
-            const persona = generateMiddlePersona(visitorId, newVisitCount);
+            const persona = generateMiddlePersona(visitorId);
 
             await db
                 .prepare(`
@@ -131,12 +131,16 @@ export const POST: APIRoute = async ({ request, locals }) => {
                     SET last_seen = ?, 
                         visit_count = ?, 
                         total_page_views = ?, 
+                        persona_name = ?,
+                        persona_alias = ?,
+                        persona_badge_color = ?,
+                        persona_emoji = ?,
                         last_country = ?, 
                         last_device = ?, 
                         last_browser = ?
                     WHERE id = ?
                 `)
-                .bind(now, newVisitCount, newTotalViews, country, device, browser, visitorId)
+                .bind(now, newVisitCount, newTotalViews, persona.name, persona.alias, persona.badgeColor, persona.avatarEmoji, country, device, browser, visitorId)
                 .run();
 
             // 2. Insert Journey Step
@@ -156,7 +160,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
 
         // New Visitor Creation
-        const persona = generateMiddlePersona(visitorId, 1);
+        const persona = generateMiddlePersona(visitorId);
         await db
             .prepare(`
                 INSERT INTO visitors 
@@ -167,8 +171,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
                 visitorId,
                 persona.name,
                 persona.alias,
-                persona.role,
-                persona.quote,
+                'Visitor',
+                '',
                 persona.badgeColor,
                 persona.avatarEmoji,
                 now,
