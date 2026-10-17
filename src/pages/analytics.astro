@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/base-layout.astro';
+import 'country-flag-icons/3x2/flags.css';
 
 export const prerender = false;
 ---
@@ -253,6 +254,7 @@ export const prerender = false;
                 uniqueVisitors: number;
                 returningVisitors: number;
                 topCountry: string;
+                topCountryCode?: string;
                 bounceRate: string;
             };
             visitors: Visitor[];
@@ -288,6 +290,15 @@ export const prerender = false;
             }
         }
 
+        function renderFlag(code?: string): string {
+            if (!code || code === 'Unknown' || code === '--') return '';
+            const c = code.trim().toUpperCase();
+            if (/^[A-Z]{2}$/.test(c)) {
+                return `<span class="flag:${c} inline-block align-middle rounded-xs shadow-xs shrink-0" style="width: 1.1em; height: 0.73em;"></span>`;
+            }
+            return '';
+        }
+
         function openJourneyModal(visitorId: string) {
             const visitor = allVisitors.find(v => v.id === visitorId);
             if (!visitor) return;
@@ -318,7 +329,10 @@ export const prerender = false;
             if (metaEl) {
                 metaEl.textContent = `${visitor.visitCount} ${visitor.visitCount === 1 ? 'visit' : 'visits'} · ${visitor.totalPageViews} views · ${dwellStr} total dwell`;
             }
-            if (locEl) locEl.textContent = `📍 ${visitor.lastCountry || 'Unknown'}`;
+            if (locEl) {
+                const flagHtml = renderFlag(visitor.lastCountry);
+                locEl.innerHTML = `${flagHtml ? flagHtml + ' ' : ''}<span>${visitor.lastCountry || 'Unknown'}</span>`;
+            }
             if (devEl) devEl.textContent = `💻 ${visitor.lastDevice || 'Desktop'}`;
             if (browserEl) browserEl.textContent = `🌐 ${visitor.lastBrowser || 'Web'}`;
 
@@ -369,7 +383,12 @@ export const prerender = false;
                 if (elUnique) elUnique.textContent = uniqueVisitors.toLocaleString();
 
                 const elTopCountry = document.getElementById('stat-top-country');
-                if (elTopCountry) elTopCountry.textContent = data.summary.topCountry || '--';
+                if (elTopCountry) {
+                    const countryText = data.summary.topCountry || '--';
+                    const countryCode = data.summary.topCountryCode || (countryText.split(' ')[0] || '');
+                    const flagHtml = renderFlag(countryCode);
+                    elTopCountry.innerHTML = `${flagHtml ? flagHtml + ' ' : ''}<span>${countryText}</span>`;
+                }
 
                 const elBounce = document.getElementById('stat-bounce-rate');
                 if (elBounce) elBounce.textContent = data.summary.bounceRate || '0%';
@@ -438,6 +457,7 @@ export const prerender = false;
                             row.onclick = () => openJourneyModal(v.id);
 
                             const initials = v.personaName ? v.personaName.split(' ').map(n => n[0]).join('').slice(0, 2) : 'V';
+                            const flagHtml = renderFlag(v.lastCountry);
 
                             row.innerHTML = `
                                 <div class="sm:col-span-4 flex items-center gap-2.5">
@@ -449,8 +469,8 @@ export const prerender = false;
                                             <span class="font-medium text-sm text-main truncate">${v.personaName}</span>
                                             ${isMe ? '<span class="rounded bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-mono text-[9px] px-1.5 py-0.2 font-bold">YOU</span>' : ''}
                                         </div>
-                                        <span class="text-[11px] text-muted font-mono sm:hidden">
-                                            ${v.lastCountry || 'Unknown'} · ${v.lastDevice || 'Desktop'}
+                                        <span class="text-[11px] text-muted font-mono sm:hidden flex items-center gap-1.5 mt-0.5">
+                                            ${flagHtml} <span>${v.lastCountry || 'Unknown'} · ${v.lastDevice || 'Desktop'}</span>
                                         </span>
                                     </div>
                                 </div>
@@ -462,8 +482,8 @@ export const prerender = false;
                                     </span>
                                 </div>
 
-                                <div class="hidden sm:flex sm:col-span-3 items-center text-xs font-mono text-muted">
-                                    <span>📍 ${v.lastCountry || 'Unknown'} · ${v.lastDevice || 'Desktop'}</span>
+                                <div class="hidden sm:flex sm:col-span-3 items-center text-xs font-mono text-muted gap-1.5">
+                                    ${flagHtml} <span>${v.lastCountry || 'Unknown'} · ${v.lastDevice || 'Desktop'}</span>
                                 </div>
 
                                 <div class="sm:col-span-2 flex items-center justify-between sm:justify-end gap-2 text-xs font-mono text-muted whitespace-nowrap">
@@ -520,10 +540,14 @@ export const prerender = false;
                 if (countriesContainer) {
                     countriesContainer.innerHTML = '';
                     data.countries.forEach(c => {
+                        const flagHtml = renderFlag(c.country);
                         const row = document.createElement('div');
                         row.className = 'flex justify-between items-center text-xs font-mono py-1 border-b border-main/5';
                         row.innerHTML = `
-                            <span class="text-main">📍 ${c.country}</span>
+                            <span class="text-main flex items-center gap-2">
+                                ${flagHtml}
+                                <span>${c.country}</span>
+                            </span>
                             <span class="text-muted bg-muted/40 px-2 py-0.5 rounded font-mono">${c.count}</span>
                         `;
                         countriesContainer.appendChild(row);

@@ -212,6 +212,7 @@ export const GET: APIRoute = async ({ locals }) => {
                 uniqueVisitors: uniqueVisitors,
                 returningVisitors: returningVisitorsRow?.count || 0,
                 topCountry,
+                topCountryCode: topCountryRow?.country || '',
                 bounceRate: `${bounceRate}%`
             },
             visitors: visitorsWithJourney,
