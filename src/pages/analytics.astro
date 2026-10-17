@@ -62,15 +62,15 @@ export const prerender = false;
                 </div>
 
                 <div class="rounded-xl border border-main/15 bg-muted/20 p-4 sm:p-5">
-                    <p class="text-xs font-mono uppercase tracking-wider text-muted">Returning Rate</p>
-                    <p id="stat-returning-rate" class="mt-1 font-serif text-2xl font-bold sm:text-3xl text-main">0%</p>
-                    <p id="stat-returning-sub" class="mt-1 text-[11px] text-muted">0 repeat visitors</p>
+                    <p class="text-xs font-mono uppercase tracking-wider text-muted">Top Country</p>
+                    <p id="stat-top-country" class="mt-1 font-serif text-xl font-bold sm:text-2xl text-main truncate">--</p>
+                    <p class="mt-1 text-[11px] text-muted">Primary visitor region</p>
                 </div>
 
                 <div class="rounded-xl border border-main/15 bg-muted/20 p-4 sm:p-5">
-                    <p class="text-xs font-mono uppercase tracking-wider text-muted">Top Persona</p>
-                    <p id="stat-top-persona" class="mt-1 font-serif text-lg font-bold sm:text-xl text-main truncate">--</p>
-                    <p class="mt-1 text-[11px] text-muted">Most common citizen</p>
+                    <p class="text-xs font-mono uppercase tracking-wider text-muted">Bounce Rate (Est)</p>
+                    <p id="stat-bounce-rate" class="mt-1 font-serif text-2xl font-bold sm:text-3xl text-main">0%</p>
+                    <p class="mt-1 text-[11px] text-muted">Single-page sessions</p>
                 </div>
             </section>
 
@@ -248,7 +248,8 @@ export const prerender = false;
                 totalPageViews: number;
                 uniqueVisitors: number;
                 returningVisitors: number;
-                topPersona: string;
+                topCountry: string;
+                bounceRate: string;
             };
             visitors: Visitor[];
             topPages: Array<{ path: string; views: number }>;
@@ -361,8 +362,6 @@ export const prerender = false;
                 // 1. KPI Cards
                 const totalViews = data.summary.totalPageViews;
                 const uniqueVisitors = data.summary.uniqueVisitors;
-                const returning = data.summary.returningVisitors;
-                const returnRate = uniqueVisitors > 0 ? Math.round((returning / uniqueVisitors) * 100) : 0;
 
                 const elTotal = document.getElementById('stat-total-views');
                 if (elTotal) elTotal.textContent = totalViews.toLocaleString();
@@ -370,14 +369,11 @@ export const prerender = false;
                 const elUnique = document.getElementById('stat-unique-visitors');
                 if (elUnique) elUnique.textContent = uniqueVisitors.toLocaleString();
 
-                const elRet = document.getElementById('stat-returning-rate');
-                if (elRet) elRet.textContent = `${returnRate}%`;
+                const elTopCountry = document.getElementById('stat-top-country');
+                if (elTopCountry) elTopCountry.textContent = data.summary.topCountry || '--';
 
-                const elRetSub = document.getElementById('stat-returning-sub');
-                if (elRetSub) elRetSub.textContent = `${returning.toLocaleString()} repeat visitors`;
-
-                const elTopPersona = document.getElementById('stat-top-persona');
-                if (elTopPersona) elTopPersona.textContent = data.summary.topPersona;
+                const elBounce = document.getElementById('stat-bounce-rate');
+                if (elBounce) elBounce.textContent = data.summary.bounceRate || '0%';
 
                 // 2. Render Full 14-Day Continuous Chart Bars
                 const chartContainer = document.getElementById('chart-bars');

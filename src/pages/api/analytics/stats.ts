@@ -78,7 +78,14 @@ export const GET: APIRoute = async ({ locals }) => {
         const totalViewsRow = await db.prepare('SELECT COUNT(*) as count FROM journeys').first<{ count: number }>();
         const uniqueVisitorsRow = await db.prepare('SELECT COUNT(*) as count FROM visitors').first<{ count: number }>();
         const returningVisitorsRow = await db.prepare('SELECT COUNT(*) as count FROM visitors WHERE visit_count > 1').first<{ count: number }>();
-        const topPersonaRow = await db.prepare('SELECT persona_alias, COUNT(*) as count FROM visitors GROUP BY persona_alias ORDER BY count DESC LIMIT 1').first<{ persona_alias: string; count: number }>();
+        const bounceVisitorsRow = await db.prepare('SELECT COUNT(*) as count FROM visitors WHERE total_page_views = 1').first<{ count: number }>();
+        const topCountryRow = await db.prepare('SELECT country, COUNT(*) as count FROM journeys WHERE country != \'\' AND country IS NOT NULL GROUP BY country ORDER BY count DESC LIMIT 1').first<{ country: string; count: number }>();
+
+        const totalViews = totalViewsRow?.count || 0;
+        const uniqueVisitors = uniqueVisitorsRow?.count || 0;
+        const singlePageBounces = bounceVisitorsRow?.count || 0;
+        const bounceRate = uniqueVisitors > 0 ? Math.round((singlePageBounces / uniqueVisitors) * 100) : 0;
+        const topCountry = topCountryRow ? `${topCountryRow.country} (${Math.round((topCountryRow.count / (totalViews || 1)) * 100)}%)` : '--';
 
         // 2. Top Pages
         const topPages = await db.prepare(`
@@ -201,10 +208,11 @@ export const GET: APIRoute = async ({ locals }) => {
 
         return new Response(JSON.stringify({
             summary: {
-                totalPageViews: totalViewsRow?.count || 0,
-                uniqueVisitors: uniqueVisitorsRow?.count || 0,
+                totalPageViews: totalViews,
+                uniqueVisitors: uniqueVisitors,
                 returningVisitors: returningVisitorsRow?.count || 0,
-                topPersona: topPersonaRow ? `${topPersonaRow.persona_alias} (${topPersonaRow.count})` : 'Sue Heck'
+                topCountry,
+                bounceRate: `${bounceRate}%`
             },
             visitors: visitorsWithJourney,
             topPages: topPages.results || [],
