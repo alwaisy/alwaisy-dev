@@ -1,6 +1,5 @@
 ---
 import { ClientRouter } from 'astro:transitions';
-import { SimpleAnalytics } from 'astro-simpleanalytics-plugin';
 import BaseHead, { type Props as HeadProps } from '../components/base-head.astro';
 import Footer from '../components/footer.astro';
 import Header from '../components/header.astro';
@@ -23,6 +22,14 @@ const { showHeader = true, slug, ...head } = Astro.props;
         </script>
         <ClientRouter />
         <script is:inline src="/theme-toggle.js"></script>
+        <script>
+            import { initAnalyticsTracker } from '../utils/analytics-client';
+
+            // Trigger on initial page load and every subsequent View Transition
+            document.addEventListener('astro:page-load', () => {
+                initAnalyticsTracker();
+            });
+        </script>
     </head>
     <body class="bg-main text-main">
         <div class="flex min-h-screen flex-col px-4 md:px-8">
@@ -34,6 +41,5 @@ const { showHeader = true, slug, ...head } = Astro.props;
             <Footer />
         </div>
         <ViewCounter slug={slug ?? Astro.url.pathname} trackOnly={true} />
-        <SimpleAnalytics collectDNT={true} allEnvironments={true} />
     </body>
 </html>

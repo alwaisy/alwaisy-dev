@@ -1,0 +1,425 @@
+---
+import BaseLayout from '../layouts/base-layout.astro';
+
+export const prerender = false;
+---
+
+<BaseLayout
+    title="Open Analytics & Citizen Journeys"
+    description="Public, transparent, zero-cookie analytics and visitor journeys for alwaisy.dev, powered by Cloudflare D1 and The Middle shenanigans."
+    showHeader={false}
+    slug="analytics"
+>
+    <article class="mb-16 sm:mb-24">
+        <!-- Page Header -->
+        <header class="mb-10 sm:mb-12">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <h1 class="font-serif text-3xl leading-tight font-medium sm:text-5xl sm:leading-tight">
+                        Open Analytics
+                    </h1>
+                    <p class="text-muted mt-2 text-base sm:text-lg">
+                        100% self-hosted, privacy-first analytics & visitor journeys powered by Cloudflare D1 and <span class="text-main font-serif italic">The Middle</span> personas.
+                    </p>
+                </div>
+                <div class="inline-flex items-center gap-2 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-3 py-1 text-xs font-mono text-emerald-700 dark:text-emerald-300">
+                    <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    Live Citizen Feed
+                </div>
+            </div>
+        </header>
+
+        <!-- Loading Skeleton -->
+        <div id="analytics-loading" class="space-y-8 animate-pulse">
+            <div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+                <div class="h-24 rounded-xl border border-main/15 bg-muted/20"></div>
+                <div class="h-24 rounded-xl border border-main/15 bg-muted/20"></div>
+                <div class="h-24 rounded-xl border border-main/15 bg-muted/20"></div>
+                <div class="h-24 rounded-xl border border-main/15 bg-muted/20"></div>
+            </div>
+            <div class="h-48 rounded-xl border border-main/15 bg-muted/20"></div>
+            <div class="h-64 rounded-xl border border-main/15 bg-muted/20"></div>
+        </div>
+
+        <!-- Real Analytics Container -->
+        <div id="analytics-content" class="hidden space-y-12 sm:space-y-16">
+            <!-- 1. Key Stat Metrics Cards -->
+            <section aria-label="Key Performance Indicators" class="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+                <div class="rounded-xl border border-main/15 bg-muted/20 p-4 sm:p-5">
+                    <p class="text-xs font-mono uppercase tracking-wider text-muted">Total Views</p>
+                    <p id="stat-total-views" class="mt-1 font-serif text-2xl font-bold sm:text-3xl text-main">0</p>
+                    <p class="mt-1 text-[11px] text-muted">All-time page hits</p>
+                </div>
+
+                <div class="rounded-xl border border-main/15 bg-muted/20 p-4 sm:p-5">
+                    <p class="text-xs font-mono uppercase tracking-wider text-muted">Unique Citizens</p>
+                    <p id="stat-unique-visitors" class="mt-1 font-serif text-2xl font-bold sm:text-3xl text-main">0</p>
+                    <p class="mt-1 text-[11px] text-muted">Distinct visitors</p>
+                </div>
+
+                <div class="rounded-xl border border-main/15 bg-muted/20 p-4 sm:p-5">
+                    <p class="text-xs font-mono uppercase tracking-wider text-muted">Returning Rate</p>
+                    <p id="stat-returning-rate" class="mt-1 font-serif text-2xl font-bold sm:text-3xl text-main">0%</p>
+                    <p id="stat-returning-sub" class="mt-1 text-[11px] text-muted">0 repeat citizens</p>
+                </div>
+
+                <div class="rounded-xl border border-main/15 bg-muted/20 p-4 sm:p-5">
+                    <p class="text-xs font-mono uppercase tracking-wider text-muted">Top Persona</p>
+                    <p id="stat-top-persona" class="mt-1 font-serif text-lg font-bold sm:text-xl text-main truncate">--</p>
+                    <p class="mt-1 text-[11px] text-muted">Most common citizen</p>
+                </div>
+            </section>
+
+            <!-- 2. Daily Traffic Chart (14-day Sparkline / Bars) -->
+            <section aria-label="Traffic Over Time" class="rounded-2xl border border-main/15 bg-muted/10 p-5 sm:p-6">
+                <div class="mb-4 flex items-center justify-between">
+                    <div>
+                        <h2 class="font-serif text-lg font-semibold sm:text-xl text-main">Recent Daily Activity</h2>
+                        <p class="text-xs text-muted">Page views per day over the last 14 days</p>
+                    </div>
+                    <span class="rounded bg-muted/40 px-2.5 py-1 text-xs font-mono text-muted">14-Day Trend</span>
+                </div>
+                <div id="chart-bars" class="flex h-36 items-end gap-2 pt-6 pb-2 border-b border-main/10 sm:gap-3">
+                    <!-- Populated via client script -->
+                </div>
+                <div id="chart-labels" class="flex justify-between pt-2 text-[10px] font-mono text-muted">
+                    <span>14 days ago</span>
+                    <span>Today</span>
+                </div>
+            </section>
+
+            <!-- 3. Real Citizen Journeys & Personas -->
+            <section aria-label="Citizen Journeys">
+                <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                        <h2 class="font-serif text-2xl sm:text-3xl font-semibold text-main">
+                            Citizen Journeys & Shenanigans
+                        </h2>
+                        <p class="text-sm text-muted">
+                            Every visitor gets a persistent persona from <span class="font-medium text-main">The Middle</span>. See exactly how citizens explore the site step-by-step.
+                        </p>
+                    </div>
+                </div>
+
+                <div id="visitors-list" class="space-y-4">
+                    <!-- Populated via client script -->
+                </div>
+            </section>
+
+            <!-- 4. Top Pages & Referrers Grid -->
+            <section class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <!-- Top Pages -->
+                <div class="rounded-2xl border border-main/15 bg-muted/10 p-5 sm:p-6">
+                    <h3 class="font-serif text-lg font-semibold sm:text-xl text-main mb-4">Top Pages</h3>
+                    <div id="top-pages-list" class="space-y-3">
+                        <!-- Populated via script -->
+                    </div>
+                </div>
+
+                <!-- Top Referrers -->
+                <div class="rounded-2xl border border-main/15 bg-muted/10 p-5 sm:p-6">
+                    <h3 class="font-serif text-lg font-semibold sm:text-xl text-main mb-4">Top Referrers</h3>
+                    <div id="top-referrers-list" class="space-y-3">
+                        <!-- Populated via script -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. Geographical & Devices Breakdown -->
+            <section class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <!-- Countries -->
+                <div class="rounded-2xl border border-main/15 bg-muted/10 p-5 sm:p-6">
+                    <h3 class="font-serif text-lg font-semibold sm:text-xl text-main mb-4">Countries</h3>
+                    <div id="countries-list" class="space-y-3">
+                        <!-- Populated via script -->
+                    </div>
+                </div>
+
+                <!-- Devices & Browsers -->
+                <div class="rounded-2xl border border-main/15 bg-muted/10 p-5 sm:p-6">
+                    <h3 class="font-serif text-lg font-semibold sm:text-xl text-main mb-4">Devices</h3>
+                    <div id="devices-list" class="space-y-3">
+                        <!-- Populated via script -->
+                    </div>
+                </div>
+            </section>
+        </div>
+    </article>
+
+    <script>
+        interface Step {
+            id: number;
+            path: string;
+            title: string;
+            referrer: string;
+            stepOrder: number;
+            dwellTimeSeconds: number;
+            createdAt: number;
+        }
+
+        interface Visitor {
+            id: string;
+            personaName: string;
+            personaAlias: string;
+            personaRole: string;
+            personaQuote: string;
+            personaBadgeColor: string;
+            personaEmoji: string;
+            firstSeen: number;
+            lastSeen: number;
+            visitCount: number;
+            totalPageViews: number;
+            lastCountry: string;
+            lastDevice: string;
+            lastBrowser: string;
+            journey: Step[];
+        }
+
+        interface AnalyticsPayload {
+            summary: {
+                totalPageViews: number;
+                uniqueVisitors: number;
+                returningVisitors: number;
+                topPersona: string;
+            };
+            visitors: Visitor[];
+            topPages: Array<{ path: string; views: number }>;
+            topReferrers: Array<{ referrer: string; count: number }>;
+            countries: Array<{ country: string; count: number }>;
+            devices: Array<{ device: string; count: number }>;
+            dailyTrends: Array<{ date: string; views: number }>;
+        }
+
+        function formatTimeAgo(timestamp: number): string {
+            const diff = Math.max(0, Math.floor((Date.now() - timestamp) / 1000));
+            if (diff < 60) return `${diff}s ago`;
+            if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+            if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+            return `${Math.floor(diff / 86400)}d ago`;
+        }
+
+        function getBadgeClass(color: string): string {
+            switch (color) {
+                case 'emerald': return 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30';
+                case 'indigo': return 'bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 border-indigo-500/30';
+                case 'amber': return 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/30';
+                case 'rose': return 'bg-rose-500/15 text-rose-700 dark:text-rose-300 border-rose-500/30';
+                case 'pink': return 'bg-pink-500/15 text-pink-700 dark:text-pink-300 border-pink-500/30';
+                case 'purple': return 'bg-purple-500/15 text-purple-700 dark:text-purple-300 border-purple-500/30';
+                case 'teal': return 'bg-teal-500/15 text-teal-700 dark:text-teal-300 border-teal-500/30';
+                case 'sky': return 'bg-sky-500/15 text-sky-700 dark:text-sky-300 border-sky-500/30';
+                default: return 'bg-muted text-main border-main/20';
+            }
+        }
+
+        async function loadAnalyticsDashboard() {
+            try {
+                const res = await fetch('/api/analytics/stats');
+                if (!res.ok) throw new Error('Failed to load stats');
+                const data: AnalyticsPayload = await res.json();
+
+                // 1. Fill KPI Cards
+                const totalViews = data.summary.totalPageViews;
+                const uniqueVisitors = data.summary.uniqueVisitors;
+                const returning = data.summary.returningVisitors;
+                const returnRate = uniqueVisitors > 0 ? Math.round((returning / uniqueVisitors) * 100) : 0;
+
+                const elTotal = document.getElementById('stat-total-views');
+                if (elTotal) elTotal.textContent = totalViews.toLocaleString();
+
+                const elUnique = document.getElementById('stat-unique-visitors');
+                if (elUnique) elUnique.textContent = uniqueVisitors.toLocaleString();
+
+                const elRet = document.getElementById('stat-returning-rate');
+                if (elRet) elRet.textContent = `${returnRate}%`;
+
+                const elRetSub = document.getElementById('stat-returning-sub');
+                if (elRetSub) elRetSub.textContent = `${returning.toLocaleString()} repeat citizens`;
+
+                const elTopPersona = document.getElementById('stat-top-persona');
+                if (elTopPersona) elTopPersona.textContent = data.summary.topPersona;
+
+                // 2. Render Chart Bars
+                const chartContainer = document.getElementById('chart-bars');
+                if (chartContainer) {
+                    chartContainer.innerHTML = '';
+                    const maxDaily = Math.max(...(data.dailyTrends.map(t => t.views)), 1);
+                    
+                    if (data.dailyTrends.length === 0) {
+                        chartContainer.innerHTML = '<p class="text-xs text-muted my-auto">No traffic recorded yet today.</p>';
+                    } else {
+                        data.dailyTrends.forEach((trend) => {
+                            const heightPercent = Math.max(8, Math.round((trend.views / maxDaily) * 100));
+                            const col = document.createElement('div');
+                            col.className = 'group relative flex-1 flex flex-col items-center h-full justify-end';
+                            col.innerHTML = `
+                                <div class="w-full rounded-t bg-main/30 group-hover:bg-emerald-500 transition-colors" style="height: ${heightPercent}%"></div>
+                                <div class="opacity-0 group-hover:opacity-100 transition-opacity absolute -top-8 text-[10px] font-mono bg-main text-black dark:text-white px-1.5 py-0.5 rounded shadow pointer-events-none whitespace-nowrap">
+                                    ${trend.views} views (${trend.date})
+                                </div>
+                            `;
+                            chartContainer.appendChild(col);
+                        });
+                    }
+                }
+
+                // 3. Render Visitor Personas & Journeys
+                const visitorsContainer = document.getElementById('visitors-list');
+                if (visitorsContainer) {
+                    visitorsContainer.innerHTML = '';
+                    if (data.visitors.length === 0) {
+                        visitorsContainer.innerHTML = `
+                            <div class="rounded-xl border border-main/15 bg-muted/20 p-8 text-center text-muted">
+                                No visitor journeys captured yet. Navigate the site to see your own citizen journey appear!
+                            </div>
+                        `;
+                    } else {
+                        data.visitors.forEach((v) => {
+                            const item = document.createElement('div');
+                            item.className = 'rounded-xl border border-main/15 bg-muted/20 p-4 sm:p-5 transition hover:border-main/30';
+                            
+                            // Build Journey breadcrumb trail
+                            const journeyHtml = v.journey && v.journey.length > 0 
+                                ? v.journey.map((step, idx) => `
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="font-mono text-[11px] font-medium text-main rounded bg-muted/50 px-2 py-0.5 border border-main/10">
+                                            ${step.path}
+                                        </span>
+                                        ${step.dwellTimeSeconds > 0 ? `<span class="text-[10px] text-muted">(${step.dwellTimeSeconds}s)</span>` : ''}
+                                        ${idx < v.journey.length - 1 ? '<span class="text-muted text-xs">→</span>' : ''}
+                                    </div>
+                                `).join('')
+                                : '<span class="text-xs text-muted">No journey steps recorded</span>';
+
+                            item.innerHTML = `
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-main/10 pb-3">
+                                    <div class="flex items-center gap-3">
+                                        <span class="text-2xl">${v.personaEmoji}</span>
+                                        <div>
+                                            <div class="flex flex-wrap items-center gap-2">
+                                                <h4 class="font-semibold text-main text-base sm:text-lg">${v.personaName}</h4>
+                                                <span class="rounded border px-2 py-0.2 text-[10px] font-mono uppercase ${getBadgeClass(v.personaBadgeColor)}">
+                                                    ${v.personaRole}
+                                                </span>
+                                            </div>
+                                            <p class="text-xs italic text-muted mt-0.5">${v.personaQuote}</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-3 text-xs font-mono text-muted">
+                                        <span class="rounded bg-muted/60 px-2 py-0.5 border border-main/10">
+                                            ${v.visitCount} ${v.visitCount === 1 ? 'visit' : 'visits'} · ${v.totalPageViews} pages
+                                        </span>
+                                        <span>${formatTimeAgo(v.lastSeen)}</span>
+                                    </div>
+                                </div>
+
+                                <div class="mt-3">
+                                    <p class="text-[11px] font-mono uppercase tracking-wider text-muted mb-1.5">Citizen Journey Path</p>
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        ${journeyHtml}
+                                    </div>
+                                </div>
+
+                                <div class="mt-3 flex flex-wrap items-center gap-4 text-[11px] text-muted pt-2 border-t border-main/5 font-mono">
+                                    <span>📍 ${v.lastCountry || 'Unknown'}</span>
+                                    <span>💻 ${v.lastDevice || 'Desktop'}</span>
+                                    <span>🌐 ${v.lastBrowser || 'Web'}</span>
+                                </div>
+                            `;
+                            visitorsContainer.appendChild(item);
+                        });
+                    }
+                }
+
+                // 4. Render Top Pages
+                const topPagesContainer = document.getElementById('top-pages-list');
+                if (topPagesContainer) {
+                    topPagesContainer.innerHTML = '';
+                    const maxViews = Math.max(...(data.topPages.map(p => p.views)), 1);
+                    data.topPages.forEach(page => {
+                        const pct = Math.round((page.views / maxViews) * 100);
+                        const row = document.createElement('div');
+                        row.className = 'space-y-1';
+                        row.innerHTML = `
+                            <div class="flex justify-between text-xs font-mono">
+                                <span class="text-main truncate max-w-[200px] sm:max-w-xs">${page.path}</span>
+                                <span class="text-muted">${page.views.toLocaleString()}</span>
+                            </div>
+                            <div class="h-1.5 w-full bg-muted/30 rounded-full overflow-hidden">
+                                <div class="h-full bg-main/40 rounded-full" style="width: ${pct}%"></div>
+                            </div>
+                        `;
+                        topPagesContainer.appendChild(row);
+                    });
+                }
+
+                // 5. Render Top Referrers
+                const referrersContainer = document.getElementById('top-referrers-list');
+                if (referrersContainer) {
+                    referrersContainer.innerHTML = '';
+                    data.topReferrers.forEach(ref => {
+                        const row = document.createElement('div');
+                        row.className = 'flex justify-between items-center text-xs font-mono py-1 border-b border-main/5';
+                        row.innerHTML = `
+                            <span class="text-main">${ref.referrer}</span>
+                            <span class="text-muted bg-muted/40 px-2 py-0.5 rounded">${ref.count}</span>
+                        `;
+                        referrersContainer.appendChild(row);
+                    });
+                }
+
+                // 6. Render Countries & Devices
+                const countriesContainer = document.getElementById('countries-list');
+                if (countriesContainer) {
+                    countriesContainer.innerHTML = '';
+                    data.countries.forEach(c => {
+                        const row = document.createElement('div');
+                        row.className = 'flex justify-between items-center text-xs font-mono py-1 border-b border-main/5';
+                        row.innerHTML = `
+                            <span class="text-main">📍 ${c.country}</span>
+                            <span class="text-muted bg-muted/40 px-2 py-0.5 rounded">${c.count}</span>
+                        `;
+                        countriesContainer.appendChild(row);
+                    });
+                }
+
+                const devicesContainer = document.getElementById('devices-list');
+                if (devicesContainer) {
+                    devicesContainer.innerHTML = '';
+                    data.devices.forEach(d => {
+                        const row = document.createElement('div');
+                        row.className = 'flex justify-between items-center text-xs font-mono py-1 border-b border-main/5';
+                        row.innerHTML = `
+                            <span class="text-main">💻 ${d.device}</span>
+                            <span class="text-muted bg-muted/40 px-2 py-0.5 rounded">${d.count}</span>
+                        `;
+                        devicesContainer.appendChild(row);
+                    });
+                }
+
+                // Show Content
+                const loadingEl = document.getElementById('analytics-loading');
+                const contentEl = document.getElementById('analytics-content');
+                if (loadingEl) loadingEl.classList.add('hidden');
+                if (contentEl) contentEl.classList.remove('hidden');
+
+            } catch (err) {
+                const loadingEl = document.getElementById('analytics-loading');
+                if (loadingEl) {
+                    loadingEl.innerHTML = `
+                        <div class="rounded-xl border border-red-500/20 bg-red-500/10 p-6 text-center text-sm text-red-600 dark:text-red-400">
+                            Failed to load analytics: ${err instanceof Error ? err.message : String(err)}
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        // Run when page loads
+        document.addEventListener('astro:page-load', () => {
+            if (window.location.pathname === '/analytics' || window.location.pathname === '/analytics/') {
+                loadAnalyticsDashboard();
+            }
+        });
+    </script>
+</BaseLayout>

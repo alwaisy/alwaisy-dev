@@ -20,5 +20,12 @@
 		{
 			"binding": "SESSION"
 		}
+	],
+	"d1_databases": [
+		{
+			"binding": "ANALYTICS_DB",
+			"database_name": "alwaisy-analytics-db",
+			"database_id": "82c153ca-fd6f-420b-920a-8f72b04a775a"
+		}
 	]
 }

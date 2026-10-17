@@ -50,6 +50,10 @@ const siteConfig: SiteConfig = {
             href: '/changelog'
         },
         {
+            text: 'Analytics',
+            href: '/analytics'
+        },
+        {
             text: "Let's Talk",
             href: '/contact'
         },
