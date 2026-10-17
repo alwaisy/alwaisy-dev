@@ -16,6 +16,9 @@
 		{
 			"binding": "PAGE_VIEWS",
 			"id": "7dc8853cbad6468880a6030ae47593e1"
+		},
+		{
+			"binding": "SESSION"
 		}
 	]
 }
