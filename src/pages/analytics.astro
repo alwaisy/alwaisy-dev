@@ -25,9 +25,9 @@ export const prerender = false;
                 <!-- Dynamic Your Persona indicator -->
                 <div
                     id="my-persona-pill"
-                    class="hidden items-center gap-2 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-3.5 py-1 text-xs font-mono text-emerald-700 dark:text-emerald-300 transition-all"
+                    class="hidden items-center gap-1.5 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-3.5 py-1 text-xs font-mono text-emerald-700 dark:text-emerald-300 transition-all"
                 >
-                    <span id="my-persona-emoji">🪥</span>
+                    <span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
                     <span>You: <strong id="my-persona-name" class="font-semibold text-main">--</strong></span>
                 </div>
             </div>
@@ -170,11 +170,15 @@ export const prerender = false;
     <!-- Modal Dialog for Full Journey Inspection (Miller's Law) -->
     <dialog
         id="journey-modal"
-        class="backdrop:bg-black/60 rounded-2xl border border-main/20 bg-main text-main p-0 max-w-xl w-full mx-auto shadow-2xl overflow-hidden"
+        class="backdrop:bg-black/70 backdrop:backdrop-blur-sm rounded-2xl border border-main/20 bg-main text-main p-0 max-w-xl w-[calc(100%-2rem)] fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 m-0 shadow-2xl overflow-hidden"
     >
         <div class="p-5 sm:p-6 border-b border-main/15 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <span id="modal-visitor-emoji" class="text-3xl">🪥</span>
+                <div class="w-10 h-10 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                </div>
                 <div>
                     <div class="flex items-center gap-2">
                         <h3 id="modal-visitor-name" class="font-semibold text-lg text-main">Visitor Journey</h3>
@@ -271,15 +275,12 @@ export const prerender = false;
 
         function updateMyPersonaPill() {
             const personaName = localStorage.getItem('mid_persona_name');
-            const personaEmoji = localStorage.getItem('mid_persona_emoji');
 
             if (personaName) {
                 const pill = document.getElementById('my-persona-pill');
                 const elName = document.getElementById('my-persona-name');
-                const elEmoji = document.getElementById('my-persona-emoji');
 
                 if (elName) elName.textContent = personaName;
-                if (elEmoji) elEmoji.textContent = personaEmoji || '🪥';
                 if (pill) {
                     pill.classList.remove('hidden');
                     pill.classList.add('inline-flex');
@@ -298,7 +299,6 @@ export const prerender = false;
             const isMe = myVisitorId && visitor.id === myVisitorId;
 
             const nameEl = document.getElementById('modal-visitor-name');
-            const emojiEl = document.getElementById('modal-visitor-emoji');
             const meBadge = document.getElementById('modal-visitor-me');
             const metaEl = document.getElementById('modal-visitor-meta');
             const stepsEl = document.getElementById('modal-journey-steps');
@@ -307,7 +307,6 @@ export const prerender = false;
             const browserEl = document.getElementById('modal-visitor-browser');
 
             if (nameEl) nameEl.textContent = visitor.personaName;
-            if (emojiEl) emojiEl.textContent = visitor.personaEmoji || '🪥';
             if (meBadge) {
                 if (isMe) meBadge.classList.remove('hidden');
                 else meBadge.classList.add('hidden');
@@ -438,9 +437,13 @@ export const prerender = false;
                             }`;
                             row.onclick = () => openJourneyModal(v.id);
 
+                            const initials = v.personaName ? v.personaName.split(' ').map(n => n[0]).join('').slice(0, 2) : 'V';
+
                             row.innerHTML = `
                                 <div class="sm:col-span-4 flex items-center gap-2.5">
-                                    <span class="text-xl">${v.personaEmoji}</span>
+                                    <div class="w-7 h-7 rounded-full bg-main/10 border border-main/15 flex items-center justify-center font-mono text-xs font-semibold text-main shrink-0">
+                                        ${initials}
+                                    </div>
                                     <div class="truncate">
                                         <div class="flex items-center gap-1.5">
                                             <span class="font-medium text-sm text-main truncate">${v.personaName}</span>

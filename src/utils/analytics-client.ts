@@ -62,12 +62,11 @@ export function initAnalyticsTracker() {
         body: JSON.stringify(payload),
         keepalive: true
     })
-        .then((res) => res.json() as Promise<{ ok?: boolean; persona?: { name: string; avatarEmoji: string; badgeColor: string } }>)
+        .then((res) => res.json() as Promise<{ ok?: boolean; persona?: { name: string; badgeColor: string } }>)
         .then((data) => {
             if (data.ok && data.persona) {
                 // Save resolved persona to localStorage
                 localStorage.setItem('mid_persona_name', data.persona.name);
-                localStorage.setItem('mid_persona_emoji', data.persona.avatarEmoji);
                 localStorage.setItem('mid_persona_color', data.persona.badgeColor);
 
                 window.dispatchEvent(new CustomEvent('mid:persona-ready', { detail: data.persona }));

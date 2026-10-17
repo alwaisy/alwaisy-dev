@@ -140,7 +140,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
                         last_browser = ?
                     WHERE id = ?
                 `)
-                .bind(now, newVisitCount, newTotalViews, persona.name, persona.alias, persona.badgeColor, persona.avatarEmoji, country, device, browser, visitorId)
+                .bind(now, newVisitCount, newTotalViews, persona.name, persona.alias, persona.badgeColor, '', country, device, browser, visitorId)
                 .run();
 
             // 2. Insert Journey Step
@@ -174,7 +174,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
                 'Visitor',
                 '',
                 persona.badgeColor,
-                persona.avatarEmoji,
+                '',
                 now,
                 now,
                 1,

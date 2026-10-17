@@ -2,30 +2,28 @@ export interface MiddlePersona {
     name: string;          // Pure character name, e.g. "Sue Heck", "Brick Heck", "Axl Heck"
     alias: string;         // e.g. "Sue"
     badgeColor: string;    // emerald, indigo, amber, rose, zinc, pink, purple, teal, sky
-    avatarEmoji: string;   // 🪥, 📚, 🎸, 🍗, etc.
 }
 
 interface CharacterDefinition {
     name: string;
     alias: string;
-    emoji: string;
     color: string;
 }
 
 // Clean, iconic characters from The Middle sitcom
 const CHARACTERS: CharacterDefinition[] = [
-    { name: 'Sue Heck', alias: 'Sue', emoji: '🪥', color: 'emerald' },
-    { name: 'Brick Heck', alias: 'Brick', emoji: '📚', color: 'indigo' },
-    { name: 'Axl Heck', alias: 'Axl', emoji: '🎸', color: 'amber' },
-    { name: 'Frankie Heck', alias: 'Frankie', emoji: '🍗', color: 'rose' },
-    { name: 'Mike Heck', alias: 'Mike', emoji: '🪨', color: 'zinc' },
-    { name: 'Brad Bottig', alias: 'Brad', emoji: '✨', color: 'pink' },
-    { name: 'Weird Ashley', alias: 'Ashley', emoji: '🧙‍♀️', color: 'purple' },
-    { name: 'Big Mike', alias: 'Big Mike', emoji: '📦', color: 'teal' },
-    { name: 'Uncle Rusty', alias: 'Rusty', emoji: '🚐', color: 'yellow' },
-    { name: 'Mr. Ehlert', alias: 'Ehlert', emoji: '🚗', color: 'red' },
-    { name: 'Nancy Donahue', alias: 'Nancy', emoji: '🥧', color: 'sky' },
-    { name: 'Bob Weaver', alias: 'Bob', emoji: '👔', color: 'blue' }
+    { name: 'Sue Heck', alias: 'Sue', color: 'emerald' },
+    { name: 'Brick Heck', alias: 'Brick', color: 'indigo' },
+    { name: 'Axl Heck', alias: 'Axl', color: 'amber' },
+    { name: 'Frankie Heck', alias: 'Frankie', color: 'rose' },
+    { name: 'Mike Heck', alias: 'Mike', color: 'zinc' },
+    { name: 'Brad Bottig', alias: 'Brad', color: 'pink' },
+    { name: 'Weird Ashley', alias: 'Ashley', color: 'purple' },
+    { name: 'Big Mike', alias: 'Big Mike', color: 'teal' },
+    { name: 'Uncle Rusty', alias: 'Rusty', color: 'yellow' },
+    { name: 'Mr. Ehlert', alias: 'Ehlert', color: 'red' },
+    { name: 'Nancy Donahue', alias: 'Nancy', color: 'sky' },
+    { name: 'Bob Weaver', alias: 'Bob', color: 'blue' }
 ];
 
 export function hashString(str: string): number {
@@ -47,7 +45,6 @@ export function generateMiddlePersona(visitorId: string): MiddlePersona {
     return {
         name: char.name,
         alias: char.alias,
-        badgeColor: char.color,
-        avatarEmoji: char.emoji
+        badgeColor: char.color
     };
 }
