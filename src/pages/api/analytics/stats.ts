@@ -169,10 +169,9 @@ export const GET: APIRoute = async ({ locals }) => {
             });
         }
 
-        // 7. Daily Trends (last 14 days)
-        // 86400000 ms in a day
+        // 7. Daily Trends (full 14-day continuous range with 0-filled days)
         const fourteenDaysAgo = Date.now() - (14 * 24 * 60 * 60 * 1000);
-        const dailyTrends = await db.prepare(`
+        const rawTrends = await db.prepare(`
             SELECT 
                 date(created_at / 1000, 'unixepoch') as date, 
                 COUNT(*) as views 
@@ -181,6 +180,24 @@ export const GET: APIRoute = async ({ locals }) => {
             GROUP BY date 
             ORDER BY date ASC
         `).bind(fourteenDaysAgo).all<{ date: string; views: number }>();
+
+        const trendMap = new Map<string, number>();
+        for (const row of (rawTrends.results || [])) {
+            trendMap.set(row.date, row.views);
+        }
+
+        // Fill complete continuous 14-day range
+        const dailyTrends: Array<{ date: string; label: string; views: number }> = [];
+        for (let i = 13; i >= 0; i--) {
+            const d = new Date(Date.now() - (i * 24 * 60 * 60 * 1000));
+            const dateStr = d.toISOString().split('T')[0];
+            const label = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            dailyTrends.push({
+                date: dateStr,
+                label,
+                views: trendMap.get(dateStr) || 0
+            });
+        }
 
         return new Response(JSON.stringify({
             summary: {
@@ -194,7 +211,7 @@ export const GET: APIRoute = async ({ locals }) => {
             topReferrers: topReferrers.results || [],
             countries: countries.results || [],
             devices: devices.results || [],
-            dailyTrends: dailyTrends.results || []
+            dailyTrends
         }), {
             status: 200,
             headers: {

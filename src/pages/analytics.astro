@@ -12,22 +12,46 @@ export const prerender = false;
 >
     <article class="mb-16 sm:mb-24">
         <!-- Page Header -->
-        <header class="mb-10 sm:mb-12">
+        <header class="mb-8">
             <div class="flex flex-wrap items-center justify-between gap-4">
                 <div>
                     <h1 class="font-serif text-3xl leading-tight font-medium sm:text-5xl sm:leading-tight">
                         Open Analytics
                     </h1>
                     <p class="text-muted mt-2 text-base sm:text-lg">
-                        100% self-hosted, privacy-first analytics & visitor journeys powered by Cloudflare D1 and <span class="text-main font-serif italic">The Middle</span> personas.
+                        100% self-hosted, privacy-first telemetry & visitor journeys powered by Cloudflare D1.
                     </p>
                 </div>
                 <div class="inline-flex items-center gap-2 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-3 py-1 text-xs font-mono text-emerald-700 dark:text-emerald-300">
                     <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    Live Citizen Feed
+                    Live Telemetry
                 </div>
             </div>
         </header>
+
+        <!-- Current Visitor Persona Greeting Card -->
+        <section
+            id="my-persona-card"
+            class="mb-10 rounded-2xl border border-emerald-500/30 bg-emerald-500/5 p-4 sm:p-5 transition-all"
+        >
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <span id="my-persona-emoji" class="text-3xl">🪥</span>
+                    <div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="text-xs font-mono uppercase tracking-wider text-emerald-600 dark:text-emerald-400 font-semibold">Your Persona</span>
+                            <span class="text-muted text-xs">·</span>
+                            <h2 id="my-persona-name" class="font-semibold text-main text-base sm:text-lg">Detecting identity...</h2>
+                        </div>
+                        <p id="my-persona-quote" class="text-xs italic text-muted mt-0.5">Assigned deterministically from The Middle sitcom shenanigans</p>
+                    </div>
+                </div>
+                <div class="text-xs font-mono text-muted flex sm:flex-col items-center sm:items-end justify-between">
+                    <span class="rounded bg-muted/60 px-2 py-0.5 border border-main/10 text-main font-medium">You are in Session #1</span>
+                    <span class="text-[11px] mt-0.5">Zero tracking cookies used</span>
+                </div>
+            </div>
+        </section>
 
         <!-- Loading Skeleton -->
         <div id="analytics-loading" class="space-y-8 animate-pulse">
@@ -37,8 +61,8 @@ export const prerender = false;
                 <div class="h-24 rounded-xl border border-main/15 bg-muted/20"></div>
                 <div class="h-24 rounded-xl border border-main/15 bg-muted/20"></div>
             </div>
-            <div class="h-48 rounded-xl border border-main/15 bg-muted/20"></div>
             <div class="h-64 rounded-xl border border-main/15 bg-muted/20"></div>
+            <div class="h-80 rounded-xl border border-main/15 bg-muted/20"></div>
         </div>
 
         <!-- Real Analytics Container -->
@@ -52,15 +76,15 @@ export const prerender = false;
                 </div>
 
                 <div class="rounded-xl border border-main/15 bg-muted/20 p-4 sm:p-5">
-                    <p class="text-xs font-mono uppercase tracking-wider text-muted">Unique Citizens</p>
+                    <p class="text-xs font-mono uppercase tracking-wider text-muted">Unique Visitors</p>
                     <p id="stat-unique-visitors" class="mt-1 font-serif text-2xl font-bold sm:text-3xl text-main">0</p>
-                    <p class="mt-1 text-[11px] text-muted">Distinct visitors</p>
+                    <p class="mt-1 text-[11px] text-muted">Distinct humans</p>
                 </div>
 
                 <div class="rounded-xl border border-main/15 bg-muted/20 p-4 sm:p-5">
                     <p class="text-xs font-mono uppercase tracking-wider text-muted">Returning Rate</p>
                     <p id="stat-returning-rate" class="mt-1 font-serif text-2xl font-bold sm:text-3xl text-main">0%</p>
-                    <p id="stat-returning-sub" class="mt-1 text-[11px] text-muted">0 repeat citizens</p>
+                    <p id="stat-returning-sub" class="mt-1 text-[11px] text-muted">0 repeat visitors</p>
                 </div>
 
                 <div class="rounded-xl border border-main/15 bg-muted/20 p-4 sm:p-5">
@@ -70,33 +94,42 @@ export const prerender = false;
                 </div>
             </section>
 
-            <!-- 2. Daily Traffic Chart (14-day Sparkline / Bars) -->
+            <!-- 2. Robust 14-Day Traffic Chart -->
             <section aria-label="Traffic Over Time" class="rounded-2xl border border-main/15 bg-muted/10 p-5 sm:p-6">
-                <div class="mb-4 flex items-center justify-between">
+                <div class="mb-4 flex flex-wrap items-center justify-between gap-2">
                     <div>
-                        <h2 class="font-serif text-lg font-semibold sm:text-xl text-main">Recent Daily Activity</h2>
-                        <p class="text-xs text-muted">Page views per day over the last 14 days</p>
+                        <h2 class="font-serif text-lg font-semibold sm:text-xl text-main">14-Day Traffic Trend</h2>
+                        <p class="text-xs text-muted">Continuous daily page views across all routes</p>
                     </div>
-                    <span class="rounded bg-muted/40 px-2.5 py-1 text-xs font-mono text-muted">14-Day Trend</span>
+                    <div class="flex items-center gap-2">
+                        <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+                        <span class="text-xs font-mono text-muted">Views per day</span>
+                    </div>
                 </div>
-                <div id="chart-bars" class="flex h-36 items-end gap-2 pt-6 pb-2 border-b border-main/10 sm:gap-3">
-                    <!-- Populated via client script -->
-                </div>
-                <div id="chart-labels" class="flex justify-between pt-2 text-[10px] font-mono text-muted">
-                    <span>14 days ago</span>
-                    <span>Today</span>
+
+                <!-- Chart Grid with Height and Zero-Filled Bars -->
+                <div class="relative pt-6">
+                    <div id="chart-bars" class="flex h-44 items-end gap-1.5 sm:gap-2.5 border-b border-main/15 pb-1">
+                        <!-- Populated with continuous 14-day bars via client script -->
+                    </div>
+                    <!-- Axis Baseline Labels -->
+                    <div id="chart-labels" class="flex justify-between pt-2 text-[10px] font-mono text-muted">
+                        <span id="chart-date-start">14 days ago</span>
+                        <span id="chart-date-mid">7 days ago</span>
+                        <span id="chart-date-end">Today</span>
+                    </div>
                 </div>
             </section>
 
-            <!-- 3. Real Citizen Journeys & Personas -->
+            <!-- 3. Visitor Journeys (Clean & Readable) -->
             <section aria-label="Citizen Journeys">
                 <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
                     <div>
                         <h2 class="font-serif text-2xl sm:text-3xl font-semibold text-main">
-                            Citizen Journeys & Shenanigans
+                            Live Visitor Journeys
                         </h2>
                         <p class="text-sm text-muted">
-                            Every visitor gets a persistent persona from <span class="font-medium text-main">The Middle</span>. See exactly how citizens explore the site step-by-step.
+                            Complete step-by-step navigation path taken by each visitor with dwell times.
                         </p>
                     </div>
                 </div>
@@ -110,7 +143,7 @@ export const prerender = false;
             <section class="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <!-- Top Pages -->
                 <div class="rounded-2xl border border-main/15 bg-muted/10 p-5 sm:p-6">
-                    <h3 class="font-serif text-lg font-semibold sm:text-xl text-main mb-4">Top Pages</h3>
+                    <h3 class="font-serif text-lg font-semibold sm:text-xl text-main mb-4">Top Pages & Views</h3>
                     <div id="top-pages-list" class="space-y-3">
                         <!-- Populated via script -->
                     </div>
@@ -118,7 +151,7 @@ export const prerender = false;
 
                 <!-- Top Referrers -->
                 <div class="rounded-2xl border border-main/15 bg-muted/10 p-5 sm:p-6">
-                    <h3 class="font-serif text-lg font-semibold sm:text-xl text-main mb-4">Top Referrers</h3>
+                    <h3 class="font-serif text-lg font-semibold sm:text-xl text-main mb-4">Traffic Sources & Referrers</h3>
                     <div id="top-referrers-list" class="space-y-3">
                         <!-- Populated via script -->
                     </div>
@@ -137,7 +170,7 @@ export const prerender = false;
 
                 <!-- Devices & Browsers -->
                 <div class="rounded-2xl border border-main/15 bg-muted/10 p-5 sm:p-6">
-                    <h3 class="font-serif text-lg font-semibold sm:text-xl text-main mb-4">Devices</h3>
+                    <h3 class="font-serif text-lg font-semibold sm:text-xl text-main mb-4">Devices & Browsers</h3>
                     <div id="devices-list" class="space-y-3">
                         <!-- Populated via script -->
                     </div>
@@ -175,6 +208,12 @@ export const prerender = false;
             journey: Step[];
         }
 
+        interface TrendDay {
+            date: string;
+            label: string;
+            views: number;
+        }
+
         interface AnalyticsPayload {
             summary: {
                 totalPageViews: number;
@@ -187,7 +226,7 @@ export const prerender = false;
             topReferrers: Array<{ referrer: string; count: number }>;
             countries: Array<{ country: string; count: number }>;
             devices: Array<{ device: string; count: number }>;
-            dailyTrends: Array<{ date: string; views: number }>;
+            dailyTrends: TrendDay[];
         }
 
         function formatTimeAgo(timestamp: number): string {
@@ -212,13 +251,31 @@ export const prerender = false;
             }
         }
 
+        function updateMyPersonaCard() {
+            const personaName = localStorage.getItem('mid_persona_name');
+            const personaEmoji = localStorage.getItem('mid_persona_emoji');
+            const personaQuote = localStorage.getItem('mid_persona_quote');
+
+            if (personaName) {
+                const elName = document.getElementById('my-persona-name');
+                const elEmoji = document.getElementById('my-persona-emoji');
+                const elQuote = document.getElementById('my-persona-quote');
+
+                if (elName) elName.textContent = personaName;
+                if (elEmoji) elEmoji.textContent = personaEmoji || '🪥';
+                if (elQuote && personaQuote) elQuote.textContent = personaQuote;
+            }
+        }
+
         async function loadAnalyticsDashboard() {
+            updateMyPersonaCard();
+
             try {
                 const res = await fetch('/api/analytics/stats');
                 if (!res.ok) throw new Error('Failed to load stats');
                 const data: AnalyticsPayload = await res.json();
 
-                // 1. Fill KPI Cards
+                // 1. KPI Cards
                 const totalViews = data.summary.totalPageViews;
                 const uniqueVisitors = data.summary.uniqueVisitors;
                 const returning = data.summary.returningVisitors;
@@ -234,59 +291,90 @@ export const prerender = false;
                 if (elRet) elRet.textContent = `${returnRate}%`;
 
                 const elRetSub = document.getElementById('stat-returning-sub');
-                if (elRetSub) elRetSub.textContent = `${returning.toLocaleString()} repeat citizens`;
+                if (elRetSub) elRetSub.textContent = `${returning.toLocaleString()} repeat visitors`;
 
                 const elTopPersona = document.getElementById('stat-top-persona');
                 if (elTopPersona) elTopPersona.textContent = data.summary.topPersona;
 
-                // 2. Render Chart Bars
+                // 2. Render Full 14-Day Continuous Chart Bars
                 const chartContainer = document.getElementById('chart-bars');
-                if (chartContainer) {
+                if (chartContainer && data.dailyTrends && data.dailyTrends.length > 0) {
                     chartContainer.innerHTML = '';
                     const maxDaily = Math.max(...(data.dailyTrends.map(t => t.views)), 1);
-                    
-                    if (data.dailyTrends.length === 0) {
-                        chartContainer.innerHTML = '<p class="text-xs text-muted my-auto">No traffic recorded yet today.</p>';
-                    } else {
-                        data.dailyTrends.forEach((trend) => {
-                            const heightPercent = Math.max(8, Math.round((trend.views / maxDaily) * 100));
-                            const col = document.createElement('div');
-                            col.className = 'group relative flex-1 flex flex-col items-center h-full justify-end';
-                            col.innerHTML = `
-                                <div class="w-full rounded-t bg-main/30 group-hover:bg-emerald-500 transition-colors" style="height: ${heightPercent}%"></div>
-                                <div class="opacity-0 group-hover:opacity-100 transition-opacity absolute -top-8 text-[10px] font-mono bg-main text-black dark:text-white px-1.5 py-0.5 rounded shadow pointer-events-none whitespace-nowrap">
-                                    ${trend.views} views (${trend.date})
+
+                    data.dailyTrends.forEach((trend, idx) => {
+                        const isToday = idx === data.dailyTrends.length - 1;
+                        // Height percentage with minimum floor for zero days so track is visible
+                        const heightPercent = trend.views > 0 
+                            ? Math.max(12, Math.round((trend.views / maxDaily) * 100))
+                            : 4;
+
+                        const barColor = trend.views > 0
+                            ? (isToday ? 'bg-emerald-500' : 'bg-main/40 group-hover:bg-emerald-500')
+                            : 'bg-main/10 group-hover:bg-main/20';
+
+                        const col = document.createElement('div');
+                        col.className = 'group relative flex-1 flex flex-col items-center h-full justify-end cursor-pointer';
+                        col.innerHTML = `
+                            <div class="w-full rounded-t ${barColor} transition-all duration-300" style="height: ${heightPercent}%"></div>
+                            
+                            <!-- Interactive Tooltip -->
+                            <div class="pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity absolute -top-12 z-20 flex flex-col items-center">
+                                <div class="rounded-md bg-main px-2 py-1 text-[11px] font-mono text-black dark:text-white shadow-lg whitespace-nowrap">
+                                    <span class="font-bold">${trend.views}</span> views · ${trend.label}
                                 </div>
-                            `;
-                            chartContainer.appendChild(col);
-                        });
-                    }
+                                <div class="h-1 w-1 border-4 border-transparent border-t-main"></div>
+                            </div>
+                        `;
+                        chartContainer.appendChild(col);
+                    });
+
+                    // Set axis labels
+                    const startLabel = document.getElementById('chart-date-start');
+                    const midLabel = document.getElementById('chart-date-mid');
+                    const endLabel = document.getElementById('chart-date-end');
+                    if (startLabel && data.dailyTrends[0]) startLabel.textContent = data.dailyTrends[0].label;
+                    if (midLabel && data.dailyTrends[6]) midLabel.textContent = data.dailyTrends[6].label;
+                    if (endLabel && data.dailyTrends[13]) endLabel.textContent = `${data.dailyTrends[13].label} (Today)`;
                 }
 
-                // 3. Render Visitor Personas & Journeys
+                // 3. Render Visitor Journeys
                 const visitorsContainer = document.getElementById('visitors-list');
+                const myVisitorId = localStorage.getItem('mid_v_id');
+
                 if (visitorsContainer) {
                     visitorsContainer.innerHTML = '';
                     if (data.visitors.length === 0) {
                         visitorsContainer.innerHTML = `
                             <div class="rounded-xl border border-main/15 bg-muted/20 p-8 text-center text-muted">
-                                No visitor journeys captured yet. Navigate the site to see your own citizen journey appear!
+                                No visitor journeys captured yet.
                             </div>
                         `;
                     } else {
                         data.visitors.forEach((v) => {
+                            const isMe = myVisitorId && v.id === myVisitorId;
                             const item = document.createElement('div');
-                            item.className = 'rounded-xl border border-main/15 bg-muted/20 p-4 sm:p-5 transition hover:border-main/30';
-                            
+                            item.className = `rounded-xl border p-4 sm:p-5 transition ${
+                                isMe 
+                                    ? 'border-emerald-500/50 bg-emerald-500/5 ring-1 ring-emerald-500/20' 
+                                    : 'border-main/15 bg-muted/20 hover:border-main/30'
+                            }`;
+
+                            // Calculate total dwell time across this visitor's session
+                            const totalDwell = v.journey ? v.journey.reduce((acc, step) => acc + (step.dwellTimeSeconds || 0), 0) : 0;
+                            const dwellStr = totalDwell > 60 
+                                ? `${Math.floor(totalDwell / 60)}m ${totalDwell % 60}s` 
+                                : `${totalDwell}s`;
+
                             // Build Journey breadcrumb trail
                             const journeyHtml = v.journey && v.journey.length > 0 
                                 ? v.journey.map((step, idx) => `
-                                    <div class="flex items-center gap-1.5">
-                                        <span class="font-mono text-[11px] font-medium text-main rounded bg-muted/50 px-2 py-0.5 border border-main/10">
+                                    <div class="inline-flex items-center gap-1.5 py-0.5">
+                                        <span class="font-mono text-xs font-medium text-main rounded bg-muted/60 px-2 py-0.5 border border-main/10">
                                             ${step.path}
                                         </span>
                                         ${step.dwellTimeSeconds > 0 ? `<span class="text-[10px] text-muted">(${step.dwellTimeSeconds}s)</span>` : ''}
-                                        ${idx < v.journey.length - 1 ? '<span class="text-muted text-xs">→</span>' : ''}
+                                        ${idx < v.journey.length - 1 ? '<span class="text-muted/60 text-xs mx-0.5">→</span>' : ''}
                                     </div>
                                 `).join('')
                                 : '<span class="text-xs text-muted">No journey steps recorded</span>';
@@ -298,6 +386,7 @@ export const prerender = false;
                                         <div>
                                             <div class="flex flex-wrap items-center gap-2">
                                                 <h4 class="font-semibold text-main text-base sm:text-lg">${v.personaName}</h4>
+                                                ${isMe ? '<span class="rounded bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-mono text-[10px] px-2 py-0.5 font-bold uppercase">That\'s You</span>' : ''}
                                                 <span class="rounded border px-2 py-0.2 text-[10px] font-mono uppercase ${getBadgeClass(v.personaBadgeColor)}">
                                                     ${v.personaRole}
                                                 </span>
@@ -306,16 +395,19 @@ export const prerender = false;
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-3 text-xs font-mono text-muted">
-                                        <span class="rounded bg-muted/60 px-2 py-0.5 border border-main/10">
-                                            ${v.visitCount} ${v.visitCount === 1 ? 'visit' : 'visits'} · ${v.totalPageViews} pages
+                                        <span class="rounded bg-muted/60 px-2 py-0.5 border border-main/10 text-main">
+                                            ${v.visitCount} ${v.visitCount === 1 ? 'visit' : 'visits'} · ${v.totalPageViews} views
                                         </span>
                                         <span>${formatTimeAgo(v.lastSeen)}</span>
                                     </div>
                                 </div>
 
                                 <div class="mt-3">
-                                    <p class="text-[11px] font-mono uppercase tracking-wider text-muted mb-1.5">Citizen Journey Path</p>
-                                    <div class="flex flex-wrap items-center gap-2">
+                                    <div class="flex items-center justify-between mb-1.5">
+                                        <p class="text-[11px] font-mono uppercase tracking-wider text-muted">Journey Path</p>
+                                        <span class="text-[11px] font-mono text-muted">Time on site: ${dwellStr}</span>
+                                    </div>
+                                    <div class="flex flex-wrap items-center gap-y-1">
                                         ${journeyHtml}
                                     </div>
                                 </div>
@@ -331,7 +423,7 @@ export const prerender = false;
                     }
                 }
 
-                // 4. Render Top Pages
+                // 4. Render Top Pages with percentage bars
                 const topPagesContainer = document.getElementById('top-pages-list');
                 if (topPagesContainer) {
                     topPagesContainer.innerHTML = '';
@@ -362,7 +454,7 @@ export const prerender = false;
                         row.className = 'flex justify-between items-center text-xs font-mono py-1 border-b border-main/5';
                         row.innerHTML = `
                             <span class="text-main">${ref.referrer}</span>
-                            <span class="text-muted bg-muted/40 px-2 py-0.5 rounded">${ref.count}</span>
+                            <span class="text-muted bg-muted/40 px-2 py-0.5 rounded font-mono">${ref.count}</span>
                         `;
                         referrersContainer.appendChild(row);
                     });
@@ -377,7 +469,7 @@ export const prerender = false;
                         row.className = 'flex justify-between items-center text-xs font-mono py-1 border-b border-main/5';
                         row.innerHTML = `
                             <span class="text-main">📍 ${c.country}</span>
-                            <span class="text-muted bg-muted/40 px-2 py-0.5 rounded">${c.count}</span>
+                            <span class="text-muted bg-muted/40 px-2 py-0.5 rounded font-mono">${c.count}</span>
                         `;
                         countriesContainer.appendChild(row);
                     });
@@ -391,7 +483,7 @@ export const prerender = false;
                         row.className = 'flex justify-between items-center text-xs font-mono py-1 border-b border-main/5';
                         row.innerHTML = `
                             <span class="text-main">💻 ${d.device}</span>
-                            <span class="text-muted bg-muted/40 px-2 py-0.5 rounded">${d.count}</span>
+                            <span class="text-muted bg-muted/40 px-2 py-0.5 rounded font-mono">${d.count}</span>
                         `;
                         devicesContainer.appendChild(row);
                     });
@@ -414,6 +506,11 @@ export const prerender = false;
                 }
             }
         }
+
+        // Listen for persona-ready event from tracker
+        window.addEventListener('mid:persona-ready', () => {
+            updateMyPersonaCard();
+        });
 
         // Run when page loads
         document.addEventListener('astro:page-load', () => {
