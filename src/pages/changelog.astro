@@ -1,0 +1,139 @@
+---
+import BaseLayout from '../layouts/base-layout.astro';
+import ViewCounter from '../components/view-counter.astro';
+import { getGitChangelog } from '../utils/changelog-utils';
+
+export const prerender = true;
+
+const groups = getGitChangelog();
+const totalCommits = groups.reduce((acc, g) => acc + g.commits.length, 0);
+
+function formatDate(isoDate: string): string {
+    const d = new Date(isoDate);
+    return d.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+    });
+}
+
+function getTypeBadgeStyle(type: string): string {
+    switch (type) {
+        case 'feat':
+            return 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30';
+        case 'fix':
+            return 'bg-rose-500/15 text-rose-700 dark:text-rose-300 border-rose-500/30';
+        case 'style':
+            return 'bg-purple-500/15 text-purple-700 dark:text-purple-300 border-purple-500/30';
+        case 'refactor':
+            return 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/30';
+        case 'docs':
+            return 'bg-sky-500/15 text-sky-700 dark:text-sky-300 border-sky-500/30';
+        case 'chore':
+            return 'bg-zinc-500/15 text-zinc-700 dark:text-zinc-300 border-zinc-500/30';
+        default:
+            return 'bg-muted text-main border-main/20';
+    }
+}
+---
+
+<BaseLayout
+    title="Changelog"
+    description="Full commit log and timeline of updates for alwaisy.dev, from inception to today."
+    showHeader={false}
+    slug="changelog"
+>
+    <article class="mb-16 sm:mb-24">
+        <header class="mb-10 sm:mb-12">
+            <h1 class="font-serif text-3xl leading-tight font-medium sm:text-5xl sm:leading-tight">Changelog</h1>
+            <p class="text-muted mt-2 text-base sm:text-lg">
+                A chronological timeline of every commit shipped to <span class="font-medium text-main">alwaisy.dev</span>.
+            </p>
+            <div class="mt-4 flex flex-wrap items-center gap-4 text-xs sm:text-sm text-muted">
+                <span class="inline-flex items-center gap-1.5 rounded-full border border-main/15 bg-muted/30 px-3 py-1 font-mono">
+                    <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                    {totalCommits} commits shipped
+                </span>
+                <ViewCounter slug="changelog" />
+            </div>
+        </header>
+
+        {groups.length === 0 ? (
+            <div class="rounded-xl border border-main/15 bg-muted/20 p-8 text-center text-muted">
+                No git commits found.
+            </div>
+        ) : (
+            <div class="space-y-12 sm:space-y-16">
+                {groups.map((group) => (
+                    <section aria-labelledby={`group-${group.year}-${group.month}`}>
+                        <div class="sticky top-0 z-10 -mx-4 mb-6 flex items-center gap-3 bg-main/90 px-4 py-2 backdrop-blur-md sm:-mx-6 sm:px-6">
+                            <h2
+                                id={`group-${group.year}-${group.month}`}
+                                class="font-serif text-xl sm:text-2xl font-semibold tracking-tight text-main"
+                            >
+                                {group.key}
+                            </h2>
+                            <span class="text-xs text-muted font-mono rounded-md bg-muted/50 px-2 py-0.5 border border-main/10">
+                                {group.commits.length} {group.commits.length === 1 ? 'commit' : 'commits'}
+                            </span>
+                            <div class="h-px flex-1 bg-gradient-to-r from-main/20 to-transparent"></div>
+                        </div>
+
+                        <div class="relative pl-6 sm:pl-8 border-l border-main/20 space-y-6 sm:space-y-8 ml-2 sm:ml-3">
+                            {group.commits.map((commit) => (
+                                <div class="relative group">
+                                    {/* Timeline indicator node */}
+                                    <div class="absolute -left-[31px] sm:-left-[39px] top-1.5 flex h-3.5 w-3.5 items-center justify-center rounded-full border-2 border-main bg-main group-hover:scale-125 transition-transform">
+                                        <div class="h-1.5 w-1.5 rounded-full bg-muted group-hover:bg-emerald-500 transition-colors"></div>
+                                    </div>
+
+                                    <div class="flex flex-col gap-1.5">
+                                        <div class="flex flex-wrap items-center gap-2">
+                                            <span
+                                                class={`inline-block rounded border px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider font-mono ${getTypeBadgeStyle(commit.type)}`}
+                                            >
+                                                {commit.type}
+                                            </span>
+
+                                            {commit.scope && (
+                                                <span class="text-xs font-mono text-muted">
+                                                    ({commit.scope})
+                                                </span>
+                                            )}
+
+                                            <a
+                                                href={`https://github.com/alwaisy/alwaisy-dev/commit/${commit.hash}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                class="font-mono text-xs text-muted hover:text-main underline decoration-main/30 underline-offset-2 hover:decoration-main transition-colors"
+                                                title={`View commit ${commit.hash} on GitHub`}
+                                            >
+                                                {commit.shortHash}
+                                            </a>
+
+                                            <span class="text-xs text-muted">·</span>
+
+                                            <time
+                                                datetime={commit.date}
+                                                class="text-xs text-muted font-sans"
+                                            >
+                                                {formatDate(commit.date)}
+                                            </time>
+                                        </div>
+
+                                        <p class="text-sm sm:text-base text-main leading-relaxed font-normal break-words">
+                                            {commit.message}
+                                        </p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                ))}
+            </div>
+        )}
+    </article>
+</BaseLayout>

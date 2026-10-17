@@ -34,12 +34,20 @@ const siteConfig: SiteConfig = {
         {
             text: 'Tags',
             href: '/tags'
+        },
+        {
+            text: 'Changelog',
+            href: '/changelog'
         }
     ],
     footerNavLinks: [
         {
             text: 'About Me',
             href: '/about'
+        },
+        {
+            text: 'Changelog',
+            href: '/changelog'
         },
         {
             text: "Let's Talk",
