@@ -13,9 +13,9 @@ const { slug, class: className = '', trackOnly = false } = Astro.props;
         <span class="page-view-counter hidden" data-slug={slug} data-track-only="true" aria-hidden="true" />
     ) : (
         <span class:list={['page-view-counter inline-flex items-center gap-1 font-mono text-xs opacity-75', className]} data-slug={slug}>
-            {/**/}
+            {/*}
             <span class="view-dot inline-block h-1.5 w-1.5 rounded-full bg-current opacity-60" />
-            {/**/}
+            {*/}
             <span class="view-count">...</span>
             <span>views</span>
         </span>
