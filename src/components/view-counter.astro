@@ -1,0 +1,141 @@
+---
+type Props = {
+    slug: string;
+    class?: string;
+    trackOnly?: boolean;
+};
+
+const { slug, class: className = '', trackOnly = false } = Astro.props;
+---
+
+{
+    trackOnly ? (
+        <span class="page-view-counter hidden" data-slug={slug} data-track-only="true" aria-hidden="true" />
+    ) : (
+        <span class:list={['page-view-counter inline-flex items-center gap-1 font-mono text-xs opacity-75', className]} data-slug={slug}>
+            <span class="view-dot inline-block h-1.5 w-1.5 rounded-full bg-current opacity-60"></span>
+            <span class="view-count">...</span>
+            <span>views</span>
+        </span>
+    )
+}
+
+<script>
+    function setupViewCounters() {
+        const counters = document.querySelectorAll<HTMLElement>('.page-view-counter');
+        if (!counters.length) return;
+
+        // Defense Layer A: Instant WebDriver check (Selenium, Puppeteer, Playwright)
+        if (navigator.webdriver) {
+            return;
+        }
+
+        // Defense Layer B: Ignore prerender or hidden browser tasks
+        if ((document.visibilityState as string) === 'prerender') {
+            return;
+        }
+
+        const processedSlugs = new Set<string>();
+
+        interface ViewsApiResponse {
+            views?: number;
+            ok?: boolean;
+            slug?: string;
+            incremented?: boolean;
+        }
+
+        counters.forEach((counter) => {
+            const slug = counter.getAttribute('data-slug');
+            if (!slug) return;
+
+            const isTrackOnly = counter.getAttribute('data-track-only') === 'true';
+
+            // 1. Fetch current view count immediately for display (unless trackOnly)
+            if (!isTrackOnly) {
+                fetch(`/api/views/${encodeURIComponent(slug)}`)
+                    .then((r) => r.json() as Promise<ViewsApiResponse>)
+                    .then((data) => {
+                        if (data && typeof data.views === 'number') {
+                            document.querySelectorAll(`.page-view-counter[data-slug="${CSS.escape(slug)}"] .view-count`).forEach((el) => {
+                                el.textContent = Number(data.views).toLocaleString();
+                            });
+                        }
+                    })
+                    .catch(() => {});
+            }
+
+            // If we already attached listener for this slug on this page, don't double ping
+            if (processedSlugs.has(slug)) return;
+            processedSlugs.add(slug);
+
+            // 2. Client-side Deduplication:
+            // Check if this visitor already recorded this slug in sessionStorage (or within last 30 minutes)
+            const sessionKey = `viewed_${slug}`;
+            const lastViewed = sessionStorage.getItem(sessionKey);
+            if (lastViewed) {
+                // Already counted in this session, do not send view ping again
+                return;
+            }
+
+            // Defense Layer C: Human engagement gate
+            // We require either:
+            // - Staying engaged on the page for at least 3.5 seconds
+            // - OR scrolling down past 120 pixels
+            // - OR interacting with the page (touch / mouse click)
+            let pinged = false;
+
+            const triggerHumanView = () => {
+                if (pinged) return;
+                // Double-check tab is visible when firing
+                if (document.visibilityState === 'hidden') return;
+
+                pinged = true;
+                cleanupListeners();
+                sessionStorage.setItem(sessionKey, Date.now().toString());
+
+                // Send engagement beacon with proof payload
+                const payload = JSON.stringify({ engaged: true, t: Date.now() });
+
+                fetch(`/api/views/${encodeURIComponent(slug)}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: payload,
+                    keepalive: true
+                })
+                    .then((r) => r.json() as Promise<ViewsApiResponse>)
+                    .then((data) => {
+                        if (data && typeof data.views === 'number') {
+                            document.querySelectorAll(`.page-view-counter[data-slug="${CSS.escape(slug)}"] .view-count`).forEach((el) => {
+                                el.textContent = Number(data.views).toLocaleString();
+                            });
+                        }
+                    })
+                    .catch(() => {});
+            };
+
+            const onScroll = () => {
+                if (window.scrollY > 120) {
+                    triggerHumanView();
+                }
+            };
+
+            const onInteraction = () => {
+                triggerHumanView();
+            };
+
+            const timer = window.setTimeout(triggerHumanView, 3500);
+
+            window.addEventListener('scroll', onScroll, { passive: true });
+            window.addEventListener('pointerdown', onInteraction, { once: true, passive: true });
+
+            function cleanupListeners() {
+                window.clearTimeout(timer);
+                window.removeEventListener('scroll', onScroll);
+                window.removeEventListener('pointerdown', onInteraction);
+            }
+        });
+    }
+
+    // Run on initial page load and after Astro View Transitions (ClientRouter)
+    document.addEventListener('astro:page-load', setupViewCounters);
+</script>

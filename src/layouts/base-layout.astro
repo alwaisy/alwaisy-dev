@@ -5,10 +5,11 @@ import BaseHead, { type Props as HeadProps } from '../components/base-head.astro
 import Footer from '../components/footer.astro';
 import Header from '../components/header.astro';
 import Nav from '../components/nav.astro';
+import ViewCounter from '../components/view-counter.astro';
 
-export type Props = HeadProps & { showHeader?: boolean };
+export type Props = HeadProps & { showHeader?: boolean; slug?: string };
 
-const { showHeader = true, ...head } = Astro.props;
+const { showHeader = true, slug, ...head } = Astro.props;
 ---
 
 <!doctype html>
@@ -32,6 +33,7 @@ const { showHeader = true, ...head } = Astro.props;
             </main>
             <Footer />
         </div>
+        <ViewCounter slug={slug ?? Astro.url.pathname} trackOnly={true} />
         <SimpleAnalytics collectDNT={true} allEnvironments={true} />
     </body>
 </html>

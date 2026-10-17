@@ -17,5 +17,6 @@ export default defineConfig({
   integrations: [mdx(), sitemap()],
   adapter: cloudflare({
     imageService: 'cloudflare-binding',
+    prerenderEnvironment: 'node',
   })
 });

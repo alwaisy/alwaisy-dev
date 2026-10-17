@@ -1,6 +1,8 @@
 {
 	"compatibility_date": "2026-05-12",
-	"compatibility_flags": ["global_fetch_strictly_public"],
+	"compatibility_flags": [
+		"global_fetch_strictly_public"
+	],
 	"name": "alwaisy-dev",
 	"main": "@astrojs/cloudflare/entrypoints/server",
 	"assets": {
@@ -9,5 +11,11 @@
 	},
 	"observability": {
 		"enabled": true
-	}
+	},
+	"kv_namespaces": [
+		{
+			"binding": "PAGE_VIEWS",
+			"id": "7dc8853cbad6468880a6030ae47593e1"
+		}
+	]
 }

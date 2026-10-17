@@ -5,6 +5,7 @@ import Button from '../../components/button.astro';
 import FormattedDate from '../../components/formatted-date.astro';
 import PostPreview from '../../components/post-preview.astro';
 import Subscribe from '../../components/subscribe.astro';
+import ViewCounter from '../../components/view-counter.astro';
 import { sortItemsByDateDesc } from '../../utils/data-utils';
 import { slugify } from '../../utils/common-utils';
 
@@ -33,18 +34,17 @@ const { Content } = await render(post);
     <article class="mb-16 sm:mb-24">
         <header class="mb-8">
             <h1 class="font-serif text-3xl leading-tight font-medium sm:text-5xl sm:leading-tight">{title}</h1>
-            <div class="mt-4 text-sm">
+            <div class="mt-4 flex flex-wrap items-center gap-2 text-sm">
                 <FormattedDate date={publishDate} />
                 {
                     updatedDate && (
-                        <>
-                            {' '}
-                            <span>
-                                (Updated on <FormattedDate date={updatedDate} />)
-                            </span>
-                        </>
+                        <span>
+                            (Updated on <FormattedDate date={updatedDate} />)
+                        </span>
                     )
                 }
+                <span class="opacity-40">•</span>
+                <ViewCounter slug={`blog/${post.id}`} />
             </div>
         </header>
         <div class="prose sm:prose-lg max-w-none">

@@ -1,6 +1,7 @@
 ---
 import { type CollectionEntry, getCollection, render } from 'astro:content';
 import BaseLayout from '../layouts/base-layout.astro';
+import ViewCounter from '../components/view-counter.astro';
 
 export async function getStaticPaths() {
     const pages = await getCollection('pages');
@@ -23,6 +24,9 @@ const { Content } = await render(page);
     <article class="mb-16 sm:mb-24">
         <header class="mb-8">
             <h1 class="font-serif text-3xl leading-tight font-medium sm:text-5xl sm:leading-tight">{title}</h1>
+            <div class="mt-4 flex items-center text-sm">
+                <ViewCounter slug={page.id} />
+            </div>
         </header>
         <div class="prose sm:prose-lg max-w-none">
             <Content />

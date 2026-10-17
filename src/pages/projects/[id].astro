@@ -1,6 +1,7 @@
 ---
 import { type CollectionEntry, getCollection, render } from 'astro:content';
 import ProjectPreview from '../../components/project-preview.astro';
+import ViewCounter from '../../components/view-counter.astro';
 import BaseLayout from '../../layouts/base-layout.astro';
 import { sortItemsByDateDesc } from '../../utils/data-utils';
 
@@ -32,6 +33,9 @@ const { Content } = await render(project);
     <article class="mb-16 sm:mb-24">
         <header class="mb-8">
             <h1 class="font-serif text-3xl leading-tight font-medium sm:text-5xl sm:leading-tight">{title}</h1>
+            <div class="mt-4 flex items-center text-sm">
+                <ViewCounter slug={`projects/${project.id}`} />
+            </div>
         </header>
         <div class="prose sm:prose-lg max-w-none">
             <Content />
