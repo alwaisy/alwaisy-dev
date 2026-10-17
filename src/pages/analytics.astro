@@ -47,7 +47,45 @@ export const prerender = false;
         </div>
 
         <!-- Real Analytics Dashboard -->
-        <div id="analytics-content" class="hidden space-y-10 sm:space-y-14">
+        <div id="analytics-content" class="hidden space-y-8 sm:space-y-12">
+            <!-- Time Range Filters -->
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-main/15 pb-4">
+                <div class="inline-flex items-center rounded-xl border border-main/20 bg-muted/20 p-1 text-xs font-mono">
+                    <button
+                        type="button"
+                        data-timeframe="all"
+                        class="timeframe-btn rounded-lg px-3 py-1.5 font-medium transition-colors bg-main text-background shadow-xs"
+                    >
+                        All Time
+                    </button>
+                    <button
+                        type="button"
+                        data-timeframe="30d"
+                        class="timeframe-btn rounded-lg px-3 py-1.5 font-medium transition-colors text-muted hover:text-main"
+                    >
+                        Last 30 Days
+                    </button>
+                    <button
+                        type="button"
+                        data-timeframe="7d"
+                        class="timeframe-btn rounded-lg px-3 py-1.5 font-medium transition-colors text-muted hover:text-main"
+                    >
+                        Last 7 Days
+                    </button>
+                    <button
+                        type="button"
+                        data-timeframe="today"
+                        class="timeframe-btn rounded-lg px-3 py-1.5 font-medium transition-colors text-muted hover:text-main"
+                    >
+                        Today
+                    </button>
+                </div>
+                <div class="flex items-center gap-2 text-xs font-mono text-muted">
+                    <span class="inline-block h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span id="filter-status-label">All-time telemetry data</span>
+                </div>
+            </div>
+
             <!-- 1. Key Performance Indicators -->
             <section aria-label="Key Performance Indicators" class="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
                 <div class="rounded-xl border border-main/15 bg-muted/20 p-4 sm:p-5">
@@ -363,11 +401,38 @@ export const prerender = false;
             modal.showModal();
         }
 
-        async function loadAnalyticsDashboard() {
+        let currentTimeframe = 'all';
+
+        function setTimeframe(newTimeframe: string) {
+            currentTimeframe = newTimeframe;
+
+            // Update button styles
+            const buttons = document.querySelectorAll('.timeframe-btn');
+            buttons.forEach(btn => {
+                const btnTf = btn.getAttribute('data-timeframe');
+                if (btnTf === currentTimeframe) {
+                    btn.className = 'timeframe-btn rounded-lg px-3 py-1.5 font-medium transition-colors bg-main text-background shadow-xs';
+                } else {
+                    btn.className = 'timeframe-btn rounded-lg px-3 py-1.5 font-medium transition-colors text-muted hover:text-main';
+                }
+            });
+
+            const statusLabel = document.getElementById('filter-status-label');
+            if (statusLabel) {
+                if (currentTimeframe === 'today') statusLabel.textContent = "Today's telemetry";
+                else if (currentTimeframe === '7d') statusLabel.textContent = "Last 7 days telemetry";
+                else if (currentTimeframe === '30d') statusLabel.textContent = "Last 30 days telemetry";
+                else statusLabel.textContent = "All-time telemetry data";
+            }
+
+            loadAnalyticsDashboard(currentTimeframe);
+        }
+
+        async function loadAnalyticsDashboard(timeframe = currentTimeframe) {
             updateMyPersonaPill();
 
             try {
-                const res = await fetch('/api/analytics/stats');
+                const res = await fetch(`/api/telemetry/stats?timeframe=${encodeURIComponent(timeframe)}`);
                 if (!res.ok) throw new Error('Failed to load stats');
                 const data: AnalyticsPayload = await res.json();
                 allVisitors = data.visitors || [];
@@ -601,9 +666,23 @@ export const prerender = false;
             updateMyPersonaPill();
         });
 
+        // Attach timeframe filter button click handlers
+        function initTimeframeButtons() {
+            const buttons = document.querySelectorAll('.timeframe-btn');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const tf = btn.getAttribute('data-timeframe');
+                    if (tf && tf !== currentTimeframe) {
+                        setTimeframe(tf);
+                    }
+                });
+            });
+        }
+
         // Run when page loads
         document.addEventListener('astro:page-load', () => {
             if (window.location.pathname === '/analytics' || window.location.pathname === '/analytics/') {
+                initTimeframeButtons();
                 loadAnalyticsDashboard();
             }
         });

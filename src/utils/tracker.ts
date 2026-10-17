@@ -56,7 +56,7 @@ export function initAnalyticsTracker() {
         dwellTimeSeconds: dwellSeconds
     };
 
-    fetch('/api/analytics/collect', {
+    fetch('/api/telemetry/beacon', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),

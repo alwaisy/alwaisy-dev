@@ -108,64 +108,27 @@ export const POST: APIRoute = async ({ request, locals }) => {
             });
         }
 
-        // 1. Check existing visitor to calculate visit_count & persona
-        const existingVisitor = await db
-            .prepare('SELECT id, visit_count, total_page_views, last_seen FROM visitors WHERE id = ?')
-            .bind(visitorId)
-            .first<{ id: string; visit_count: number; total_page_views: number; last_seen: number }>();
-
-        let newVisitCount = 1;
-        let newTotalViews = 1;
-
-        if (existingVisitor) {
-            // If more than 30 minutes since last interaction, count as new session/visit
-            const isNewSession = (now - existingVisitor.last_seen) > (30 * 60 * 1000);
-            newVisitCount = isNewSession ? existingVisitor.visit_count + 1 : existingVisitor.visit_count;
-            newTotalViews = existingVisitor.total_page_views + 1;
-
-            const persona = generateMiddlePersona(visitorId);
-
-            await db
-                .prepare(`
-                    UPDATE visitors 
-                    SET last_seen = ?, 
-                        visit_count = ?, 
-                        total_page_views = ?, 
-                        persona_name = ?,
-                        persona_alias = ?,
-                        persona_badge_color = ?,
-                        persona_emoji = ?,
-                        last_country = ?, 
-                        last_device = ?, 
-                        last_browser = ?
-                    WHERE id = ?
-                `)
-                .bind(now, newVisitCount, newTotalViews, persona.name, persona.alias, persona.badgeColor, '', country, device, browser, visitorId)
-                .run();
-
-            // 2. Insert Journey Step
-            await db
-                .prepare(`
-                    INSERT INTO journeys 
-                    (visitor_id, session_id, path, title, referrer, step_order, dwell_time_seconds, created_at, country, city, device, browser)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                `)
-                .bind(visitorId, sessionId, `/${path}`, title, referrer, stepOrder, dwellTime, now, country, city, device, browser)
-                .run();
-
-            return new Response(JSON.stringify({ ok: true, persona, visitCount: newVisitCount }), {
-                status: 200,
-                headers: { 'Content-Type': 'application/json' }
-            });
-        }
-
-        // New Visitor Creation
         const persona = generateMiddlePersona(visitorId);
+
+        // Atomic Upsert: Handles concurrent hits from the same visitor simultaneously without race conditions
         await db
             .prepare(`
                 INSERT INTO visitors 
                 (id, persona_name, persona_alias, persona_role, persona_quote, persona_badge_color, persona_emoji, first_seen, last_seen, visit_count, total_page_views, last_country, last_device, last_browser)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 1, ?, ?, ?)
+                ON CONFLICT(id) DO UPDATE SET
+                    last_seen = excluded.last_seen,
+                    total_page_views = visitors.total_page_views + 1,
+                    visit_count = CASE 
+                        WHEN (excluded.last_seen - visitors.last_seen) > 1800000 THEN visitors.visit_count + 1 
+                        ELSE visitors.visit_count 
+                    END,
+                    persona_name = excluded.persona_name,
+                    persona_alias = excluded.persona_alias,
+                    persona_badge_color = excluded.persona_badge_color,
+                    last_country = excluded.last_country,
+                    last_device = excluded.last_device,
+                    last_browser = excluded.last_browser
             `)
             .bind(
                 visitorId,
@@ -177,15 +140,13 @@ export const POST: APIRoute = async ({ request, locals }) => {
                 '',
                 now,
                 now,
-                1,
-                1,
                 country,
                 device,
                 browser
             )
             .run();
 
-        // Insert initial journey
+        // 2. Insert Journey Step
         await db
             .prepare(`
                 INSERT INTO journeys 
@@ -195,7 +156,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             .bind(visitorId, sessionId, `/${path}`, title, referrer, stepOrder, dwellTime, now, country, city, device, browser)
             .run();
 
-        return new Response(JSON.stringify({ ok: true, persona, visitCount: 1 }), {
+        return new Response(JSON.stringify({ ok: true, persona }), {
             status: 200,
             headers: { 'Content-Type': 'application/json' }
         });

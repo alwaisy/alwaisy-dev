@@ -35,7 +35,7 @@ export interface VisitorWithJourney {
     journey: JourneyStep[];
 }
 
-export const GET: APIRoute = async ({ locals }) => {
+export const GET: APIRoute = async ({ request, locals }) => {
     let db: D1Database | undefined;
     let dbError: string | null = null;
     try {
@@ -57,7 +57,8 @@ export const GET: APIRoute = async ({ locals }) => {
                 totalPageViews: 0,
                 uniqueVisitors: 0,
                 returningVisitors: 0,
-                topPersona: 'None yet'
+                topCountry: '--',
+                bounceRate: '0%'
             },
             visitors: [],
             topPages: [],
@@ -74,56 +75,139 @@ export const GET: APIRoute = async ({ locals }) => {
     }
 
     try {
+        const url = new URL(request.url);
+        const timeframe = (url.searchParams.get('timeframe') || 'all').toLowerCase();
+        const now = Date.now();
+
+        let minTime = 0;
+        let trendDaysCount = 14;
+
+        if (timeframe === 'today') {
+            const startOfToday = new Date();
+            startOfToday.setHours(0, 0, 0, 0);
+            minTime = startOfToday.getTime();
+            trendDaysCount = 1;
+        } else if (timeframe === '7d') {
+            minTime = now - (7 * 24 * 60 * 60 * 1000);
+            trendDaysCount = 7;
+        } else if (timeframe === '30d') {
+            minTime = now - (30 * 24 * 60 * 60 * 1000);
+            trendDaysCount = 30;
+        } else {
+            // all time
+            minTime = 0;
+            trendDaysCount = 14;
+        }
+
+        const isFiltered = minTime > 0;
+
         // 1. Core Totals
-        const totalViewsRow = await db.prepare('SELECT COUNT(*) as count FROM journeys').first<{ count: number }>();
-        const uniqueVisitorsRow = await db.prepare('SELECT COUNT(*) as count FROM visitors').first<{ count: number }>();
-        const returningVisitorsRow = await db.prepare('SELECT COUNT(*) as count FROM visitors WHERE visit_count > 1').first<{ count: number }>();
-        const bounceVisitorsRow = await db.prepare('SELECT COUNT(*) as count FROM visitors WHERE total_page_views = 1').first<{ count: number }>();
-        const topCountryRow = await db.prepare('SELECT country, COUNT(*) as count FROM journeys WHERE country != \'\' AND country IS NOT NULL GROUP BY country ORDER BY count DESC LIMIT 1').first<{ country: string; count: number }>();
+        const totalViewsRow = isFiltered
+            ? await db.prepare(`SELECT COUNT(*) as count FROM journeys WHERE created_at >= ?`).bind(minTime).first<{ count: number }>()
+            : await db.prepare('SELECT COUNT(*) as count FROM journeys').first<{ count: number }>();
+
+        const uniqueVisitorsRow = isFiltered
+            ? await db.prepare(`SELECT COUNT(DISTINCT visitor_id) as count FROM journeys WHERE created_at >= ?`).bind(minTime).first<{ count: number }>()
+            : await db.prepare('SELECT COUNT(*) as count FROM visitors').first<{ count: number }>();
+
+        const singlePageBouncesRow = isFiltered
+            ? await db.prepare(`
+                SELECT COUNT(*) as count FROM (
+                    SELECT visitor_id FROM journeys WHERE created_at >= ? GROUP BY visitor_id HAVING COUNT(*) = 1
+                )
+            `).bind(minTime).first<{ count: number }>()
+            : await db.prepare('SELECT COUNT(*) as count FROM visitors WHERE total_page_views = 1').first<{ count: number }>();
+
+        const returningVisitorsRow = isFiltered
+            ? await db.prepare(`
+                SELECT COUNT(*) as count FROM (
+                    SELECT visitor_id FROM journeys WHERE created_at >= ? GROUP BY visitor_id HAVING COUNT(*) > 1
+                )
+            `).bind(minTime).first<{ count: number }>()
+            : await db.prepare('SELECT COUNT(*) as count FROM visitors WHERE visit_count > 1').first<{ count: number }>();
+
+        const topCountryRow = isFiltered
+            ? await db.prepare(`SELECT country, COUNT(*) as count FROM journeys WHERE country != '' AND country IS NOT NULL AND created_at >= ? GROUP BY country ORDER BY count DESC LIMIT 1`).bind(minTime).first<{ country: string; count: number }>()
+            : await db.prepare(`SELECT country, COUNT(*) as count FROM journeys WHERE country != '' AND country IS NOT NULL GROUP BY country ORDER BY count DESC LIMIT 1`).first<{ country: string; count: number }>();
 
         const totalViews = totalViewsRow?.count || 0;
         const uniqueVisitors = uniqueVisitorsRow?.count || 0;
-        const singlePageBounces = bounceVisitorsRow?.count || 0;
+        const singlePageBounces = singlePageBouncesRow?.count || 0;
         const bounceRate = uniqueVisitors > 0 ? Math.round((singlePageBounces / uniqueVisitors) * 100) : 0;
         const topCountry = topCountryRow ? `${topCountryRow.country} (${Math.round((topCountryRow.count / (totalViews || 1)) * 100)}%)` : '--';
 
         // 2. Top Pages
-        const topPages = await db.prepare(`
-            SELECT path, COUNT(*) as views 
-            FROM journeys 
-            GROUP BY path 
-            ORDER BY views DESC 
-            LIMIT 10
-        `).all<{ path: string; views: number }>();
+        const topPages = isFiltered
+            ? await db.prepare(`
+                SELECT path, COUNT(*) as views 
+                FROM journeys 
+                WHERE created_at >= ?
+                GROUP BY path 
+                ORDER BY views DESC 
+                LIMIT 10
+            `).bind(minTime).all<{ path: string; views: number }>()
+            : await db.prepare(`
+                SELECT path, COUNT(*) as views 
+                FROM journeys 
+                GROUP BY path 
+                ORDER BY views DESC 
+                LIMIT 10
+            `).all<{ path: string; views: number }>();
 
         // 3. Top Referrers
-        const topReferrers = await db.prepare(`
-            SELECT referrer, COUNT(*) as count 
-            FROM journeys 
-            WHERE referrer != '' AND referrer IS NOT NULL
-            GROUP BY referrer 
-            ORDER BY count DESC 
-            LIMIT 8
-        `).all<{ referrer: string; count: number }>();
+        const topReferrers = isFiltered
+            ? await db.prepare(`
+                SELECT referrer, COUNT(*) as count 
+                FROM journeys 
+                WHERE referrer != '' AND referrer IS NOT NULL AND created_at >= ?
+                GROUP BY referrer 
+                ORDER BY count DESC 
+                LIMIT 8
+            `).bind(minTime).all<{ referrer: string; count: number }>()
+            : await db.prepare(`
+                SELECT referrer, COUNT(*) as count 
+                FROM journeys 
+                WHERE referrer != '' AND referrer IS NOT NULL
+                GROUP BY referrer 
+                ORDER BY count DESC 
+                LIMIT 8
+            `).all<{ referrer: string; count: number }>();
 
         // 4. Country Breakdown
-        const countries = await db.prepare(`
-            SELECT country, COUNT(*) as count 
-            FROM journeys 
-            WHERE country != '' AND country IS NOT NULL
-            GROUP BY country 
-            ORDER BY count DESC 
-            LIMIT 8
-        `).all<{ country: string; count: number }>();
+        const countries = isFiltered
+            ? await db.prepare(`
+                SELECT country, COUNT(*) as count 
+                FROM journeys 
+                WHERE country != '' AND country IS NOT NULL AND created_at >= ?
+                GROUP BY country 
+                ORDER BY count DESC 
+                LIMIT 8
+            `).bind(minTime).all<{ country: string; count: number }>()
+            : await db.prepare(`
+                SELECT country, COUNT(*) as count 
+                FROM journeys 
+                WHERE country != '' AND country IS NOT NULL
+                GROUP BY country 
+                ORDER BY count DESC 
+                LIMIT 8
+            `).all<{ country: string; count: number }>();
 
         // 5. Device Breakdown
-        const devices = await db.prepare(`
-            SELECT device, COUNT(*) as count 
-            FROM journeys 
-            WHERE device != '' AND device IS NOT NULL
-            GROUP BY device 
-            ORDER BY count DESC
-        `).all<{ device: string; count: number }>();
+        const devices = isFiltered
+            ? await db.prepare(`
+                SELECT device, COUNT(*) as count 
+                FROM journeys 
+                WHERE device != '' AND device IS NOT NULL AND created_at >= ?
+                GROUP BY device 
+                ORDER BY count DESC
+            `).bind(minTime).all<{ device: string; count: number }>()
+            : await db.prepare(`
+                SELECT device, COUNT(*) as count 
+                FROM journeys 
+                WHERE device != '' AND device IS NOT NULL
+                GROUP BY device 
+                ORDER BY count DESC
+            `).all<{ device: string; count: number }>();
 
         // 6. Recent Visitors with their Journeys (latest 15 visitors)
         const recentVisitors = await db.prepare(`
@@ -176,8 +260,11 @@ export const GET: APIRoute = async ({ locals }) => {
             });
         }
 
-        // 7. Daily Trends (full 14-day continuous range with 0-filled days)
-        const fourteenDaysAgo = Date.now() - (14 * 24 * 60 * 60 * 1000);
+        // 7. Daily Trends (continuous range based on timeframe with 0-filled days)
+        const trendsMinTime = timeframe === 'today'
+            ? minTime
+            : (now - (trendDaysCount * 24 * 60 * 60 * 1000));
+
         const rawTrends = await db.prepare(`
             SELECT 
                 date(created_at / 1000, 'unixepoch') as date, 
@@ -186,16 +273,17 @@ export const GET: APIRoute = async ({ locals }) => {
             WHERE created_at >= ?
             GROUP BY date 
             ORDER BY date ASC
-        `).bind(fourteenDaysAgo).all<{ date: string; views: number }>();
+        `).bind(trendsMinTime).all<{ date: string; views: number }>();
 
         const trendMap = new Map<string, number>();
         for (const row of (rawTrends.results || [])) {
             trendMap.set(row.date, row.views);
         }
 
-        // Fill complete continuous 14-day range
+        // Fill continuous days for range
         const dailyTrends: Array<{ date: string; label: string; views: number }> = [];
-        for (let i = 13; i >= 0; i--) {
+        const daysToFill = Math.max(1, trendDaysCount);
+        for (let i = daysToFill - 1; i >= 0; i--) {
             const d = new Date(Date.now() - (i * 24 * 60 * 60 * 1000));
             const dateStr = d.toISOString().split('T')[0];
             const label = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });

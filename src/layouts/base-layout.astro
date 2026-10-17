@@ -23,7 +23,7 @@ const { showHeader = true, slug, ...head } = Astro.props;
         <ClientRouter />
         <script is:inline src="/theme-toggle.js"></script>
         <script>
-            import { initAnalyticsTracker } from '../utils/analytics-client';
+            import { initAnalyticsTracker } from '../utils/tracker';
 
             // Trigger on initial page load and every subsequent View Transition
             document.addEventListener('astro:page-load', () => {
