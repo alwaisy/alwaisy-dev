@@ -64,31 +64,30 @@ export const POST: APIRoute = async ({ request, locals }) => {
         const { device, browser } = parseDevice(ua);
         const now = Date.now();
 
-        // Access Cloudflare D1
         let db: D1Database | undefined;
+        let dbError: string | null = null;
         try {
-            const runtime = locals as { runtime?: { env?: { ANALYTICS_DB?: D1Database; PAGE_VIEWS?: KVNamespace } } };
-            if (runtime.runtime?.env?.ANALYTICS_DB) {
-                db = runtime.runtime.env.ANALYTICS_DB;
-            } else {
-                const cloudflareWorkers = await import('cloudflare:workers');
-                const env = cloudflareWorkers.env as unknown as { ANALYTICS_DB?: D1Database; PAGE_VIEWS?: KVNamespace };
-                db = env.ANALYTICS_DB;
+            const cfModule = await import('cloudflare:workers');
+            const workerEnv = cfModule?.env as unknown as { ANALYTICS_DB?: D1Database; PAGE_VIEWS?: KVNamespace } | undefined;
+            db = workerEnv?.ANALYTICS_DB;
+            if (!db) {
+                const runtime = locals as { runtime?: { env?: { ANALYTICS_DB?: D1Database; PAGE_VIEWS?: KVNamespace } } };
+                db = runtime.runtime?.env?.ANALYTICS_DB;
             }
-        } catch {
+        } catch (e) {
+            dbError = e instanceof Error ? e.message : String(e);
             db = undefined;
         }
 
         // Also increment legacy/unified PAGE_VIEWS KV counter if available
         try {
             let kv: KVNamespace | undefined;
-            const runtime = locals as { runtime?: { env?: { PAGE_VIEWS?: KVNamespace } } };
-            if (runtime.runtime?.env?.PAGE_VIEWS) {
-                kv = runtime.runtime.env.PAGE_VIEWS;
-            } else {
-                const cloudflareWorkers = await import('cloudflare:workers');
-                const env = cloudflareWorkers.env as unknown as { PAGE_VIEWS?: KVNamespace };
-                kv = env.PAGE_VIEWS;
+            const cfModule = await import('cloudflare:workers');
+            const workerEnv = cfModule?.env as unknown as { PAGE_VIEWS?: KVNamespace } | undefined;
+            kv = workerEnv?.PAGE_VIEWS;
+            if (!kv) {
+                const runtime = locals as { runtime?: { env?: { PAGE_VIEWS?: KVNamespace } } };
+                kv = runtime.runtime?.env?.PAGE_VIEWS;
             }
             if (kv) {
                 const viewKey = `views:${path}`;
@@ -101,9 +100,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
 
         if (!db) {
-            // Return persona preview even in local mode without D1 binding
+            // Return persona preview with diagnostic in response
             const persona = generateMiddlePersona(visitorId, 1);
-            return new Response(JSON.stringify({ ok: true, persona }), {
+            return new Response(JSON.stringify({ ok: true, persona, debugDbMissing: true, dbError }), {
                 status: 200,
                 headers: { 'Content-Type': 'application/json' }
             });

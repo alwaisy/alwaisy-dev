@@ -37,16 +37,17 @@ export interface VisitorWithJourney {
 
 export const GET: APIRoute = async ({ locals }) => {
     let db: D1Database | undefined;
+    let dbError: string | null = null;
     try {
-        const runtime = locals as { runtime?: { env?: { ANALYTICS_DB?: D1Database } } };
-        if (runtime.runtime?.env?.ANALYTICS_DB) {
-            db = runtime.runtime.env.ANALYTICS_DB;
-        } else {
-            const cloudflareWorkers = await import('cloudflare:workers');
-            const env = cloudflareWorkers.env as unknown as { ANALYTICS_DB?: D1Database };
-            db = env.ANALYTICS_DB;
+        const cfModule = await import('cloudflare:workers');
+        const workerEnv = cfModule?.env as unknown as { ANALYTICS_DB?: D1Database } | undefined;
+        db = workerEnv?.ANALYTICS_DB;
+        if (!db) {
+            const runtime = locals as { runtime?: { env?: { ANALYTICS_DB?: D1Database } } };
+            db = runtime.runtime?.env?.ANALYTICS_DB;
         }
-    } catch {
+    } catch (e) {
+        dbError = e instanceof Error ? e.message : String(e);
         db = undefined;
     }
 
@@ -63,7 +64,9 @@ export const GET: APIRoute = async ({ locals }) => {
             topReferrers: [],
             countries: [],
             devices: [],
-            dailyTrends: []
+            dailyTrends: [],
+            debugDbMissing: true,
+            dbError
         }), {
             status: 200,
             headers: { 'Content-Type': 'application/json' }
