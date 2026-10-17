@@ -1,20 +1,20 @@
 import type { APIRoute } from 'astro';
 import { verifyHumanRequest, getDailyVisitorHash, normalizeSlug } from '../../../utils/view-counter';
 
-import { env } from 'cloudflare:workers';
-
 export const prerender = false;
 
 // In-memory fallback for local development or when KV binding is not initialized
 const devMemoryCounts = new Map<string, number>();
 const devMemoryHashes = new Set<string>();
 
-function getKvBinding(): KVNamespace | null {
-    // In Cloudflare Workers runtime (Astro v6), env is imported directly from 'cloudflare:workers'
+async function getKvBinding(): Promise<KVNamespace | null> {
+    // In Cloudflare Workers runtime (Astro v6), env is provided by 'cloudflare:workers'
     try {
-        const workerEnv = (env as unknown as { PAGE_VIEWS?: KVNamespace });
+        const cfModule = await import('cloudflare:workers');
+        const workerEnv = cfModule?.env as { PAGE_VIEWS?: KVNamespace } | undefined;
         return workerEnv?.PAGE_VIEWS || null;
     } catch {
+        // Running in Node dev server or environment without workerd
         return null;
     }
 }
@@ -22,7 +22,7 @@ function getKvBinding(): KVNamespace | null {
 export const GET: APIRoute = async ({ params }) => {
     const rawSlug = params.slug || 'home';
     const slug = normalizeSlug(rawSlug);
-    const kv = getKvBinding();
+    const kv = await getKvBinding();
 
     let views = 0;
     if (kv) {
@@ -74,7 +74,7 @@ export const POST: APIRoute = async ({ params, request }) => {
         });
     }
 
-    const kv = getKvBinding();
+    const kv = await getKvBinding();
     const visitorHash = await getDailyVisitorHash(request, slug);
 
     let views = 0;
