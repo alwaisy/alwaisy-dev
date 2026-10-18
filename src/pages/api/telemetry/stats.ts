@@ -25,6 +25,20 @@ export interface PageDetail {
     title?: string;
 }
 
+export interface RealtimeVisitor {
+    id: string;
+    personaName: string;
+    personaAlias: string;
+    personaBadgeColor: string;
+    lastCountry: string;
+    lastDevice: string;
+    lastBrowser: string;
+    currentPath: string;
+    currentTitle?: string;
+    dwellTimeSeconds: number;
+    secondsAgo: number;
+}
+
 export interface VisitorWithJourney {
     id: string;
     personaName: string;
@@ -312,6 +326,33 @@ export const GET: APIRoute = async ({ request, locals }) => {
             });
         }
 
+        // 8. Real-Time Active Online Visitors (Active within the last 3 minutes / 180s)
+        const threeMinutesAgo = now - 180000;
+        const activeVisitorsQuery = await db.prepare(`
+            SELECT 
+                v.id,
+                v.persona_name as personaName,
+                v.persona_alias as personaAlias,
+                v.persona_badge_color as personaBadgeColor,
+                v.last_country as lastCountry,
+                v.last_device as lastDevice,
+                v.last_browser as lastBrowser,
+                j.path as currentPath,
+                j.title as currentTitle,
+                j.dwell_time_seconds as dwellTimeSeconds,
+                ROUND((? - v.last_seen) / 1000) as secondsAgo
+            FROM visitors v
+            JOIN journeys j ON j.visitor_id = v.id AND j.id = (
+                SELECT id FROM journeys WHERE visitor_id = v.id ORDER BY created_at DESC LIMIT 1
+            )
+            WHERE v.last_seen >= ?
+            ORDER BY v.last_seen DESC
+            LIMIT 10
+        `).bind(now, threeMinutesAgo).all<RealtimeVisitor>();
+
+        const activeVisitors = activeVisitorsQuery.results || [];
+        const onlineCount = activeVisitors.length;
+
         return new Response(JSON.stringify({
             summary: {
                 totalPageViews: totalViews,
@@ -319,9 +360,11 @@ export const GET: APIRoute = async ({ request, locals }) => {
                 returningVisitors: returningVisitorsRow?.count || 0,
                 topCountry,
                 topCountryCode: topCountryRow?.country || '',
-                bounceRate: `${bounceRate}%`
+                bounceRate: `${bounceRate}%`,
+                onlineCount
             },
             visitors: visitorsWithJourney,
+            activeVisitors,
             topPages: topPages.results || [],
             topReferrers: topReferrers.results || [],
             countries: countries.results || [],

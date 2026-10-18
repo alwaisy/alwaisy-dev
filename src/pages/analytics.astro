@@ -23,13 +23,26 @@ export const prerender = false;
                         100% self-hosted, cookie-less telemetry and visitor journeys.
                     </p>
                 </div>
-                <!-- Dynamic Your Persona indicator -->
-                <div
-                    id="my-persona-pill"
-                    class="hidden items-center gap-1.5 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-3.5 py-1 text-xs font-mono text-emerald-700 dark:text-emerald-300 transition-all"
-                >
-                    <span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
-                    <span>You: <strong id="my-persona-name" class="font-semibold text-main">--</strong></span>
+                <div class="flex items-center gap-2.5">
+                    <!-- Live Online Users Pill -->
+                    <div
+                        id="live-online-pill"
+                        class="inline-flex items-center gap-2 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-3.5 py-1.5 text-xs font-mono text-emerald-700 dark:text-emerald-300"
+                    >
+                        <span class="relative flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                        </span>
+                        <span>Live: <strong id="live-online-count" class="font-bold text-main">0</strong> Online</span>
+                    </div>
+
+                    <!-- Dynamic Your Persona indicator -->
+                    <div
+                        id="my-persona-pill"
+                        class="hidden items-center gap-1.5 rounded-full border border-main/20 bg-muted/20 px-3.5 py-1.5 text-xs font-mono text-main transition-all"
+                    >
+                        <span>You: <strong id="my-persona-name" class="font-semibold text-main">--</strong></span>
+                    </div>
                 </div>
             </div>
         </header>
@@ -135,6 +148,33 @@ export const prerender = false;
                         <span id="chart-date-mid">7 days ago</span>
                         <span id="chart-date-end">Today</span>
                     </div>
+                </div>
+            </section>
+
+            <!-- 2.5 Real-Time Active Visitors Section -->
+            <section id="active-visitors-section" aria-label="Real-Time Active Visitors" class="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-5 sm:p-6 transition-all">
+                <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+                    <div class="flex items-center gap-2.5">
+                        <span class="relative flex h-2.5 w-2.5">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                        </span>
+                        <div>
+                            <h2 class="font-serif text-xl sm:text-2xl font-semibold text-main">
+                                Active Right Now
+                            </h2>
+                            <p class="text-xs text-muted">
+                                Visitors browsing pages within the last 3 minutes (auto-refreshed live).
+                            </p>
+                        </div>
+                    </div>
+                    <span id="active-visitors-badge" class="rounded-full bg-emerald-500/15 border border-emerald-500/20 px-3 py-1 text-xs font-mono font-medium text-emerald-700 dark:text-emerald-300">
+                        0 Active
+                    </span>
+                </div>
+
+                <div id="active-visitors-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    <!-- Populated dynamically via JS -->
                 </div>
             </section>
 
@@ -361,6 +401,20 @@ export const prerender = false;
             title?: string;
         }
 
+        interface RealtimeVisitor {
+            id: string;
+            personaName: string;
+            personaAlias?: string;
+            personaBadgeColor?: string;
+            lastCountry?: string;
+            lastDevice?: string;
+            lastBrowser?: string;
+            currentPath: string;
+            currentTitle?: string;
+            dwellTimeSeconds: number;
+            secondsAgo: number;
+        }
+
         interface AnalyticsPayload {
             summary: {
                 totalPageViews: number;
@@ -369,8 +423,10 @@ export const prerender = false;
                 topCountry: string;
                 topCountryCode?: string;
                 bounceRate: string;
+                onlineCount?: number;
             };
             visitors: Visitor[];
+            activeVisitors?: RealtimeVisitor[];
             topPages: PageStat[];
             topReferrers: Array<{ referrer: string; count: number }>;
             countries: Array<{ country: string; count: number }>;
@@ -630,6 +686,69 @@ export const prerender = false;
                     if (endLabel && data.dailyTrends[13]) endLabel.textContent = `${data.dailyTrends[13].label} (Today)`;
                 }
 
+                // Update live online count in header pill
+                const onlineCount = data.summary.onlineCount ?? (data.activeVisitors ? data.activeVisitors.length : 0);
+                const elLiveCount = document.getElementById('live-online-count');
+                if (elLiveCount) elLiveCount.textContent = onlineCount.toString();
+
+                // 2.5 Real-Time Active Online Visitors Section
+                const activeContainer = document.getElementById('active-visitors-container');
+                const activeBadge = document.getElementById('active-visitors-badge');
+                if (activeBadge) activeBadge.textContent = `${onlineCount} Active`;
+
+                if (activeContainer) {
+                    activeContainer.innerHTML = '';
+                    const activeList = data.activeVisitors || [];
+                    const myVisitorId = localStorage.getItem('mid_v_id');
+
+                    if (activeList.length === 0) {
+                        activeContainer.innerHTML = `
+                            <div class="col-span-full py-3 px-4 rounded-xl border border-dashed border-main/15 bg-main/5 text-center text-xs font-mono text-muted">
+                                No other active visitors right now. (Active window: last 3 minutes)
+                            </div>
+                        `;
+                    } else {
+                        activeList.forEach((v) => {
+                            const isMe = myVisitorId && v.id === myVisitorId;
+                            const card = document.createElement('div');
+                            card.className = `p-3.5 rounded-xl border transition-all cursor-pointer ${
+                                isMe 
+                                    ? 'border-emerald-500/40 bg-emerald-500/10' 
+                                    : 'border-main/15 bg-muted/15 hover:border-emerald-500/30 hover:bg-muted/30'
+                            }`;
+                            card.onclick = () => openJourneyModal(v.id);
+
+                            const flagHtml = renderFlag(v.lastCountry);
+                            const dwellDisplay = v.dwellTimeSeconds > 60 
+                                ? `${Math.floor(v.dwellTimeSeconds / 60)}m ${v.dwellTimeSeconds % 60}s` 
+                                : `${v.dwellTimeSeconds || 0}s`;
+
+                            card.innerHTML = `
+                                <div class="flex items-center justify-between gap-2 mb-2">
+                                    <div class="flex items-center gap-2 truncate">
+                                        <span class="relative flex h-2 w-2 shrink-0">
+                                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                                        </span>
+                                        <span class="font-semibold text-sm text-main truncate">${v.personaName}</span>
+                                        ${isMe ? '<span class="rounded bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-mono text-[9px] px-1.5 py-0.5 font-bold uppercase shrink-0">You</span>' : ''}
+                                    </div>
+                                    <span class="text-[10px] font-mono text-muted shrink-0">${v.secondsAgo < 10 ? 'just now' : `${v.secondsAgo}s ago`}</span>
+                                </div>
+                                <div class="flex items-center justify-between text-xs font-mono text-muted">
+                                    <span class="truncate max-w-[180px] text-main font-medium" title="${v.currentTitle || v.currentPath}">${v.currentPath}</span>
+                                    <span class="shrink-0 text-emerald-600 dark:text-emerald-400 font-medium">⏱ ${dwellDisplay}</span>
+                                </div>
+                                <div class="mt-2 pt-2 border-t border-main/10 flex items-center justify-between text-[11px] font-mono text-muted">
+                                    <span class="flex items-center gap-1">${flagHtml} ${v.lastCountry || 'Unknown'}</span>
+                                    <span>${v.lastDevice || 'Desktop'} · ${v.lastBrowser || 'Web'}</span>
+                                </div>
+                            `;
+                            activeContainer.appendChild(card);
+                        });
+                    }
+                }
+
                 // 3. Compact Minimalist Visitor Sessions (Miller's Law)
                 const visitorsContainer = document.getElementById('visitors-list');
                 const myVisitorId = localStorage.getItem('mid_v_id');
@@ -832,11 +951,32 @@ export const prerender = false;
             });
         }
 
-        // Run when page loads
+        // Run when page loads & set up live polling
+        let livePollTimer: ReturnType<typeof setInterval> | null = null;
+
         document.addEventListener('astro:page-load', () => {
             if (window.location.pathname === '/analytics' || window.location.pathname === '/analytics/') {
                 initTimeframeButtons();
                 loadAnalyticsDashboard();
+
+                if (livePollTimer) clearInterval(livePollTimer);
+                // Poll every 15 seconds to keep the real-time active users and dwell seconds live
+                livePollTimer = setInterval(() => {
+                    // Only refresh if page is visible
+                    if (document.visibilityState === 'visible') {
+                        loadAnalyticsDashboard();
+                    }
+                }, 15000);
+            } else if (livePollTimer) {
+                clearInterval(livePollTimer);
+                livePollTimer = null;
+            }
+        });
+
+        document.addEventListener('astro:before-swap', () => {
+            if (livePollTimer) {
+                clearInterval(livePollTimer);
+                livePollTimer = null;
             }
         });
     </script>
