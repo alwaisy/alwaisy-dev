@@ -12,36 +12,43 @@ export const prerender = false;
     slug="analytics"
 >
     <article class="mb-16 sm:mb-24">
-        <!-- Page Header -->
-        <header class="mb-8">
-            <div class="flex flex-wrap items-center justify-between gap-4">
+        <!-- Page Header: Editorial & Restrained -->
+        <header class="mb-10 pb-6 border-b border-main/15">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
                 <div>
-                    <h1 class="font-serif text-3xl leading-tight font-medium sm:text-5xl sm:leading-tight">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-muted">
+                            <span class="relative flex h-2 w-2">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                            </span>
+                            Live Telemetry
+                        </span>
+                    </div>
+                    <h1 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-medium tracking-tight text-main">
                         Open Analytics
                     </h1>
-                    <p class="text-muted mt-2 text-base sm:text-lg">
-                        100% self-hosted, cookie-less telemetry and visitor journeys.
+                    <p class="text-muted mt-2 text-sm sm:text-base max-w-xl">
+                        Self-hosted, cookie-less telemetry and transparent visitor journeys on Cloudflare D1.
                     </p>
                 </div>
-                <div class="flex items-center gap-2.5">
-                    <!-- Live Online Users Pill -->
+
+                <!-- Live Status & User Persona Indicators -->
+                <div class="flex items-center gap-2 shrink-0 font-mono text-xs">
                     <div
                         id="live-online-pill"
-                        class="inline-flex items-center gap-2 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-3.5 py-1.5 text-xs font-mono text-emerald-700 dark:text-emerald-300"
+                        class="inline-flex items-center gap-2 rounded-lg border border-emerald-500/25 bg-emerald-500/10 px-3 py-1.5 text-emerald-800 dark:text-emerald-300"
                     >
-                        <span class="relative flex h-2 w-2">
-                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                        </span>
-                        <span>Live: <strong id="live-online-count" class="font-bold text-main">0</strong> Online</span>
+                        <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                        <span><strong id="live-online-count" class="font-semibold text-main">0</strong> online now</span>
                     </div>
 
-                    <!-- Dynamic Your Persona indicator -->
                     <div
                         id="my-persona-pill"
-                        class="hidden items-center gap-1.5 rounded-full border border-main/20 bg-muted/20 px-3.5 py-1.5 text-xs font-mono text-main transition-all"
+                        class="hidden items-center gap-1.5 rounded-lg border border-main/15 bg-muted/20 px-3 py-1.5 text-main"
                     >
-                        <span>You: <strong id="my-persona-name" class="font-semibold text-main">--</strong></span>
+                        <span class="text-muted">You:</span>
+                        <strong id="my-persona-name" class="font-semibold text-main">--</strong>
                     </div>
                 </div>
             </div>
@@ -49,62 +56,59 @@ export const prerender = false;
 
         <!-- Loading Skeleton -->
         <div id="analytics-loading" class="space-y-8 animate-pulse">
-            <div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
-                <div class="h-24 rounded-xl border border-main/15 bg-muted/20"></div>
-                <div class="h-24 rounded-xl border border-main/15 bg-muted/20"></div>
-                <div class="h-24 rounded-xl border border-main/15 bg-muted/20"></div>
-                <div class="h-24 rounded-xl border border-main/15 bg-muted/20"></div>
+            <div class="grid grid-cols-2 gap-px border border-main/15 bg-main/15 sm:grid-cols-4 rounded-xl overflow-hidden">
+                <div class="h-28 bg-muted/20"></div>
+                <div class="h-28 bg-muted/20"></div>
+                <div class="h-28 bg-muted/20"></div>
+                <div class="h-28 bg-muted/20"></div>
             </div>
-            <div class="h-56 rounded-xl border border-main/15 bg-muted/20"></div>
-            <div class="h-72 rounded-xl border border-main/15 bg-muted/20"></div>
+            <div class="h-60 rounded-xl border border-main/15 bg-muted/15"></div>
+            <div class="h-80 rounded-xl border border-main/15 bg-muted/15"></div>
         </div>
 
         <!-- Real Analytics Dashboard -->
-        <div id="analytics-content" class="hidden space-y-8 sm:space-y-12">
-            <!-- Time Range Filters -->
-            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-main/15 pb-4">
-                <div class="inline-flex items-center rounded-xl border border-main/20 bg-muted/20 p-1 text-xs font-mono">
+        <div id="analytics-content" class="hidden space-y-10 sm:space-y-14">
+            <!-- Filter & Action Bar: Unified Toolbar -->
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <!-- Time Range Segmented Control -->
+                <div class="inline-flex items-center rounded-lg border border-main/20 bg-muted/30 p-0.5 text-xs font-mono">
                     <button
                         type="button"
                         data-timeframe="all"
-                        class="timeframe-btn rounded-lg px-3 py-1.5 font-medium transition-colors bg-main text-background shadow-xs"
+                        class="timeframe-btn rounded-md px-3 py-1 font-medium transition-colors bg-main text-background shadow-xs cursor-pointer"
                     >
                         All Time
                     </button>
                     <button
                         type="button"
                         data-timeframe="30d"
-                        class="timeframe-btn rounded-lg px-3 py-1.5 font-medium transition-colors text-muted hover:text-main"
+                        class="timeframe-btn rounded-md px-3 py-1 font-medium transition-colors text-muted hover:text-main cursor-pointer"
                     >
-                        Last 30 Days
+                        30D
                     </button>
                     <button
                         type="button"
                         data-timeframe="7d"
-                        class="timeframe-btn rounded-lg px-3 py-1.5 font-medium transition-colors text-muted hover:text-main"
+                        class="timeframe-btn rounded-md px-3 py-1 font-medium transition-colors text-muted hover:text-main cursor-pointer"
                     >
-                        Last 7 Days
+                        7D
                     </button>
                     <button
                         type="button"
                         data-timeframe="today"
-                        class="timeframe-btn rounded-lg px-3 py-1.5 font-medium transition-colors text-muted hover:text-main"
+                        class="timeframe-btn rounded-md px-3 py-1 font-medium transition-colors text-muted hover:text-main cursor-pointer"
                     >
                         Today
                     </button>
                 </div>
+
                 <div class="flex items-center gap-3 text-xs font-mono text-muted">
-                    <div class="flex items-center gap-1.5">
-                        <span class="inline-block h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span id="filter-status-label">All-time telemetry</span>
-                    </div>
-
-                    <span class="text-main/20">|</span>
-
+                    <span id="filter-status-label" class="hidden sm:inline">All-time telemetry data</span>
+                    
                     <button
                         type="button"
                         id="manual-refresh-btn"
-                        class="inline-flex items-center gap-1.5 rounded-lg border border-main/15 bg-muted/20 px-2.5 py-1 text-xs font-mono text-main hover:bg-main/10 hover:border-main/30 transition-all cursor-pointer"
+                        class="inline-flex items-center gap-1.5 rounded-md border border-main/15 bg-muted/20 px-2.5 py-1 text-xs font-mono text-main hover:bg-main/10 hover:border-main/30 transition-all cursor-pointer"
                         title="Force refresh analytics directly from database"
                     >
                         <svg id="refresh-spinner" class="w-3.5 h-3.5 text-main transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -115,48 +119,50 @@ export const prerender = false;
                 </div>
             </div>
 
-            <!-- 1. Key Performance Indicators -->
-            <section aria-label="Key Performance Indicators" class="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-                <div class="rounded-xl border border-main/15 bg-muted/20 p-4 sm:p-5">
-                    <p class="text-xs font-mono uppercase tracking-wider text-muted">Total Views</p>
-                    <p id="stat-total-views" class="mt-1 font-serif text-2xl font-bold sm:text-3xl text-main">0</p>
-                    <p class="mt-1 text-[11px] text-muted">All-time page hits</p>
-                </div>
+            <!-- 1. Key Performance Indicators: Unified Data Grid (Not 4 floating cards) -->
+            <section aria-label="Key Performance Indicators">
+                <div class="grid grid-cols-2 sm:grid-cols-4 border border-main/15 bg-muted/10 divide-x divide-y sm:divide-y-0 divide-main/15 rounded-xl overflow-hidden">
+                    <div class="p-4 sm:p-6">
+                        <p class="text-[11px] font-mono uppercase tracking-wider text-muted">Total Views</p>
+                        <p id="stat-total-views" class="mt-2 font-mono text-2xl sm:text-3xl font-semibold text-main">0</p>
+                        <p class="mt-1 text-[11px] font-mono text-muted/80">Page views</p>
+                    </div>
 
-                <div class="rounded-xl border border-main/15 bg-muted/20 p-4 sm:p-5">
-                    <p class="text-xs font-mono uppercase tracking-wider text-muted">Unique Visitors</p>
-                    <p id="stat-unique-visitors" class="mt-1 font-serif text-2xl font-bold sm:text-3xl text-main">0</p>
-                    <p class="mt-1 text-[11px] text-muted">Distinct humans</p>
-                </div>
+                    <div class="p-4 sm:p-6">
+                        <p class="text-[11px] font-mono uppercase tracking-wider text-muted">Unique Visitors</p>
+                        <p id="stat-unique-visitors" class="mt-2 font-mono text-2xl sm:text-3xl font-semibold text-main">0</p>
+                        <p class="mt-1 text-[11px] font-mono text-muted/80">Distinct personas</p>
+                    </div>
 
-                <div class="rounded-xl border border-main/15 bg-muted/20 p-4 sm:p-5">
-                    <p class="text-xs font-mono uppercase tracking-wider text-muted">Top Country</p>
-                    <p id="stat-top-country" class="mt-1 font-serif text-xl font-bold sm:text-2xl text-main truncate">--</p>
-                    <p class="mt-1 text-[11px] text-muted">Primary visitor region</p>
-                </div>
+                    <div class="p-4 sm:p-6">
+                        <p class="text-[11px] font-mono uppercase tracking-wider text-muted">Top Country</p>
+                        <p id="stat-top-country" class="mt-2 font-mono text-lg sm:text-2xl font-semibold text-main truncate">--</p>
+                        <p class="mt-1 text-[11px] font-mono text-muted/80">Primary origin</p>
+                    </div>
 
-                <div class="rounded-xl border border-main/15 bg-muted/20 p-4 sm:p-5">
-                    <p class="text-xs font-mono uppercase tracking-wider text-muted">Bounce Rate (Est)</p>
-                    <p id="stat-bounce-rate" class="mt-1 font-serif text-2xl font-bold sm:text-3xl text-main">0%</p>
-                    <p class="mt-1 text-[11px] text-muted">Single-page sessions</p>
+                    <div class="p-4 sm:p-6">
+                        <p class="text-[11px] font-mono uppercase tracking-wider text-muted">Bounce Rate</p>
+                        <p id="stat-bounce-rate" class="mt-2 font-mono text-2xl sm:text-3xl font-semibold text-main">0%</p>
+                        <p class="mt-1 text-[11px] font-mono text-muted/80">Single-page journeys</p>
+                    </div>
                 </div>
             </section>
 
             <!-- 2. Continuous 14-Day Traffic Trend -->
-            <section aria-label="Traffic Over Time" class="rounded-2xl border border-main/15 bg-muted/10 p-5 sm:p-6">
+            <section aria-label="Traffic Over Time" class="rounded-xl border border-main/15 bg-muted/10 p-5 sm:p-6">
                 <div class="mb-4 flex flex-wrap items-center justify-between gap-2">
                     <div>
-                        <h2 class="font-serif text-lg font-semibold sm:text-xl text-main">14-Day Traffic Trend</h2>
-                        <p class="text-xs text-muted">Daily page views across all pages</p>
+                        <h2 class="font-serif text-lg sm:text-xl font-medium text-main">Traffic Volume</h2>
+                        <p class="text-xs font-mono text-muted mt-0.5">Daily page hits recorded across all routes</p>
                     </div>
                     <div class="flex items-center gap-2">
                         <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
-                        <span class="text-xs font-mono text-muted">Views per day</span>
+                        <span class="text-xs font-mono text-muted">Daily hits</span>
                     </div>
                 </div>
 
                 <div class="relative pt-6">
-                    <div id="chart-bars" class="flex h-40 items-end gap-1.5 sm:gap-2.5 border-b border-main/15 pb-1">
+                    <div id="chart-bars" class="flex h-36 items-end gap-1.5 sm:gap-2.5 border-b border-main/15 pb-1">
                         <!-- Populated with continuous 14-day bars -->
                     </div>
                     <div id="chart-labels" class="flex justify-between pt-2 text-[10px] font-mono text-muted">
@@ -171,33 +177,30 @@ export const prerender = false;
             <section aria-label="Visitor Sessions">
                 <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
                     <div>
-                        <div class="flex items-center gap-2.5">
-                            <h2 class="font-serif text-2xl sm:text-3xl font-semibold text-main">
+                        <div class="flex items-center gap-3">
+                            <h2 class="font-serif text-xl sm:text-2xl font-medium text-main">
                                 Visitor Journeys
                             </h2>
                             <!-- Live pill filter -->
                             <button
                                 type="button"
                                 id="filter-live-toggle"
-                                class="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-2.5 py-0.5 text-xs font-mono text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/20 transition-colors cursor-pointer"
+                                class="inline-flex items-center gap-1.5 rounded-md border border-emerald-500/25 bg-emerald-500/10 px-2 py-0.5 text-xs font-mono text-emerald-800 dark:text-emerald-300 hover:bg-emerald-500/20 transition-colors cursor-pointer"
                                 title="Click to filter only active online visitors"
                             >
-                                <span class="relative flex h-2 w-2">
-                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                                </span>
+                                <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
                                 <span id="active-visitors-badge">0 Live Now</span>
                             </button>
                         </div>
-                        <p class="text-xs sm:text-sm text-muted mt-1">
-                            Click any visitor to inspect their complete path, page sequence, and dwell time.
+                        <p class="text-xs text-muted font-mono mt-1">
+                            Click any visitor to inspect their sequence and dwell duration.
                         </p>
                     </div>
 
                     <!-- Filter state indicator when active -->
                     <div id="live-filter-active-notice" class="hidden items-center gap-2 text-xs font-mono text-emerald-600 dark:text-emerald-400">
-                        <span>Showing live active visitors only</span>
-                        <button id="clear-live-filter" class="underline hover:text-main text-[11px] cursor-pointer">Show All</button>
+                        <span>Filtered by live active only</span>
+                        <button id="clear-live-filter" class="underline hover:text-main text-[11px] cursor-pointer">Reset</button>
                     </div>
                 </div>
 
@@ -205,9 +208,9 @@ export const prerender = false;
                 <div class="overflow-hidden rounded-xl border border-main/15 bg-muted/10">
                     <div class="hidden sm:grid sm:grid-cols-12 gap-3 px-4 py-2.5 border-b border-main/10 text-[11px] font-mono uppercase tracking-wider text-muted">
                         <div class="col-span-4">Visitor Persona</div>
-                        <div class="col-span-3">Initial Page / Current Route</div>
-                        <div class="col-span-3">Location & Device</div>
-                        <div class="col-span-2 text-right">Status · Time</div>
+                        <div class="col-span-3">Initial Route</div>
+                        <div class="col-span-3">Origin & Device</div>
+                        <div class="col-span-2 text-right">Activity · Time</div>
                     </div>
 
                     <div id="visitors-list" class="divide-y divide-main/10">
@@ -216,39 +219,51 @@ export const prerender = false;
                 </div>
             </section>
 
-            <!-- 4. Top Pages & Referrers Grid -->
+            <!-- 4. Top Pages & Traffic Sources -->
             <section class="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <!-- Top Pages -->
-                <div class="rounded-2xl border border-main/15 bg-muted/10 p-5 sm:p-6">
-                    <h3 class="font-serif text-lg font-semibold sm:text-xl text-main mb-4">Top Pages & Views</h3>
-                    <div id="top-pages-list" class="space-y-3">
+                <div class="rounded-xl border border-main/15 bg-muted/10 p-5 sm:p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-serif text-lg font-medium text-main">Top Pages</h3>
+                        <span class="text-[11px] font-mono text-muted uppercase">Views</span>
+                    </div>
+                    <div id="top-pages-list" class="space-y-2.5">
                         <!-- Populated via script -->
                     </div>
                 </div>
 
                 <!-- Top Referrers -->
-                <div class="rounded-2xl border border-main/15 bg-muted/10 p-5 sm:p-6">
-                    <h3 class="font-serif text-lg font-semibold sm:text-xl text-main mb-4">Traffic Sources & Referrers</h3>
-                    <div id="top-referrers-list" class="space-y-3">
+                <div class="rounded-xl border border-main/15 bg-muted/10 p-5 sm:p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-serif text-lg font-medium text-main">Referral Sources</h3>
+                        <span class="text-[11px] font-mono text-muted uppercase">Hits</span>
+                    </div>
+                    <div id="top-referrers-list" class="space-y-1">
                         <!-- Populated via script -->
                     </div>
                 </div>
             </section>
 
-            <!-- 5. Geographical & Devices Breakdown -->
+            <!-- 5. Geographical & Platform Breakdown -->
             <section class="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <!-- Countries -->
-                <div class="rounded-2xl border border-main/15 bg-muted/10 p-5 sm:p-6">
-                    <h3 class="font-serif text-lg font-semibold sm:text-xl text-main mb-4">Countries</h3>
-                    <div id="countries-list" class="space-y-3">
+                <div class="rounded-xl border border-main/15 bg-muted/10 p-5 sm:p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-serif text-lg font-medium text-main">Geography</h3>
+                        <span class="text-[11px] font-mono text-muted uppercase">Sessions</span>
+                    </div>
+                    <div id="countries-list" class="space-y-1">
                         <!-- Populated via script -->
                     </div>
                 </div>
 
                 <!-- Devices & Browsers -->
-                <div class="rounded-2xl border border-main/15 bg-muted/10 p-5 sm:p-6">
-                    <h3 class="font-serif text-lg font-semibold sm:text-xl text-main mb-4">Devices & Browsers</h3>
-                    <div id="devices-list" class="space-y-3">
+                <div class="rounded-xl border border-main/15 bg-muted/10 p-5 sm:p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-serif text-lg font-medium text-main">Platforms</h3>
+                        <span class="text-[11px] font-mono text-muted uppercase">Hits</span>
+                    </div>
+                    <div id="devices-list" class="space-y-1">
                         <!-- Populated via script -->
                     </div>
                 </div>
@@ -259,46 +274,39 @@ export const prerender = false;
     <!-- Modal Dialog for Full Journey Inspection (Miller's Law) -->
     <dialog
         id="journey-modal"
-        class="backdrop:bg-black/70 backdrop:backdrop-blur-sm rounded-2xl border border-main/20 bg-main text-main p-0 max-w-xl w-[calc(100%-2rem)] fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 m-0 shadow-2xl overflow-hidden"
+        class="backdrop:bg-black/60 backdrop:backdrop-blur-xs rounded-xl border border-main/20 bg-main text-main p-0 max-w-xl w-[calc(100%-2rem)] fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 m-0 shadow-2xl overflow-hidden"
     >
-        <div class="p-5 sm:p-6 border-b border-main/15 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
-                    <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                    </svg>
+        <div class="px-5 py-4 border-b border-main/15 flex items-center justify-between">
+            <div>
+                <div class="flex items-center gap-2">
+                    <h3 id="modal-visitor-name" class="font-serif text-lg font-semibold text-main">Visitor Journey</h3>
+                    <span id="modal-visitor-me" class="hidden rounded bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 font-mono text-[10px] px-2 py-0.5 font-bold uppercase">That's You</span>
                 </div>
-                <div>
-                    <div class="flex items-center gap-2">
-                        <h3 id="modal-visitor-name" class="font-semibold text-lg text-main">Visitor Journey</h3>
-                        <span id="modal-visitor-me" class="hidden rounded bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-mono text-[10px] px-2 py-0.5 font-bold uppercase">That's You</span>
-                    </div>
-                    <p id="modal-visitor-meta" class="text-xs text-muted font-mono mt-0.5">1 visit · 9 views · 13m 23s on site</p>
-                </div>
+                <p id="modal-visitor-meta" class="text-xs text-muted font-mono mt-0.5">1 visit · 9 views · 13m 23s on site</p>
             </div>
             <button
                 id="modal-close-btn"
-                class="rounded-lg p-1.5 text-muted hover:text-main hover:bg-muted/40 transition-colors"
+                class="rounded-md p-1 text-muted hover:text-main hover:bg-muted/40 transition-colors cursor-pointer"
                 aria-label="Close dialog"
             >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
             </button>
         </div>
 
-        <div class="p-5 sm:p-6 max-h-[60vh] overflow-y-auto space-y-4">
+        <div class="p-5 max-h-[65vh] overflow-y-auto space-y-4">
             <div>
-                <h4 class="text-xs font-mono uppercase tracking-wider text-muted mb-3">Step-by-Step Navigation Sequence</h4>
-                <div id="modal-journey-steps" class="space-y-3 pl-4 border-l-2 border-main/20 ml-2">
+                <h4 class="text-[11px] font-mono uppercase tracking-wider text-muted mb-3">Navigation History</h4>
+                <div id="modal-journey-steps" class="space-y-2 pl-3 border-l border-main/20 ml-1">
                     <!-- Populated dynamically -->
                 </div>
             </div>
 
             <div class="pt-4 border-t border-main/10 flex flex-wrap gap-4 text-xs font-mono text-muted">
-                <span id="modal-visitor-loc">📍 Location: Unknown</span>
-                <span id="modal-visitor-dev">💻 Device: Desktop</span>
-                <span id="modal-visitor-browser">🌐 Browser: Chrome</span>
+                <span id="modal-visitor-loc">Location: Unknown</span>
+                <span id="modal-visitor-dev">Device: Desktop</span>
+                <span id="modal-visitor-browser">Browser: Chrome</span>
             </div>
         </div>
     </dialog>
@@ -306,54 +314,47 @@ export const prerender = false;
     <!-- Modal Dialog for Page Detail Inspection (Miller's Law) -->
     <dialog
         id="page-modal"
-        class="backdrop:bg-black/70 backdrop:backdrop-blur-sm rounded-2xl border border-main/20 bg-main text-main p-0 max-w-xl w-[calc(100%-2rem)] fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 m-0 shadow-2xl overflow-hidden"
+        class="backdrop:bg-black/60 backdrop:backdrop-blur-xs rounded-xl border border-main/20 bg-main text-main p-0 max-w-xl w-[calc(100%-2rem)] fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 m-0 shadow-2xl overflow-hidden"
     >
-        <div class="p-5 sm:p-6 border-b border-main/15 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center shrink-0">
-                    <svg class="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
+        <div class="px-5 py-4 border-b border-main/15 flex items-center justify-between">
+            <div>
+                <div class="flex items-center gap-2">
+                    <h3 id="modal-page-path" class="font-mono font-semibold text-base text-main truncate max-w-[260px] sm:max-w-md">/</h3>
                 </div>
-                <div>
-                    <div class="flex items-center gap-2">
-                        <h3 id="modal-page-path" class="font-mono font-semibold text-base sm:text-lg text-main truncate max-w-[260px] sm:max-w-md">/</h3>
-                    </div>
-                    <p id="modal-page-title" class="text-xs text-muted truncate max-w-[260px] sm:max-w-md mt-0.5">Page Title</p>
-                </div>
+                <p id="modal-page-title" class="text-xs text-muted truncate max-w-[260px] sm:max-w-md mt-0.5">Page Title</p>
             </div>
             <button
                 id="modal-page-close-btn"
-                class="rounded-lg p-1.5 text-muted hover:text-main hover:bg-muted/40 transition-colors"
+                class="rounded-md p-1 text-muted hover:text-main hover:bg-muted/40 transition-colors cursor-pointer"
                 aria-label="Close page dialog"
             >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
             </button>
         </div>
 
-        <div class="p-5 sm:p-6 max-h-[60vh] overflow-y-auto space-y-6">
+        <div class="p-5 max-h-[65vh] overflow-y-auto space-y-5">
             <!-- Key Page Metrics Grid -->
-            <div class="grid grid-cols-3 gap-3">
-                <div class="rounded-xl border border-main/10 bg-muted/20 p-3 text-center">
-                    <span class="text-[11px] font-mono text-muted uppercase">Total Views</span>
-                    <p id="modal-page-views" class="text-xl sm:text-2xl font-bold font-mono text-main mt-1">0</p>
+            <div class="grid grid-cols-3 border border-main/15 divide-x divide-main/15 rounded-lg overflow-hidden bg-muted/10">
+                <div class="p-3 text-center">
+                    <span class="text-[10px] font-mono text-muted uppercase">Views</span>
+                    <p id="modal-page-views" class="text-lg sm:text-xl font-bold font-mono text-main mt-0.5">0</p>
                 </div>
-                <div class="rounded-xl border border-main/10 bg-muted/20 p-3 text-center">
-                    <span class="text-[11px] font-mono text-muted uppercase">Unique Visitors</span>
-                    <p id="modal-page-uniques" class="text-xl sm:text-2xl font-bold font-mono text-main mt-1">0</p>
+                <div class="p-3 text-center">
+                    <span class="text-[10px] font-mono text-muted uppercase">Uniques</span>
+                    <p id="modal-page-uniques" class="text-lg sm:text-xl font-bold font-mono text-main mt-0.5">0</p>
                 </div>
-                <div class="rounded-xl border border-main/10 bg-muted/20 p-3 text-center">
-                    <span class="text-[11px] font-mono text-muted uppercase">Avg Dwell</span>
-                    <p id="modal-page-dwell" class="text-xl sm:text-2xl font-bold font-mono text-main mt-1">0s</p>
+                <div class="p-3 text-center">
+                    <span class="text-[10px] font-mono text-muted uppercase">Avg Dwell</span>
+                    <p id="modal-page-dwell" class="text-lg sm:text-xl font-bold font-mono text-main mt-0.5">0s</p>
                 </div>
             </div>
 
             <!-- Recent Visitors to this Page -->
             <div>
-                <h4 class="text-xs font-mono uppercase tracking-wider text-muted mb-3">Recent Visitors on this Page</h4>
-                <div id="modal-page-visitors" class="space-y-2">
+                <h4 class="text-[11px] font-mono uppercase tracking-wider text-muted mb-2.5">Visitors on this Route</h4>
+                <div id="modal-page-visitors" class="space-y-1.5">
                     <!-- Populated dynamically -->
                 </div>
             </div>
@@ -831,24 +832,23 @@ export const prerender = false;
                     data.topPages.forEach(page => {
                         const pct = Math.round((page.views / maxViews) * 100);
                         const row = document.createElement('div');
-                        row.className = 'group p-2 rounded-xl transition-colors hover:bg-main/5 cursor-pointer space-y-1.5 border border-transparent hover:border-main/10';
+                        row.className = 'group p-2 rounded-lg transition-colors hover:bg-main/5 cursor-pointer space-y-1.5';
                         row.onclick = () => openPageModal(page.path);
                         row.innerHTML = `
                             <div class="flex justify-between items-center text-xs font-mono">
                                 <span class="text-main font-medium truncate max-w-[200px] sm:max-w-xs group-hover:underline flex items-center gap-1.5">
                                     <span>${page.path}</span>
-                                    <svg class="w-3 h-3 opacity-0 group-hover:opacity-70 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                    <svg class="w-3 h-3 opacity-0 group-hover:opacity-60 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
                                     </svg>
                                 </span>
                                 <div class="flex items-center gap-2">
                                     ${page.uniqueVisitors ? `<span class="text-[10px] text-muted">${page.uniqueVisitors}u</span>` : ''}
-                                    <span class="text-muted font-bold">${page.views.toLocaleString()}</span>
+                                    <span class="text-main font-medium">${page.views.toLocaleString()}</span>
                                 </div>
                             </div>
-                            <div class="h-1.5 w-full bg-muted/30 rounded-full overflow-hidden">
-                                <div class="h-full bg-main/40 rounded-full group-hover:bg-main/70 transition-colors" style="width: ${pct}%"></div>
+                            <div class="h-1 w-full bg-muted/40 rounded-full overflow-hidden">
+                                <div class="h-full bg-main/50 rounded-full group-hover:bg-main/80 transition-colors" style="width: ${pct}%"></div>
                             </div>
                         `;
                         topPagesContainer.appendChild(row);
@@ -859,48 +859,60 @@ export const prerender = false;
                 const referrersContainer = document.getElementById('top-referrers-list');
                 if (referrersContainer) {
                     referrersContainer.innerHTML = '';
-                    data.topReferrers.forEach(ref => {
-                        const row = document.createElement('div');
-                        row.className = 'flex justify-between items-center text-xs font-mono py-1 border-b border-main/5';
-                        row.innerHTML = `
-                            <span class="text-main">${ref.referrer}</span>
-                            <span class="text-muted bg-muted/40 px-2 py-0.5 rounded font-mono">${ref.count}</span>
-                        `;
-                        referrersContainer.appendChild(row);
-                    });
+                    if (data.topReferrers.length === 0) {
+                        referrersContainer.innerHTML = '<p class="text-xs font-mono text-muted py-2">Direct traffic only</p>';
+                    } else {
+                        data.topReferrers.forEach(ref => {
+                            const row = document.createElement('div');
+                            row.className = 'flex justify-between items-center text-xs font-mono py-1.5 border-b border-main/10 last:border-b-0';
+                            row.innerHTML = `
+                                <span class="text-main truncate max-w-[200px]">${ref.referrer}</span>
+                                <span class="text-muted font-mono">${ref.count}</span>
+                            `;
+                            referrersContainer.appendChild(row);
+                        });
+                    }
                 }
 
                 // 6. Render Countries & Devices
                 const countriesContainer = document.getElementById('countries-list');
                 if (countriesContainer) {
                     countriesContainer.innerHTML = '';
-                    data.countries.forEach(c => {
-                        const flagHtml = renderFlag(c.country);
-                        const row = document.createElement('div');
-                        row.className = 'flex justify-between items-center text-xs font-mono py-1 border-b border-main/5';
-                        row.innerHTML = `
-                            <span class="text-main flex items-center gap-2">
-                                ${flagHtml}
-                                <span>${c.country}</span>
-                            </span>
-                            <span class="text-muted bg-muted/40 px-2 py-0.5 rounded font-mono">${c.count}</span>
-                        `;
-                        countriesContainer.appendChild(row);
-                    });
+                    if (data.countries.length === 0) {
+                        countriesContainer.innerHTML = '<p class="text-xs font-mono text-muted py-2">No data recorded</p>';
+                    } else {
+                        data.countries.forEach(c => {
+                            const flagHtml = renderFlag(c.country);
+                            const row = document.createElement('div');
+                            row.className = 'flex justify-between items-center text-xs font-mono py-1.5 border-b border-main/10 last:border-b-0';
+                            row.innerHTML = `
+                                <span class="text-main flex items-center gap-2">
+                                    ${flagHtml}
+                                    <span>${c.country}</span>
+                                </span>
+                                <span class="text-muted font-mono">${c.count}</span>
+                            `;
+                            countriesContainer.appendChild(row);
+                        });
+                    }
                 }
 
                 const devicesContainer = document.getElementById('devices-list');
                 if (devicesContainer) {
                     devicesContainer.innerHTML = '';
-                    data.devices.forEach(d => {
-                        const row = document.createElement('div');
-                        row.className = 'flex justify-between items-center text-xs font-mono py-1 border-b border-main/5';
-                        row.innerHTML = `
-                            <span class="text-main">💻 ${d.device}</span>
-                            <span class="text-muted bg-muted/40 px-2 py-0.5 rounded font-mono">${d.count}</span>
-                        `;
-                        devicesContainer.appendChild(row);
-                    });
+                    if (data.devices.length === 0) {
+                        devicesContainer.innerHTML = '<p class="text-xs font-mono text-muted py-2">No platform telemetry</p>';
+                    } else {
+                        data.devices.forEach(d => {
+                            const row = document.createElement('div');
+                            row.className = 'flex justify-between items-center text-xs font-mono py-1.5 border-b border-main/10 last:border-b-0';
+                            row.innerHTML = `
+                                <span class="text-main">${d.device}</span>
+                                <span class="text-muted font-mono">${d.count}</span>
+                            `;
+                            devicesContainer.appendChild(row);
+                        });
+                    }
                 }
 
                 // Show Content
