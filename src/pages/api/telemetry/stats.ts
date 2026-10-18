@@ -95,10 +95,11 @@ export const GET: APIRoute = async ({ request, locals }) => {
             headers: { 'Content-Type': 'application/json' }
         });
     }
-
+ 
     try {
         const url = new URL(request.url);
         const timeframe = (url.searchParams.get('timeframe') || 'all').toLowerCase();
+        const isFresh = url.searchParams.has('fresh') || url.searchParams.get('refresh') === 'true';
         const now = Date.now();
 
         let minTime = 0;
@@ -353,6 +354,10 @@ export const GET: APIRoute = async ({ request, locals }) => {
         const activeVisitors = activeVisitorsQuery.results || [];
         const onlineCount = activeVisitors.length;
 
+        const cacheHeader = isFresh
+            ? 'no-cache, no-store, must-revalidate'
+            : 'public, max-age=10, stale-while-revalidate=45';
+
         return new Response(JSON.stringify({
             summary: {
                 totalPageViews: totalViews,
@@ -374,7 +379,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
             status: 200,
             headers: {
                 'Content-Type': 'application/json',
-                'Cache-Control': 'public, max-age=15, stale-while-revalidate=60'
+                'Cache-Control': cacheHeader
             }
         });
     } catch (err) {
