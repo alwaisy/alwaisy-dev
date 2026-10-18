@@ -1,11 +1,10 @@
 /**
- * Client-Side Autonomous Analytics Tracker with Middle Personas & Journey Tracking
+ * Client-Side Autonomous Analytics Tracker with True Per-Page Dwell Time Tracking
  */
 
 const STORAGE_KEY_VISITOR = 'mid_v_id';
 const STORAGE_KEY_SESSION = 'mid_s_id';
 const STORAGE_KEY_STEP = 'mid_step_order';
-const STORAGE_KEY_LAST_PAGELOAD = 'mid_last_load';
 
 function getOrGenerateUUID(): string {
     if (typeof crypto !== 'undefined' && crypto.randomUUID) {
@@ -14,17 +13,23 @@ function getOrGenerateUUID(): string {
     return 'v_' + Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
 }
 
-export function initAnalyticsTracker() {
+// In-memory state for currently active page dwell timer
+let currentPageEntryTime = 0;
+let currentPath = '';
+let currentTitle = '';
+let currentReferrer = '';
+let activePingInterval: ReturnType<typeof setInterval> | null = null;
+let isTrackerInitialized = false;
+
+function sendTelemetry(type: 'pageview' | 'dwell', dwellSeconds = 0) {
     if (typeof window === 'undefined') return;
 
-    // 1. Identify or persist visitor UUID (stored in localStorage)
     let visitorId = localStorage.getItem(STORAGE_KEY_VISITOR);
     if (!visitorId) {
         visitorId = getOrGenerateUUID();
         localStorage.setItem(STORAGE_KEY_VISITOR, visitorId);
     }
 
-    // 2. Identify or refresh session (stored in sessionStorage)
     let sessionId = sessionStorage.getItem(STORAGE_KEY_SESSION);
     if (!sessionId) {
         sessionId = getOrGenerateUUID();
@@ -33,49 +38,113 @@ export function initAnalyticsTracker() {
     }
 
     const stepOrder = parseInt(sessionStorage.getItem(STORAGE_KEY_STEP) || '1', 10);
+    const path = currentPath || window.location.pathname;
+    const title = currentTitle || document.title || path;
+    const referrer = currentReferrer || (document.referrer ? new URL(document.referrer, window.location.origin).hostname : 'Direct');
 
-    // Calculate dwell time on previous page before transition
-    const now = Date.now();
-    const lastLoadTime = parseInt(sessionStorage.getItem(STORAGE_KEY_LAST_PAGELOAD) || '0', 10);
-    const dwellSeconds = lastLoadTime > 0 ? Math.min(Math.round((now - lastLoadTime) / 1000), 1800) : 0;
-    sessionStorage.setItem(STORAGE_KEY_LAST_PAGELOAD, String(now));
-
-    // Get current path and referrer
-    const currentPath = window.location.pathname;
-    const referrer = document.referrer ? new URL(document.referrer, window.location.origin).hostname : 'Direct';
-    const pageTitle = document.title || currentPath;
-
-    // Send tracking beacon/fetch
     const payload = {
+        type,
         visitorId,
         sessionId,
-        path: currentPath,
-        title: pageTitle,
+        path,
+        title,
         referrer,
         stepOrder,
-        dwellTimeSeconds: dwellSeconds
+        dwellTimeSeconds: Math.round(dwellSeconds)
     };
 
-    fetch('/api/telemetry/beacon', {
+    // For page unload / tab close events, prefer navigator.sendBeacon
+    const beaconUrl = '/api/telemetry/beacon';
+    const jsonBody = JSON.stringify(payload);
+
+    if (type === 'dwell' && typeof navigator !== 'undefined' && navigator.sendBeacon) {
+        try {
+            const blob = new Blob([jsonBody], { type: 'application/json' });
+            navigator.sendBeacon(beaconUrl, blob);
+            return;
+        } catch {
+            // Fallback to fetch with keepalive below
+        }
+    }
+
+    fetch(beaconUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: jsonBody,
         keepalive: true
     })
         .then((res) => res.json() as Promise<{ ok?: boolean; persona?: { name: string; badgeColor: string } }>)
         .then((data) => {
             if (data.ok && data.persona) {
-                // Save resolved persona to localStorage
                 localStorage.setItem('mid_persona_name', data.persona.name);
                 localStorage.setItem('mid_persona_color', data.persona.badgeColor);
-
                 window.dispatchEvent(new CustomEvent('mid:persona-ready', { detail: data.persona }));
             }
         })
         .catch(() => {
-            // Silently fail without impacting user experience
+            // Fail silently without impacting user experience
         });
 
-    // Increment step order for next internal click
-    sessionStorage.setItem(STORAGE_KEY_STEP, String(stepOrder + 1));
+    if (type === 'pageview') {
+        sessionStorage.setItem(STORAGE_KEY_STEP, String(stepOrder + 1));
+    }
+}
+
+function flushCurrentDwell() {
+    if (currentPageEntryTime > 0) {
+        const dwellSeconds = Math.min(Math.round((Date.now() - currentPageEntryTime) / 1000), 1800);
+        if (dwellSeconds > 0) {
+            sendTelemetry('dwell', dwellSeconds);
+        }
+    }
+}
+
+export function initAnalyticsTracker() {
+    if (typeof window === 'undefined') return;
+
+    // 1. If transitioning from a previous page, flush its accrued dwell time first
+    flushCurrentDwell();
+
+    // 2. Start clock fresh for the newly entered page
+    currentPageEntryTime = Date.now();
+    currentPath = window.location.pathname;
+    currentTitle = document.title || currentPath;
+    currentReferrer = document.referrer ? new URL(document.referrer, window.location.origin).hostname : 'Direct';
+
+    // 3. Send initial pageview event (dwell = 0 at moment of entry)
+    sendTelemetry('pageview', 0);
+
+    // 4. Set up periodic heartbeats while user stays on page (every 15 seconds)
+    if (activePingInterval) clearInterval(activePingInterval);
+    activePingInterval = setInterval(() => {
+        if (document.visibilityState === 'visible' && currentPageEntryTime > 0) {
+            const currentAccrued = Math.min(Math.round((Date.now() - currentPageEntryTime) / 1000), 1800);
+            if (currentAccrued > 0) {
+                sendTelemetry('dwell', currentAccrued);
+            }
+        }
+    }, 15000);
+
+    // 5. Global lifecycle listeners (attached once)
+    if (!isTrackerInitialized) {
+        isTrackerInitialized = true;
+
+        // When user switches tabs or hides browser
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'hidden') {
+                flushCurrentDwell();
+            } else if (document.visibilityState === 'visible') {
+                // Resume active dwell timer
+                currentPageEntryTime = Date.now();
+            }
+        });
+
+        // When user closes tab, navigates away, or closes browser
+        window.addEventListener('pagehide', () => {
+            flushCurrentDwell();
+        });
+        window.addEventListener('beforeunload', () => {
+            flushCurrentDwell();
+        });
+    }
 }

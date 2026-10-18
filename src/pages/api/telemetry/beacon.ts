@@ -5,6 +5,7 @@ import { resolveUniqueIntelligentPersona, generateRandomFallbackPersona } from '
 export const prerender = false;
 
 interface CollectPayload {
+    type?: 'pageview' | 'dwell';
     visitorId: string;
     sessionId: string;
     path: string;
@@ -213,14 +214,37 @@ export const POST: APIRoute = async ({ request, locals }) => {
             }
         }
 
-        // 2. Insert Journey Step
+        // 2. Journey Tracking:
+        // If this is a dwell heartbeat / page unload event, update dwell_time_seconds on the existing step
+        if (body.type === 'dwell') {
+            await db
+                .prepare(`
+                    UPDATE journeys 
+                    SET dwell_time_seconds = MAX(dwell_time_seconds, ?)
+                    WHERE id = (
+                        SELECT id FROM journeys 
+                        WHERE visitor_id = ? AND session_id = ? AND path = ?
+                        ORDER BY created_at DESC 
+                        LIMIT 1
+                    )
+                `)
+                .bind(dwellTime, visitorId, sessionId, `/${path}`)
+                .run();
+
+            return new Response(JSON.stringify({ ok: true, updatedDwell: dwellTime }), {
+                status: 200,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
+
+        // Otherwise this is a fresh pageview: Insert new Journey Step
         await db
             .prepare(`
                 INSERT INTO journeys 
                 (visitor_id, session_id, path, title, referrer, step_order, dwell_time_seconds, created_at, country, city, device, browser)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?)
             `)
-            .bind(visitorId, sessionId, `/${path}`, title, referrer, stepOrder, dwellTime, now, country, city, device, browser)
+            .bind(visitorId, sessionId, `/${path}`, title, referrer, stepOrder, now, country, city, device, browser)
             .run();
 
         return new Response(JSON.stringify({ ok: true, persona: finalPersona }), {
