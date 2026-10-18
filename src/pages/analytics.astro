@@ -151,43 +151,37 @@ export const prerender = false;
                 </div>
             </section>
 
-            <!-- 2.5 Real-Time Active Visitors Section -->
-            <section id="active-visitors-section" aria-label="Real-Time Active Visitors" class="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-5 sm:p-6 transition-all">
-                <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
-                    <div class="flex items-center gap-2.5">
-                        <span class="relative flex h-2.5 w-2.5">
-                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-                        </span>
-                        <div>
-                            <h2 class="font-serif text-xl sm:text-2xl font-semibold text-main">
-                                Active Right Now
-                            </h2>
-                            <p class="text-xs text-muted">
-                                Visitors browsing pages within the last 3 minutes (auto-refreshed live).
-                            </p>
-                        </div>
-                    </div>
-                    <span id="active-visitors-badge" class="rounded-full bg-emerald-500/15 border border-emerald-500/20 px-3 py-1 text-xs font-mono font-medium text-emerald-700 dark:text-emerald-300">
-                        0 Active
-                    </span>
-                </div>
-
-                <div id="active-visitors-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                    <!-- Populated dynamically via JS -->
-                </div>
-            </section>
-
-            <!-- 3. Compact & Minimalist Visitor Sessions (Miller's Law) -->
+            <!-- 3. Minimalist Visitor Journeys with Integrated Live Filter (Miller's Law) -->
             <section aria-label="Visitor Sessions">
                 <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
                     <div>
-                        <h2 class="font-serif text-2xl sm:text-3xl font-semibold text-main">
-                            Recent Visitor Journeys
-                        </h2>
-                        <p class="text-xs sm:text-sm text-muted">
+                        <div class="flex items-center gap-2.5">
+                            <h2 class="font-serif text-2xl sm:text-3xl font-semibold text-main">
+                                Visitor Journeys
+                            </h2>
+                            <!-- Live pill filter -->
+                            <button
+                                type="button"
+                                id="filter-live-toggle"
+                                class="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-2.5 py-0.5 text-xs font-mono text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/20 transition-colors cursor-pointer"
+                                title="Click to filter only active online visitors"
+                            >
+                                <span class="relative flex h-2 w-2">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                                </span>
+                                <span id="active-visitors-badge">0 Live Now</span>
+                            </button>
+                        </div>
+                        <p class="text-xs sm:text-sm text-muted mt-1">
                             Click any visitor to inspect their complete path, page sequence, and dwell time.
                         </p>
+                    </div>
+
+                    <!-- Filter state indicator when active -->
+                    <div id="live-filter-active-notice" class="hidden items-center gap-2 text-xs font-mono text-emerald-600 dark:text-emerald-400">
+                        <span>Showing live active visitors only</span>
+                        <button id="clear-live-filter" class="underline hover:text-main text-[11px] cursor-pointer">Show All</button>
                     </div>
                 </div>
 
@@ -195,9 +189,9 @@ export const prerender = false;
                 <div class="overflow-hidden rounded-xl border border-main/15 bg-muted/10">
                     <div class="hidden sm:grid sm:grid-cols-12 gap-3 px-4 py-2.5 border-b border-main/10 text-[11px] font-mono uppercase tracking-wider text-muted">
                         <div class="col-span-4">Visitor Persona</div>
-                        <div class="col-span-3">Initial Page / Top Route</div>
+                        <div class="col-span-3">Initial Page / Current Route</div>
                         <div class="col-span-3">Location & Device</div>
-                        <div class="col-span-2 text-right">Views · Time</div>
+                        <div class="col-span-2 text-right">Status · Time</div>
                     </div>
 
                     <div id="visitors-list" class="divide-y divide-main/10">
@@ -435,7 +429,9 @@ export const prerender = false;
         }
 
         let allVisitors: Visitor[] = [];
+        let activeVisitorsList: RealtimeVisitor[] = [];
         let allPages: PageStat[] = [];
+        let onlyLiveFilter = false;
 
         function formatTimeAgo(timestamp: number): string {
             const diff = Math.max(0, Math.floor((Date.now() - timestamp) / 1000));
@@ -590,6 +586,104 @@ export const prerender = false;
             modal.showModal();
         }
 
+        function renderVisitorsList() {
+            const visitorsContainer = document.getElementById('visitors-list');
+            if (!visitorsContainer) return;
+
+            const myVisitorId = localStorage.getItem('mid_v_id');
+            const activeIdMap = new Map<string, RealtimeVisitor>();
+            activeVisitorsList.forEach(av => activeIdMap.set(av.id, av));
+
+            // If onlyLiveFilter is toggled on, show only online visitors
+            const listToShow = onlyLiveFilter
+                ? allVisitors.filter(v => activeIdMap.has(v.id))
+                : allVisitors;
+
+            const activeNotice = document.getElementById('live-filter-active-notice');
+            if (activeNotice) {
+                if (onlyLiveFilter) activeNotice.classList.remove('hidden'), activeNotice.classList.add('flex');
+                else activeNotice.classList.add('hidden'), activeNotice.classList.remove('flex');
+            }
+
+            visitorsContainer.innerHTML = '';
+            if (listToShow.length === 0) {
+                visitorsContainer.innerHTML = `
+                    <div class="p-6 text-center text-sm font-mono text-muted">
+                        ${onlyLiveFilter ? 'No visitors currently active online. Click "Show All" to view recent journeys.' : 'No visitor journeys captured yet.'}
+                    </div>
+                `;
+                return;
+            }
+
+            listToShow.forEach((v) => {
+                const isMe = myVisitorId && v.id === myVisitorId;
+                const activeData = activeIdMap.get(v.id);
+                const isLive = Boolean(activeData);
+
+                const totalDwell = v.journey ? v.journey.reduce((acc, step) => acc + (step.dwellTimeSeconds || 0), 0) : 0;
+                const dwellStr = totalDwell > 60 ? `${Math.floor(totalDwell / 60)}m` : `${totalDwell}s`;
+                
+                // Show currently active page if live, or initial route if past
+                const currentRoute = isLive && activeData
+                    ? activeData.currentPath
+                    : (v.journey && v.journey[0] ? v.journey[0].path : '/home');
+
+                const row = document.createElement('div');
+                row.className = `group flex flex-col sm:grid sm:grid-cols-12 gap-2 sm:gap-3 px-4 py-3 cursor-pointer transition-colors hover:bg-main/5 ${
+                    isLive ? 'bg-emerald-500/5' : ''
+                }`;
+                row.onclick = () => openJourneyModal(v.id);
+
+                const initials = v.personaName ? v.personaName.split(' ').map(n => n[0]).join('').slice(0, 2) : 'V';
+                const flagHtml = renderFlag(v.lastCountry);
+
+                row.innerHTML = `
+                    <div class="sm:col-span-4 flex items-center gap-2.5 min-w-0">
+                        <div class="relative shrink-0">
+                            <div class="w-7 h-7 rounded-full bg-main/10 border border-main/15 flex items-center justify-center font-mono text-xs font-semibold text-main">
+                                ${initials}
+                            </div>
+                            ${isLive ? `
+                                <span class="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500 border border-background"></span>
+                                </span>
+                            ` : ''}
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <div class="flex items-center gap-1.5 flex-wrap">
+                                <span class="font-medium text-sm text-main truncate max-w-full">${v.personaName}</span>
+                                ${isMe ? '<span class="rounded bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-mono text-[9px] px-1.5 py-0.2 font-bold shrink-0">YOU</span>' : ''}
+                                ${isLive ? '<span class="rounded bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-mono text-[9px] px-1.5 py-0.2 font-semibold shrink-0">LIVE</span>' : ''}
+                            </div>
+                            <span class="text-[11px] text-muted font-mono sm:hidden flex items-center gap-1.5 mt-0.5">
+                                ${flagHtml} <span>${v.lastCountry || 'Unknown'} · ${v.lastDevice || 'Desktop'}</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="sm:col-span-3 flex items-center min-w-0">
+                        <span class="font-mono text-xs ${isLive ? 'text-emerald-700 dark:text-emerald-300 font-medium' : 'text-muted'} truncate max-w-full" title="${currentRoute}">
+                            ${currentRoute}
+                            ${!isLive && v.journey && v.journey.length > 1 ? `<span class="text-[10px] text-muted/70 ml-1">(+${v.journey.length - 1} more)</span>` : ''}
+                        </span>
+                    </div>
+
+                    <div class="hidden sm:flex sm:col-span-3 items-center text-xs font-mono text-muted gap-1.5 min-w-0">
+                        ${flagHtml} <span class="truncate">${v.lastCountry || 'Unknown'} · ${v.lastDevice || 'Desktop'}</span>
+                    </div>
+
+                    <div class="sm:col-span-2 flex items-center justify-between sm:justify-end gap-2 text-xs font-mono text-muted whitespace-nowrap">
+                        <span class="rounded bg-muted/60 px-2 py-0.5 border border-main/10 text-main" title="Total page dwell: ${dwellStr}">
+                            ${v.visitCount}v · ${v.totalPageViews}p (${dwellStr})
+                        </span>
+                        <span>${isLive ? '<strong class="text-emerald-600 dark:text-emerald-400 font-semibold">online</strong>' : formatTimeAgo(v.lastSeen)}</span>
+                    </div>
+                `;
+                visitorsContainer.appendChild(row);
+            });
+        }
+
         let currentTimeframe = 'all';
 
         function setTimeframe(newTimeframe: string) {
@@ -686,135 +780,18 @@ export const prerender = false;
                     if (endLabel && data.dailyTrends[13]) endLabel.textContent = `${data.dailyTrends[13].label} (Today)`;
                 }
 
-                // Update live online count in header pill
+                // Update live online count in header pill & section toggle badge
                 const onlineCount = data.summary.onlineCount ?? (data.activeVisitors ? data.activeVisitors.length : 0);
                 const elLiveCount = document.getElementById('live-online-count');
                 if (elLiveCount) elLiveCount.textContent = onlineCount.toString();
 
-                // 2.5 Real-Time Active Online Visitors Section
-                const activeContainer = document.getElementById('active-visitors-container');
                 const activeBadge = document.getElementById('active-visitors-badge');
-                if (activeBadge) activeBadge.textContent = `${onlineCount} Active`;
+                if (activeBadge) activeBadge.textContent = `${onlineCount} Live Now`;
 
-                if (activeContainer) {
-                    activeContainer.innerHTML = '';
-                    const activeList = data.activeVisitors || [];
-                    const myVisitorId = localStorage.getItem('mid_v_id');
-
-                    if (activeList.length === 0) {
-                        activeContainer.innerHTML = `
-                            <div class="col-span-full py-3 px-4 rounded-xl border border-dashed border-main/15 bg-main/5 text-center text-xs font-mono text-muted">
-                                No other active visitors right now. (Active window: last 3 minutes)
-                            </div>
-                        `;
-                    } else {
-                        activeList.forEach((v) => {
-                            const isMe = myVisitorId && v.id === myVisitorId;
-                            const card = document.createElement('div');
-                            card.className = `p-3.5 rounded-xl border transition-all cursor-pointer ${
-                                isMe 
-                                    ? 'border-emerald-500/40 bg-emerald-500/10' 
-                                    : 'border-main/15 bg-muted/15 hover:border-emerald-500/30 hover:bg-muted/30'
-                            }`;
-                            card.onclick = () => openJourneyModal(v.id);
-
-                            const flagHtml = renderFlag(v.lastCountry);
-                            const dwellDisplay = v.dwellTimeSeconds > 60 
-                                ? `${Math.floor(v.dwellTimeSeconds / 60)}m ${v.dwellTimeSeconds % 60}s` 
-                                : `${v.dwellTimeSeconds || 0}s`;
-
-                            card.innerHTML = `
-                                <div class="flex items-center justify-between gap-2 mb-2">
-                                    <div class="flex items-center gap-2 truncate">
-                                        <span class="relative flex h-2 w-2 shrink-0">
-                                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                                        </span>
-                                        <span class="font-semibold text-sm text-main truncate">${v.personaName}</span>
-                                        ${isMe ? '<span class="rounded bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-mono text-[9px] px-1.5 py-0.5 font-bold uppercase shrink-0">You</span>' : ''}
-                                    </div>
-                                    <span class="text-[10px] font-mono text-muted shrink-0">${v.secondsAgo < 10 ? 'just now' : `${v.secondsAgo}s ago`}</span>
-                                </div>
-                                <div class="flex items-center justify-between text-xs font-mono text-muted">
-                                    <span class="truncate max-w-[180px] text-main font-medium" title="${v.currentTitle || v.currentPath}">${v.currentPath}</span>
-                                    <span class="shrink-0 text-emerald-600 dark:text-emerald-400 font-medium">⏱ ${dwellDisplay}</span>
-                                </div>
-                                <div class="mt-2 pt-2 border-t border-main/10 flex items-center justify-between text-[11px] font-mono text-muted">
-                                    <span class="flex items-center gap-1">${flagHtml} ${v.lastCountry || 'Unknown'}</span>
-                                    <span>${v.lastDevice || 'Desktop'} · ${v.lastBrowser || 'Web'}</span>
-                                </div>
-                            `;
-                            activeContainer.appendChild(card);
-                        });
-                    }
-                }
+                activeVisitorsList = data.activeVisitors || [];
 
                 // 3. Compact Minimalist Visitor Sessions (Miller's Law)
-                const visitorsContainer = document.getElementById('visitors-list');
-                const myVisitorId = localStorage.getItem('mid_v_id');
-
-                if (visitorsContainer) {
-                    visitorsContainer.innerHTML = '';
-                    if (allVisitors.length === 0) {
-                        visitorsContainer.innerHTML = `
-                            <div class="p-6 text-center text-sm text-muted">
-                                No visitor journeys captured yet.
-                            </div>
-                        `;
-                    } else {
-                        allVisitors.forEach((v) => {
-                            const isMe = myVisitorId && v.id === myVisitorId;
-                            const totalDwell = v.journey ? v.journey.reduce((acc, step) => acc + (step.dwellTimeSeconds || 0), 0) : 0;
-                            const dwellStr = totalDwell > 60 ? `${Math.floor(totalDwell / 60)}m` : `${totalDwell}s`;
-                            const initialRoute = v.journey && v.journey[0] ? v.journey[0].path : '/home';
-
-                            const row = document.createElement('div');
-                            row.className = `group flex flex-col sm:grid sm:grid-cols-12 gap-2 sm:gap-3 px-4 py-3 cursor-pointer transition-colors hover:bg-main/5 ${
-                                isMe ? 'bg-emerald-500/5' : ''
-                            }`;
-                            row.onclick = () => openJourneyModal(v.id);
-
-                            const initials = v.personaName ? v.personaName.split(' ').map(n => n[0]).join('').slice(0, 2) : 'V';
-                            const flagHtml = renderFlag(v.lastCountry);
-
-                            row.innerHTML = `
-                                <div class="sm:col-span-4 flex items-center gap-2.5">
-                                    <div class="w-7 h-7 rounded-full bg-main/10 border border-main/15 flex items-center justify-center font-mono text-xs font-semibold text-main shrink-0">
-                                        ${initials}
-                                    </div>
-                                    <div class="truncate">
-                                        <div class="flex items-center gap-1.5">
-                                            <span class="font-medium text-sm text-main truncate">${v.personaName}</span>
-                                            ${isMe ? '<span class="rounded bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-mono text-[9px] px-1.5 py-0.2 font-bold">YOU</span>' : ''}
-                                        </div>
-                                        <span class="text-[11px] text-muted font-mono sm:hidden flex items-center gap-1.5 mt-0.5">
-                                            ${flagHtml} <span>${v.lastCountry || 'Unknown'} · ${v.lastDevice || 'Desktop'}</span>
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div class="sm:col-span-3 flex items-center">
-                                    <span class="font-mono text-xs text-muted truncate max-w-full">
-                                        ${initialRoute}
-                                        ${v.journey && v.journey.length > 1 ? `<span class="text-[10px] text-muted/70 ml-1">(+${v.journey.length - 1} more)</span>` : ''}
-                                    </span>
-                                </div>
-
-                                <div class="hidden sm:flex sm:col-span-3 items-center text-xs font-mono text-muted gap-1.5">
-                                    ${flagHtml} <span>${v.lastCountry || 'Unknown'} · ${v.lastDevice || 'Desktop'}</span>
-                                </div>
-
-                                <div class="sm:col-span-2 flex items-center justify-between sm:justify-end gap-2 text-xs font-mono text-muted whitespace-nowrap">
-                                    <span class="rounded bg-muted/60 px-2 py-0.5 border border-main/10 text-main" title="Total page dwell: ${dwellStr}">
-                                        ${v.visitCount}v · ${v.totalPageViews}p (${dwellStr})
-                                    </span>
-                                    <span>${formatTimeAgo(v.lastSeen)}</span>
-                                </div>
-                            `;
-                            visitorsContainer.appendChild(row);
-                        });
-                    }
-                }
+                renderVisitorsList();
 
                 // 4. Render Top Pages with percentage bars & clickable detail modal
                 const topPagesContainer = document.getElementById('top-pages-list');
@@ -949,6 +926,34 @@ export const prerender = false;
                     }
                 });
             });
+
+            // Live filter toggle
+            const liveToggle = document.getElementById('filter-live-toggle');
+            if (liveToggle) {
+                liveToggle.onclick = () => {
+                    onlyLiveFilter = !onlyLiveFilter;
+                    if (onlyLiveFilter) {
+                        liveToggle.classList.remove('bg-emerald-500/10', 'text-emerald-700', 'dark:text-emerald-300');
+                        liveToggle.classList.add('bg-emerald-500', 'text-black', 'font-bold');
+                    } else {
+                        liveToggle.classList.remove('bg-emerald-500', 'text-black', 'font-bold');
+                        liveToggle.classList.add('bg-emerald-500/10', 'text-emerald-700', 'dark:text-emerald-300');
+                    }
+                    renderVisitorsList();
+                };
+            }
+
+            const clearLiveBtn = document.getElementById('clear-live-filter');
+            if (clearLiveBtn) {
+                clearLiveBtn.onclick = () => {
+                    onlyLiveFilter = false;
+                    if (liveToggle) {
+                        liveToggle.classList.remove('bg-emerald-500', 'text-black', 'font-bold');
+                        liveToggle.classList.add('bg-emerald-500/10', 'text-emerald-700', 'dark:text-emerald-300');
+                    }
+                    renderVisitorsList();
+                };
+            }
         }
 
         // Run when page loads & set up live polling
