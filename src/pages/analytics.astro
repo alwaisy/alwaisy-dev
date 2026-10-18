@@ -70,12 +70,12 @@ export const prerender = false;
         <div id="analytics-content" class="hidden space-y-10 sm:space-y-14">
             <!-- Filter & Action Bar: Unified Toolbar -->
             <div class="flex flex-wrap items-center justify-between gap-3">
-                <!-- Time Range Segmented Control -->
+                <!-- Time Range Segmented Control (Default: Today) -->
                 <div class="inline-flex items-center rounded-lg border border-main/20 bg-muted/30 p-0.5 text-xs font-mono">
                     <button
                         type="button"
                         data-timeframe="all"
-                        class="timeframe-btn rounded-md px-3 py-1 font-medium transition-colors bg-main text-background shadow-xs cursor-pointer"
+                        class="timeframe-btn rounded-md px-3 py-1 font-medium transition-colors text-muted hover:text-main cursor-pointer"
                     >
                         All Time
                     </button>
@@ -96,14 +96,14 @@ export const prerender = false;
                     <button
                         type="button"
                         data-timeframe="today"
-                        class="timeframe-btn rounded-md px-3 py-1 font-medium transition-colors text-muted hover:text-main cursor-pointer"
+                        class="timeframe-btn rounded-md px-3 py-1 font-medium transition-colors bg-main text-background shadow-xs cursor-pointer"
                     >
                         Today
                     </button>
                 </div>
 
                 <div class="flex items-center gap-3 text-xs font-mono text-muted">
-                    <span id="filter-status-label" class="hidden sm:inline">All-time telemetry data</span>
+                    <span id="filter-status-label" class="hidden sm:inline">Today's telemetry</span>
                     
                     <button
                         type="button"
@@ -134,9 +134,9 @@ export const prerender = false;
                         <p class="mt-1 text-[11px] font-mono text-muted/80">Distinct personas</p>
                     </div>
 
-                    <div class="p-4 sm:p-6">
+                    <div class="p-4 sm:p-6 min-w-0">
                         <p class="text-[11px] font-mono uppercase tracking-wider text-muted">Top Country</p>
-                        <p id="stat-top-country" class="mt-2 font-mono text-lg sm:text-2xl font-semibold text-main truncate">--</p>
+                        <p id="stat-top-country" class="mt-2 font-mono text-lg sm:text-2xl font-semibold text-main">--</p>
                         <p class="mt-1 text-[11px] font-mono text-muted/80">Primary origin</p>
                     </div>
 
@@ -701,7 +701,7 @@ export const prerender = false;
             });
         }
 
-        let currentTimeframe = 'all';
+        let currentTimeframe = 'today';
 
         function setTimeframe(newTimeframe: string) {
             currentTimeframe = newTimeframe;
@@ -711,9 +711,9 @@ export const prerender = false;
             buttons.forEach(btn => {
                 const btnTf = btn.getAttribute('data-timeframe');
                 if (btnTf === currentTimeframe) {
-                    btn.className = 'timeframe-btn rounded-lg px-3 py-1.5 font-medium transition-colors bg-main text-background shadow-xs';
+                    btn.className = 'timeframe-btn rounded-md px-3 py-1 font-medium transition-colors bg-main text-background shadow-xs cursor-pointer';
                 } else {
-                    btn.className = 'timeframe-btn rounded-lg px-3 py-1.5 font-medium transition-colors text-muted hover:text-main';
+                    btn.className = 'timeframe-btn rounded-md px-3 py-1 font-medium transition-colors text-muted hover:text-main cursor-pointer';
                 }
             });
 
@@ -767,7 +767,22 @@ export const prerender = false;
                     const countryText = data.summary.topCountry || '--';
                     const countryCode = data.summary.topCountryCode || (countryText.split(' ')[0] || '');
                     const flagHtml = renderFlag(countryCode);
-                    elTopCountry.innerHTML = `${flagHtml ? flagHtml + ' ' : ''}<span>${countryText}</span>`;
+
+                    // Cleanly separate country code and percentage so it never clips or ellipses
+                    const match = countryText.match(/^([A-Z]{2}|\w+)\s*\((.+)\)$/);
+                    if (match) {
+                        const code = match[1];
+                        const pct = match[2];
+                        elTopCountry.innerHTML = `
+                            <span class="inline-flex items-center gap-1.5 flex-wrap">
+                                ${flagHtml ? flagHtml : ''}
+                                <span>${code}</span>
+                                <span class="text-xs sm:text-sm font-normal text-muted font-mono tracking-tight">${pct}</span>
+                            </span>
+                        `;
+                    } else {
+                        elTopCountry.innerHTML = `${flagHtml ? flagHtml + ' ' : ''}<span>${countryText}</span>`;
+                    }
                 }
 
                 const elBounce = document.getElementById('stat-bounce-rate');
