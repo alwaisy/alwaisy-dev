@@ -253,6 +253,73 @@ export const prerender = false;
         </div>
     </dialog>
 
+    <!-- Modal Dialog for Page Detail Inspection (Miller's Law) -->
+    <dialog
+        id="page-modal"
+        class="backdrop:bg-black/70 backdrop:backdrop-blur-sm rounded-2xl border border-main/20 bg-main text-main p-0 max-w-xl w-[calc(100%-2rem)] fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 m-0 shadow-2xl overflow-hidden"
+    >
+        <div class="p-5 sm:p-6 border-b border-main/15 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h3 id="modal-page-path" class="font-mono font-semibold text-base sm:text-lg text-main truncate max-w-[260px] sm:max-w-md">/</h3>
+                    </div>
+                    <p id="modal-page-title" class="text-xs text-muted truncate max-w-[260px] sm:max-w-md mt-0.5">Page Title</p>
+                </div>
+            </div>
+            <button
+                id="modal-page-close-btn"
+                class="rounded-lg p-1.5 text-muted hover:text-main hover:bg-muted/40 transition-colors"
+                aria-label="Close page dialog"
+            >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+
+        <div class="p-5 sm:p-6 max-h-[60vh] overflow-y-auto space-y-6">
+            <!-- Key Page Metrics Grid -->
+            <div class="grid grid-cols-3 gap-3">
+                <div class="rounded-xl border border-main/10 bg-muted/20 p-3 text-center">
+                    <span class="text-[11px] font-mono text-muted uppercase">Total Views</span>
+                    <p id="modal-page-views" class="text-xl sm:text-2xl font-bold font-mono text-main mt-1">0</p>
+                </div>
+                <div class="rounded-xl border border-main/10 bg-muted/20 p-3 text-center">
+                    <span class="text-[11px] font-mono text-muted uppercase">Unique Visitors</span>
+                    <p id="modal-page-uniques" class="text-xl sm:text-2xl font-bold font-mono text-main mt-1">0</p>
+                </div>
+                <div class="rounded-xl border border-main/10 bg-muted/20 p-3 text-center">
+                    <span class="text-[11px] font-mono text-muted uppercase">Avg Dwell</span>
+                    <p id="modal-page-dwell" class="text-xl sm:text-2xl font-bold font-mono text-main mt-1">0s</p>
+                </div>
+            </div>
+
+            <!-- Recent Visitors to this Page -->
+            <div>
+                <h4 class="text-xs font-mono uppercase tracking-wider text-muted mb-3">Recent Visitors on this Page</h4>
+                <div id="modal-page-visitors" class="space-y-2">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+
+            <div class="pt-4 border-t border-main/10 flex items-center justify-between text-xs font-mono text-muted">
+                <a id="modal-page-live-link" href="#" target="_blank" rel="noopener noreferrer" class="text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1">
+                    <span>Visit Live Page</span>
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                    </svg>
+                </a>
+                <span class="text-[11px] opacity-70">Filtered by selected timeframe</span>
+            </div>
+        </div>
+    </dialog>
+
     <script>
         interface Step {
             id: number;
@@ -286,6 +353,14 @@ export const prerender = false;
             views: number;
         }
 
+        interface PageStat {
+            path: string;
+            views: number;
+            uniqueVisitors?: number;
+            avgDwellSeconds?: number;
+            title?: string;
+        }
+
         interface AnalyticsPayload {
             summary: {
                 totalPageViews: number;
@@ -296,7 +371,7 @@ export const prerender = false;
                 bounceRate: string;
             };
             visitors: Visitor[];
-            topPages: Array<{ path: string; views: number }>;
+            topPages: PageStat[];
             topReferrers: Array<{ referrer: string; count: number }>;
             countries: Array<{ country: string; count: number }>;
             devices: Array<{ device: string; count: number }>;
@@ -304,6 +379,7 @@ export const prerender = false;
         }
 
         let allVisitors: Visitor[] = [];
+        let allPages: PageStat[] = [];
 
         function formatTimeAgo(timestamp: number): string {
             const diff = Math.max(0, Math.floor((Date.now() - timestamp) / 1000));
@@ -401,6 +477,63 @@ export const prerender = false;
             modal.showModal();
         }
 
+        function openPageModal(pagePath: string) {
+            const page = allPages.find(p => p.path === pagePath);
+            const modal = document.getElementById('page-modal') as HTMLDialogElement | null;
+            if (!modal) return;
+
+            const pathEl = document.getElementById('modal-page-path');
+            const titleEl = document.getElementById('modal-page-title');
+            const viewsEl = document.getElementById('modal-page-views');
+            const uniquesEl = document.getElementById('modal-page-uniques');
+            const dwellEl = document.getElementById('modal-page-dwell');
+            const visitorsEl = document.getElementById('modal-page-visitors');
+            const linkEl = document.getElementById('modal-page-live-link') as HTMLAnchorElement | null;
+
+            if (pathEl) pathEl.textContent = pagePath;
+            if (titleEl) titleEl.textContent = page?.title || pagePath;
+            if (viewsEl) viewsEl.textContent = (page?.views || 0).toLocaleString();
+            if (uniquesEl) uniquesEl.textContent = (page?.uniqueVisitors || 0).toLocaleString();
+            if (dwellEl) {
+                const sec = page?.avgDwellSeconds || 0;
+                dwellEl.textContent = sec > 60 ? `${Math.floor(sec / 60)}m ${sec % 60}s` : `${sec}s`;
+            }
+            if (linkEl) linkEl.href = pagePath.startsWith('/') ? pagePath : `/${pagePath}`;
+
+            // Find all visitors who have visited this page in their journey
+            if (visitorsEl) {
+                visitorsEl.innerHTML = '';
+                const visitorsOnPage = allVisitors.filter(v => 
+                    v.journey && v.journey.some(step => step.path === pagePath || step.path === `/${pagePath}` || `/${step.path}` === pagePath)
+                );
+
+                if (visitorsOnPage.length === 0) {
+                    visitorsEl.innerHTML = '<p class="text-xs text-muted font-mono py-2">No visitor sessions recorded for this page in this timeframe.</p>';
+                } else {
+                    visitorsOnPage.slice(0, 8).forEach(v => {
+                        const row = document.createElement('div');
+                        row.className = 'flex items-center justify-between p-2.5 rounded-lg border border-main/10 bg-muted/10 text-xs font-mono transition-colors hover:bg-main/5 cursor-pointer';
+                        row.onclick = () => {
+                            modal.close();
+                            openJourneyModal(v.id);
+                        };
+
+                        const flagHtml = renderFlag(v.lastCountry);
+                        row.innerHTML = `
+                            <div class="flex items-center gap-2 truncate">
+                                <span class="font-medium text-main truncate">${v.personaName}</span>
+                                <span class="text-muted text-[11px] flex items-center gap-1">${flagHtml} ${v.lastCountry || 'Unknown'}</span>
+                            </div>
+                            <span class="text-[11px] text-muted shrink-0">${formatTimeAgo(v.lastSeen)}</span>
+                        `;
+                        visitorsEl.appendChild(row);
+                    });
+                }
+            }
+
+            modal.showModal();
+        }
+
         let currentTimeframe = 'all';
 
         function setTimeframe(newTimeframe: string) {
@@ -436,6 +569,7 @@ export const prerender = false;
                 if (!res.ok) throw new Error('Failed to load stats');
                 const data: AnalyticsPayload = await res.json();
                 allVisitors = data.visitors || [];
+                allPages = data.topPages || [];
 
                 // 1. KPI Cards
                 const totalViews = data.summary.totalPageViews;
@@ -563,7 +697,7 @@ export const prerender = false;
                     }
                 }
 
-                // 4. Render Top Pages with percentage bars
+                // 4. Render Top Pages with percentage bars & clickable detail modal
                 const topPagesContainer = document.getElementById('top-pages-list');
                 if (topPagesContainer) {
                     topPagesContainer.innerHTML = '';
@@ -571,14 +705,24 @@ export const prerender = false;
                     data.topPages.forEach(page => {
                         const pct = Math.round((page.views / maxViews) * 100);
                         const row = document.createElement('div');
-                        row.className = 'space-y-1';
+                        row.className = 'group p-2 rounded-xl transition-colors hover:bg-main/5 cursor-pointer space-y-1.5 border border-transparent hover:border-main/10';
+                        row.onclick = () => openPageModal(page.path);
                         row.innerHTML = `
-                            <div class="flex justify-between text-xs font-mono">
-                                <span class="text-main truncate max-w-[200px] sm:max-w-xs">${page.path}</span>
-                                <span class="text-muted">${page.views.toLocaleString()}</span>
+                            <div class="flex justify-between items-center text-xs font-mono">
+                                <span class="text-main font-medium truncate max-w-[200px] sm:max-w-xs group-hover:underline flex items-center gap-1.5">
+                                    <span>${page.path}</span>
+                                    <svg class="w-3 h-3 opacity-0 group-hover:opacity-70 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                    </svg>
+                                </span>
+                                <div class="flex items-center gap-2">
+                                    ${page.uniqueVisitors ? `<span class="text-[10px] text-muted">${page.uniqueVisitors}u</span>` : ''}
+                                    <span class="text-muted font-bold">${page.views.toLocaleString()}</span>
+                                </div>
                             </div>
                             <div class="h-1.5 w-full bg-muted/30 rounded-full overflow-hidden">
-                                <div class="h-full bg-main/40 rounded-full" style="width: ${pct}%"></div>
+                                <div class="h-full bg-main/40 rounded-full group-hover:bg-main/70 transition-colors" style="width: ${pct}%"></div>
                             </div>
                         `;
                         topPagesContainer.appendChild(row);
@@ -651,13 +795,22 @@ export const prerender = false;
             }
         }
 
-        // Modal close handler
+        // Modal close handlers
         const closeBtn = document.getElementById('modal-close-btn');
         const modal = document.getElementById('journey-modal') as HTMLDialogElement | null;
         if (closeBtn && modal) {
             closeBtn.onclick = () => modal.close();
             modal.onclick = (e) => {
                 if (e.target === modal) modal.close();
+            };
+        }
+
+        const pageCloseBtn = document.getElementById('modal-page-close-btn');
+        const pageModal = document.getElementById('page-modal') as HTMLDialogElement | null;
+        if (pageCloseBtn && pageModal) {
+            pageCloseBtn.onclick = () => pageModal.close();
+            pageModal.onclick = (e) => {
+                if (e.target === pageModal) pageModal.close();
             };
         }
 

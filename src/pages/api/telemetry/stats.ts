@@ -17,6 +17,14 @@ export interface JourneyStep {
     browser: string;
 }
 
+export interface PageDetail {
+    path: string;
+    views: number;
+    uniqueVisitors: number;
+    avgDwellSeconds: number;
+    title?: string;
+}
+
 export interface VisitorWithJourney {
     id: string;
     personaName: string;
@@ -136,23 +144,33 @@ export const GET: APIRoute = async ({ request, locals }) => {
         const bounceRate = uniqueVisitors > 0 ? Math.round((singlePageBounces / uniqueVisitors) * 100) : 0;
         const topCountry = topCountryRow ? `${topCountryRow.country} (${Math.round((topCountryRow.count / (totalViews || 1)) * 100)}%)` : '--';
 
-        // 2. Top Pages
+        // 2. Top Pages with full metrics
         const topPages = isFiltered
             ? await db.prepare(`
-                SELECT path, COUNT(*) as views 
+                SELECT 
+                    path, 
+                    COUNT(*) as views,
+                    COUNT(DISTINCT visitor_id) as uniqueVisitors,
+                    ROUND(AVG(dwell_time_seconds)) as avgDwellSeconds,
+                    MAX(title) as title
                 FROM journeys 
                 WHERE created_at >= ?
                 GROUP BY path 
                 ORDER BY views DESC 
-                LIMIT 10
-            `).bind(minTime).all<{ path: string; views: number }>()
+                LIMIT 15
+            `).bind(minTime).all<PageDetail>()
             : await db.prepare(`
-                SELECT path, COUNT(*) as views 
+                SELECT 
+                    path, 
+                    COUNT(*) as views,
+                    COUNT(DISTINCT visitor_id) as uniqueVisitors,
+                    ROUND(AVG(dwell_time_seconds)) as avgDwellSeconds,
+                    MAX(title) as title
                 FROM journeys 
                 GROUP BY path 
                 ORDER BY views DESC 
-                LIMIT 10
-            `).all<{ path: string; views: number }>();
+                LIMIT 15
+            `).all<PageDetail>();
 
         // 3. Top Referrers
         const topReferrers = isFiltered
