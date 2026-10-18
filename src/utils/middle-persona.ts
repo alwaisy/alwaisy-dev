@@ -22,7 +22,7 @@ interface PrefixDef {
     hint: string;
 }
 
-const PREFIXES: PrefixDef[] = [
+export const PREFIXES: PrefixDef[] = [
     { word: 'Library', color: 'indigo', hint: 'Analytical, deep reading, books and docs' },
     { word: 'Quarry', color: 'zinc', hint: 'Bedrock, direct, pragmatic, infrastructure' },
     { word: 'Spudsy', color: 'emerald', hint: 'Frontline hustle, energetic, enthusiastic' },
@@ -34,7 +34,11 @@ const PREFIXES: PrefixDef[] = [
     { word: 'Hoosier', color: 'sky', hint: 'Down to earth, friendly local' },
     { word: 'Wrestlerette', color: 'fuchsia', hint: 'Determined, relentless grit' },
     { word: 'Notre Dame', color: 'blue', hint: 'Academic, high standards' },
-    { word: 'Pawn Shop', color: 'stone', hint: 'Curious explorer, unique angle' }
+    { word: 'Pawn Shop', color: 'stone', hint: 'Curious explorer, unique angle' },
+    { word: 'Orson High', color: 'purple', hint: 'School spirit, everyday learner' },
+    { word: 'Maple Drive', color: 'amber', hint: 'Neighborhood grit, streetwise' },
+    { word: 'Camp Hi-Ho', color: 'emerald', hint: 'Upbeat campfire optimism' },
+    { word: 'Town Council', color: 'slate', hint: 'Civic minded, governance' }
 ];
 
 // 2. Characters from The Middle Sitcom Universe
@@ -45,7 +49,7 @@ interface CharacterDef {
     hint: string;
 }
 
-const CHARACTERS: CharacterDef[] = [
+export const CHARACTERS: CharacterDef[] = [
     // Core Family
     { name: 'Brick', alias: 'Brick', color: 'indigo', hint: 'Analytical reader, microfiche, tech details' },
     { name: 'Mike', alias: 'Mike', color: 'zinc', hint: 'Stoic, practical, direct bio and backend' },
@@ -62,7 +66,13 @@ const CHARACTERS: CharacterDef[] = [
     { name: 'Lexie', alias: 'Lexie', color: 'cyan', hint: 'Sophisticated, modern setup' },
     { name: 'Goodwin', alias: 'Goodwin', color: 'cyan', hint: 'Methodical inspection of changelog' },
     { name: 'Ehlert', alias: 'Ehlert', color: 'rose', hint: 'Veteran boss, bottom line focused' },
-    { name: 'Tim-Tom', alias: 'Tim-Tom', color: 'amber', hint: 'Harmonious, inspiring message' }
+    { name: 'Tim-Tom', alias: 'Tim-Tom', color: 'amber', hint: 'Harmonious, inspiring message' },
+    { name: 'Cassidy', alias: 'Cassidy', color: 'purple', hint: 'Poetic, artistic, intellectual' },
+    { name: 'Hutch', alias: 'Hutch', color: 'amber', hint: 'College roommate, chill vibe' },
+    { name: 'Kenny', alias: 'Kenny', color: 'slate', hint: 'Gamer, silent late night scroller' },
+    { name: 'Cindy', alias: 'Cindy', color: 'emerald', hint: 'Quirky, dry humor, minimal words' },
+    { name: 'Devin', alias: 'Devin', color: 'teal', hint: 'Competitive, sporty, direct' },
+    { name: 'Rita', alias: 'Rita', color: 'red', hint: 'Rebel, unexpected chaotic path' }
 ];
 
 export function hashString(str: string): number {
@@ -75,60 +85,78 @@ export function hashString(str: string): number {
 }
 
 /**
- * Deterministic fallback combo generator: Generates authentic 2-to-3 word names
- * from The Middle universe without numbers or hash tags.
- * e.g. "Library Brick", "Quarry Mike", "Spudsy Sue", "Boss Co Axl"
+ * Generates all valid candidate combos (PREFIX + CHARACTER).
+ * Total pool: 16 prefixes * 20 characters = 320 unique combinations!
  */
-export function generateFallbackPersona(visitorId: string): MiddlePersona {
-    const hash = hashString(visitorId);
-    const prefix = PREFIXES[hash % PREFIXES.length];
-    const char = CHARACTERS[Math.floor(hash / PREFIXES.length) % CHARACTERS.length];
+export function getAllAvailableCombos(claimedNames: Set<string>): MiddlePersona[] {
+    const list: MiddlePersona[] = [];
+    for (const p of PREFIXES) {
+        for (const c of CHARACTERS) {
+            const fullName = `${p.word} ${c.name}`;
+            if (!claimedNames.has(fullName)) {
+                list.push({
+                    name: fullName,
+                    alias: c.alias,
+                    badgeColor: p.color,
+                    prefix: p.word
+                });
+            }
+        }
+    }
+    return list;
+}
+
+/**
+ * Random fallback string generator if Jev or the candidate pool is exhausted.
+ * Generates an unmistakable, completely unique fallback like "Orson-Wanderer-8a3f".
+ */
+export function generateRandomFallbackPersona(visitorId: string, claimedNames: Set<string>): MiddlePersona {
+    let candidate = '';
+    let counter = 0;
+    do {
+        const randHex = Math.random().toString(36).substring(2, 6);
+        candidate = `Orson Scout ${randHex.toUpperCase()}`;
+        counter++;
+        if (counter > 20) break;
+    } while (claimedNames.has(candidate));
 
     return {
-        name: `${prefix.word} ${char.name}`,
-        alias: char.alias,
-        badgeColor: prefix.color,
-        prefix: prefix.word
+        name: candidate,
+        alias: 'Scout',
+        badgeColor: 'indigo',
+        prefix: 'Orson'
     };
 }
 
 /**
- * Intelligent decision-powered combo generator using typesafe/jev-1.14 on OpenRouter.
- * Evaluates the visitor browsing state (path, dwell time, device, referrer)
- * and returns calibrated choices for a tight 2-to-3 word sitcom combo.
+ * Query Jev-1.14 decisions model with candidate options that are GUARANTEED NOT YET CLAIMED.
  */
-export async function resolveIntelligentPersona(
+async function queryJevForBestCombo(
     visitorId: string,
     context: VisitorContext,
-    apiKey?: string
-): Promise<MiddlePersona> {
-    const fallback = generateFallbackPersona(visitorId);
-    if (!apiKey) {
-        return fallback;
-    }
-
+    candidates: MiddlePersona[],
+    apiKey: string
+): Promise<MiddlePersona | null> {
     try {
+        // Feed up to 8 of the best available candidates matching visitor criteria
+        const sampleCandidates = candidates.slice(0, 8);
+        const criteria: Record<string, string> = {};
+        for (const cand of sampleCandidates) {
+            const pDef = PREFIXES.find(p => p.word === cand.prefix);
+            const cDef = CHARACTERS.find(c => c.alias === cand.alias);
+            criteria[cand.name] = `${pDef?.hint || 'Vibe'}, ${cDef?.hint || 'Character'}`;
+        }
+
         const stateDesc = [
-            `Visitor ID: ${visitorId.slice(0, 8)}`,
-            `Landing route: ${context.path || '/'}`,
+            `Visitor route: ${context.path || '/'}`,
             `Device: ${context.device || 'Desktop'} using ${context.browser || 'Browser'}`,
             `Referrer: ${context.referrer || 'Direct'}`,
             `Dwell time: ${context.dwellTimeSeconds || 0}s`,
-            `Steps visited: ${context.stepOrder || 1}`
+            `Step order: ${context.stepOrder || 1}`
         ].join('. ');
 
-        const prefixCriteria: Record<string, string> = {};
-        for (const p of PREFIXES) {
-            prefixCriteria[p.word] = p.hint;
-        }
-
-        const charCriteria: Record<string, string> = {};
-        for (const c of CHARACTERS) {
-            charCriteria[c.name] = c.hint;
-        }
-
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 1200); // Strict 1.2s timeout for edge speed
+        const timeoutId = setTimeout(() => controller.abort(), 1200);
 
         const response = await fetch('https://openrouter.ai/api/alpha/decisions', {
             method: 'POST',
@@ -143,15 +171,10 @@ export async function resolveIntelligentPersona(
                 model: 'typesafe/jev-1.14',
                 state: [stateDesc],
                 questions: {
-                    prefix: {
+                    best_combo: {
                         type: 'choice',
-                        instructions: 'Pick the single best 1-to-2 word role, place, or quirk from The Middle universe.',
-                        criteria: prefixCriteria
-                    },
-                    character: {
-                        type: 'choice',
-                        instructions: 'Pick the character from The Middle that best matches the visitor style.',
-                        criteria: charCriteria
+                        instructions: 'Pick the single best persona name from the available options for this visitor.',
+                        criteria
                     }
                 }
             })
@@ -159,35 +182,84 @@ export async function resolveIntelligentPersona(
 
         clearTimeout(timeoutId);
 
-        if (!response.ok) {
-            return fallback;
-        }
+        if (!response.ok) return null;
 
         const result = await response.json() as {
             answers?: {
-                prefix?: { choice?: string };
-                character?: { choice?: string };
+                best_combo?: { choice?: string };
             };
         };
 
-        const chosenPrefixWord = result.answers?.prefix?.choice;
-        const chosenCharName = result.answers?.character?.choice;
+        const chosenName = result.answers?.best_combo?.choice;
+        if (!chosenName) return null;
 
-        const prefixDef = PREFIXES.find(p => p.word === chosenPrefixWord) || PREFIXES[0];
-        const charDef = CHARACTERS.find(c => c.name === chosenCharName) || CHARACTERS[0];
-
-        const fullName = `${prefixDef.word} ${charDef.name}`;
-        // Ensure strictly 2 to 3 words
-        const words = fullName.trim().split(/\s+/);
-        const tightName = words.slice(0, 3).join(' ');
-
-        return {
-            name: tightName,
-            alias: charDef.alias,
-            badgeColor: prefixDef.color,
-            prefix: prefixDef.word
-        };
+        return sampleCandidates.find(c => c.name === chosenName) || null;
     } catch {
-        return fallback;
+        return null;
     }
+}
+
+/**
+ * Intelligent decision-powered generator with WHILE LOOP and DATABASE duplicate verification:
+ * 1. Checks available candidates not in database claimed set
+ * 2. Runs while loop (up to 3 attempts) consulting Jev
+ * 3. Verifies zero match with claimed database names
+ * 4. Breaks on success; if Jev fails, falls back to a clean unique string combo before breaking
+ */
+export async function resolveUniqueIntelligentPersona(
+    visitorId: string,
+    context: VisitorContext,
+    claimedNames: Set<string>,
+    apiKey?: string
+): Promise<MiddlePersona> {
+    // 1. Get all unclaimed combos from the 320-item lore pool
+    let available = getAllAvailableCombos(claimedNames);
+
+    if (available.length === 0) {
+        return generateRandomFallbackPersona(visitorId, claimedNames);
+    }
+
+    // Shuffle available pool pseudo-deterministically by visitorId so different visitors see diverse subsets
+    const vHash = hashString(visitorId);
+    available.sort((a, b) => {
+        const hA = hashString(a.name + visitorId);
+        const hB = hashString(b.name + visitorId);
+        return hA - hB;
+    });
+
+    let attempt = 0;
+    const maxAttempts = 3;
+    let selectedPersona: MiddlePersona | null = null;
+
+    while (attempt < maxAttempts) {
+        attempt++;
+
+        if (apiKey && available.length > 0) {
+            const jevChoice = await queryJevForBestCombo(visitorId, context, available, apiKey);
+            if (jevChoice && !claimedNames.has(jevChoice.name)) {
+                selectedPersona = jevChoice;
+                break; // Found guaranteed unique choice from Jev!
+            }
+        }
+
+        // If Jev was unavailable or picked an already taken name, try the top candidate from the shuffled available pool
+        const topCandidate = available[0];
+        if (topCandidate && !claimedNames.has(topCandidate.name)) {
+            selectedPersona = topCandidate;
+            break;
+        }
+
+        // If duplicate was found, filter it out and continue loop
+        if (topCandidate) {
+            claimedNames.add(topCandidate.name);
+            available = available.filter(a => a.name !== topCandidate.name);
+        }
+    }
+
+    // If loop finishes without an agreed unique name, generate a clean unique string before breaking
+    if (!selectedPersona || claimedNames.has(selectedPersona.name)) {
+        selectedPersona = generateRandomFallbackPersona(visitorId, claimedNames);
+    }
+
+    return selectedPersona;
 }

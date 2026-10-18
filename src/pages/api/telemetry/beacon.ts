@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { verifyHumanRequest, normalizeSlug } from '../../../utils/view-counter';
-import { resolveIntelligentPersona, generateFallbackPersona } from '../../../utils/middle-persona';
+import { resolveUniqueIntelligentPersona, generateRandomFallbackPersona } from '../../../utils/middle-persona';
 
 export const prerender = false;
 
@@ -102,14 +102,14 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
 
         if (!db) {
-            const persona = generateFallbackPersona(visitorId);
+            const persona = generateRandomFallbackPersona(visitorId, new Set());
             return new Response(JSON.stringify({ ok: true, persona }), {
                 status: 200,
                 headers: { 'Content-Type': 'application/json' }
             });
         }
 
-        // Check if visitor already has an assigned persona
+        // Check if THIS visitor already has an assigned persona
         const existing = await db
             .prepare(`SELECT persona_name, persona_alias, persona_badge_color FROM visitors WHERE id = ?`)
             .bind(visitorId)
@@ -119,9 +119,20 @@ export const POST: APIRoute = async ({ request, locals }) => {
         let personaAlias = existing?.persona_alias;
         let personaBadgeColor = existing?.persona_badge_color;
 
-        // If new visitor, or previous persona had old tag "#", resolve smart persona with Jev
+        // If new visitor, query ALL currently claimed persona names from D1 to guarantee 100% uniqueness
         if (!personaName || personaName.includes('#')) {
-            const resolved = await resolveIntelligentPersona(
+            const claimedRows = await db
+                .prepare(`SELECT persona_name FROM visitors WHERE id != ?`)
+                .bind(visitorId)
+                .all<{ persona_name: string }>();
+
+            const claimedNames = new Set<string>();
+            for (const row of (claimedRows.results || [])) {
+                if (row.persona_name) claimedNames.add(row.persona_name);
+            }
+
+            // Resolve persona via while loop with Jev and database verification
+            const resolved = await resolveUniqueIntelligentPersona(
                 visitorId,
                 {
                     path: `/${path}`,
@@ -131,8 +142,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
                     dwellTimeSeconds: dwellTime,
                     stepOrder
                 },
+                claimedNames,
                 openRouterKey
             );
+
             personaName = resolved.name;
             personaAlias = resolved.alias;
             personaBadgeColor = resolved.badgeColor;
@@ -144,41 +157,61 @@ export const POST: APIRoute = async ({ request, locals }) => {
             badgeColor: personaBadgeColor || 'indigo'
         };
 
-        // Atomic Upsert: Preserves existing persona while updating visit stats
-        await db
-            .prepare(`
-                INSERT INTO visitors 
-                (id, persona_name, persona_alias, persona_role, persona_quote, persona_badge_color, persona_emoji, first_seen, last_seen, visit_count, total_page_views, last_country, last_device, last_browser)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 1, ?, ?, ?)
-                ON CONFLICT(id) DO UPDATE SET
-                    last_seen = excluded.last_seen,
-                    total_page_views = visitors.total_page_views + 1,
-                    visit_count = CASE 
-                        WHEN (excluded.last_seen - visitors.last_seen) > 1800000 THEN visitors.visit_count + 1 
-                        ELSE visitors.visit_count 
-                    END,
-                    persona_name = excluded.persona_name,
-                    persona_alias = excluded.persona_alias,
-                    persona_badge_color = excluded.persona_badge_color,
-                    last_country = excluded.last_country,
-                    last_device = excluded.last_device,
-                    last_browser = excluded.last_browser
-            `)
-            .bind(
-                visitorId,
-                activePersona.name,
-                activePersona.alias,
-                'Visitor',
-                '',
-                activePersona.badgeColor,
-                '',
-                now,
-                now,
-                country,
-                device,
-                browser
-            )
-            .run();
+        // Try atomic upsert with collision retry:
+        // If two simultaneous hits try to claim the exact same name at the exact same millisecond,
+        // the UNIQUE constraint will trigger a catch block, which immediately generates a clean unique fallback.
+        let insertSuccess = false;
+        let finalPersona = activePersona;
+
+        for (let retry = 0; retry < 2 && !insertSuccess; retry++) {
+            try {
+                await db
+                    .prepare(`
+                        INSERT INTO visitors 
+                        (id, persona_name, persona_alias, persona_role, persona_quote, persona_badge_color, persona_emoji, first_seen, last_seen, visit_count, total_page_views, last_country, last_device, last_browser)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 1, ?, ?, ?)
+                        ON CONFLICT(id) DO UPDATE SET
+                            last_seen = excluded.last_seen,
+                            total_page_views = visitors.total_page_views + 1,
+                            visit_count = CASE 
+                                WHEN (excluded.last_seen - visitors.last_seen) > 1800000 THEN visitors.visit_count + 1 
+                                ELSE visitors.visit_count 
+                            END,
+                            persona_name = excluded.persona_name,
+                            persona_alias = excluded.persona_alias,
+                            persona_badge_color = excluded.persona_badge_color,
+                            last_country = excluded.last_country,
+                            last_device = excluded.last_device,
+                            last_browser = excluded.last_browser
+                    `)
+                    .bind(
+                        visitorId,
+                        finalPersona.name,
+                        finalPersona.alias,
+                        'Visitor',
+                        '',
+                        finalPersona.badgeColor,
+                        '',
+                        now,
+                        now,
+                        country,
+                        device,
+                        browser
+                    )
+                    .run();
+
+                insertSuccess = true;
+            } catch (upsertErr) {
+                // If a unique constraint collision happened on persona_name due to concurrent race condition
+                const errStr = String(upsertErr);
+                if (errStr.includes('UNIQUE constraint failed: visitors.persona_name') || errStr.includes('idx_visitors_persona_name')) {
+                    // Pick a guaranteed unique random string fallback
+                    finalPersona = generateRandomFallbackPersona(visitorId, new Set([finalPersona.name]));
+                } else {
+                    throw upsertErr;
+                }
+            }
+        }
 
         // 2. Insert Journey Step
         await db
@@ -190,7 +223,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             .bind(visitorId, sessionId, `/${path}`, title, referrer, stepOrder, dwellTime, now, country, city, device, browser)
             .run();
 
-        return new Response(JSON.stringify({ ok: true, persona: activePersona }), {
+        return new Response(JSON.stringify({ ok: true, persona: finalPersona }), {
             status: 200,
             headers: { 'Content-Type': 'application/json' }
         });

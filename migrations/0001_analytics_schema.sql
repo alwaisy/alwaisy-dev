@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS journeys (
 );
 
 CREATE INDEX IF NOT EXISTS idx_visitors_last_seen ON visitors(last_seen DESC);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_visitors_persona_name ON visitors(persona_name);
 CREATE INDEX IF NOT EXISTS idx_journeys_visitor_id ON journeys(visitor_id, created_at ASC);
 CREATE INDEX IF NOT EXISTS idx_journeys_path ON journeys(path);
 CREATE INDEX IF NOT EXISTS idx_journeys_created_at ON journeys(created_at DESC);
