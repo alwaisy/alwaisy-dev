@@ -227,7 +227,7 @@ export const prerender = false;
                         <h3 class="font-serif text-lg font-medium text-main">Top Pages</h3>
                         <span class="text-[11px] font-mono text-muted uppercase">Views</span>
                     </div>
-                    <div id="top-pages-list" class="space-y-2.5">
+                    <div id="top-pages-list" class="space-y-1">
                         <!-- Populated via script -->
                     </div>
                 </div>
@@ -830,33 +830,18 @@ export const prerender = false;
                     topPagesContainer.innerHTML = '';
                     const maxViews = Math.max(...(data.topPages.map(p => p.views)), 1);
                     data.topPages.forEach(page => {
-                        const pct = Math.round((page.views / maxViews) * 100);
                         const row = document.createElement('a');
                         const targetHref = page.path.startsWith('/') ? page.path : `/${page.path}`;
                         row.href = targetHref;
-                        row.className = 'group block p-2 rounded-lg transition-colors hover:bg-main/5 cursor-pointer space-y-1.5 no-underline text-inherit';
+                        row.className = 'flex justify-between items-center text-xs font-mono py-1.5 border-b border-main/10 last:border-b-0 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors group cursor-pointer no-underline';
                         row.onclick = (e) => {
-                            // If user clicked with Cmd/Ctrl or middle button, let browser open in new tab
                             if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
                             e.preventDefault();
                             openPageModal(page.path);
                         };
                         row.innerHTML = `
-                            <div class="flex justify-between items-center text-xs font-mono">
-                                <span class="text-main font-medium truncate max-w-[200px] sm:max-w-xs group-hover:underline flex items-center gap-1.5">
-                                    <span>${page.path}</span>
-                                    <svg class="w-3 h-3 opacity-0 group-hover:opacity-60 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                                    </svg>
-                                </span>
-                                <div class="flex items-center gap-2">
-                                    ${page.uniqueVisitors ? `<span class="text-[10px] text-muted">${page.uniqueVisitors}u</span>` : ''}
-                                    <span class="text-main font-medium">${page.views.toLocaleString()}</span>
-                                </div>
-                            </div>
-                            <div class="h-1 w-full bg-muted/40 rounded-full overflow-hidden">
-                                <div class="h-full bg-main/50 rounded-full group-hover:bg-main/80 transition-colors" style="width: ${pct}%"></div>
-                            </div>
+                            <span class="text-main group-hover:underline truncate max-w-[220px] sm:max-w-xs">${page.path}</span>
+                            <span class="text-muted font-mono shrink-0">${page.views.toLocaleString()}</span>
                         `;
                         topPagesContainer.appendChild(row);
                     });
