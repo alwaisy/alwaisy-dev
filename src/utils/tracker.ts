@@ -2,9 +2,22 @@
  * Client-Side Autonomous Analytics Tracker with True Per-Page Dwell Time Tracking
  */
 
-const STORAGE_KEY_VISITOR = 'mid_v_id';
-const STORAGE_KEY_SESSION = 'mid_s_id';
+const COOKIE_VISITOR = 'mid_v_id';
+const COOKIE_SESSION = 'mid_s_id';
 const STORAGE_KEY_STEP = 'mid_step_order';
+const SESSION_TTL_SECONDS = 30 * 60; // 30 minutes rolling session window
+const VISITOR_TTL_SECONDS = 365 * 24 * 60 * 60; // 1 year visitor persistence
+
+function getCookie(name: string): string | null {
+    if (typeof document === 'undefined') return null;
+    const match = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/([.$?*|{}()[\]\\/+^])/g, '\\$1') + '=([^;]*)'));
+    return match ? decodeURIComponent(match[1]) : null;
+}
+
+function setCookie(name: string, value: string, maxAgeSeconds: number) {
+    if (typeof document === 'undefined') return;
+    document.cookie = `${name}=${encodeURIComponent(value)}; path=/; max-age=${maxAgeSeconds}; SameSite=Lax`;
+}
 
 function getOrGenerateUUID(): string {
     if (typeof crypto !== 'undefined' && crypto.randomUUID) {
@@ -24,18 +37,22 @@ let isTrackerInitialized = false;
 function sendTelemetry(type: 'pageview' | 'dwell', dwellSeconds = 0) {
     if (typeof window === 'undefined') return;
 
-    let visitorId = localStorage.getItem(STORAGE_KEY_VISITOR);
+    // 1. Visitor ID: Persistent 1-year cookie
+    let visitorId = getCookie(COOKIE_VISITOR);
     if (!visitorId) {
         visitorId = getOrGenerateUUID();
-        localStorage.setItem(STORAGE_KEY_VISITOR, visitorId);
     }
+    // Refresh visitor cookie max-age to 1 year on activity
+    setCookie(COOKIE_VISITOR, visitorId, VISITOR_TTL_SECONDS);
 
-    let sessionId = sessionStorage.getItem(STORAGE_KEY_SESSION);
+    // 2. Session ID: Rolling 30-minute cookie (survives tab close and reopen)
+    let sessionId = getCookie(COOKIE_SESSION);
     if (!sessionId) {
         sessionId = getOrGenerateUUID();
-        sessionStorage.setItem(STORAGE_KEY_SESSION, sessionId);
         sessionStorage.setItem(STORAGE_KEY_STEP, '1');
     }
+    // Refresh session cookie max-age to 30 minutes on every ping/activity
+    setCookie(COOKIE_SESSION, sessionId, SESSION_TTL_SECONDS);
 
     const stepOrder = parseInt(sessionStorage.getItem(STORAGE_KEY_STEP) || '1', 10);
     const path = currentPath || window.location.pathname;

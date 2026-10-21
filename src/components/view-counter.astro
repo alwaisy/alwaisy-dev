@@ -72,11 +72,11 @@ const { slug, class: className = '', trackOnly = false } = Astro.props;
             processedSlugs.add(cleanSlug);
 
             // 2. Client-side Deduplication:
-            // Check if this visitor already recorded this slug in sessionStorage
-            const sessionKey = `viewed_${cleanSlug}`;
-            const lastViewed = sessionStorage.getItem(sessionKey);
-            if (lastViewed) {
-                // Already counted in this session, do not send view ping again
+            // Check cookie to prevent duplicate view increments when tab is closed and reopened
+            const cookieName = `vwd_${cleanSlug.replace(/[^a-zA-Z0-9_-]/g, '_')}`;
+            const hasViewedCookie = document.cookie.split('; ').some((c) => c.startsWith(`${cookieName}=`));
+            if (hasViewedCookie) {
+                // Already counted within 24h, do not send view ping again
                 return;
             }
 
@@ -94,7 +94,8 @@ const { slug, class: className = '', trackOnly = false } = Astro.props;
 
                 pinged = true;
                 cleanupListeners();
-                sessionStorage.setItem(sessionKey, Date.now().toString());
+                // Set cookie with 24 hours max-age (86400 seconds)
+                document.cookie = `${cookieName}=1; path=/; max-age=86400; SameSite=Lax`;
 
                 // Send engagement beacon with proof payload
                 const payload = JSON.stringify({ engaged: true, t: Date.now() });
