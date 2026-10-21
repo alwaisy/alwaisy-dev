@@ -68,12 +68,12 @@ const { slug, class: className = '', trackOnly = false } = Astro.props;
             }
 
             // If we already attached listener for this slug on this page, don't double ping
-            if (processedSlugs.has(slug)) return;
-            processedSlugs.add(slug);
+            if (processedSlugs.has(cleanSlug)) return;
+            processedSlugs.add(cleanSlug);
 
             // 2. Client-side Deduplication:
-            // Check if this visitor already recorded this slug in sessionStorage (or within last 30 minutes)
-            const sessionKey = `viewed_${slug}`;
+            // Check if this visitor already recorded this slug in sessionStorage
+            const sessionKey = `viewed_${cleanSlug}`;
             const lastViewed = sessionStorage.getItem(sessionKey);
             if (lastViewed) {
                 // Already counted in this session, do not send view ping again

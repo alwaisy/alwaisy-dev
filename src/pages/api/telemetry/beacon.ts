@@ -82,26 +82,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
             db = undefined;
         }
 
-        // Increment legacy/unified PAGE_VIEWS KV counter if available
-        try {
-            let kv: KVNamespace | undefined;
-            const cfModule = await import('cloudflare:workers');
-            const workerEnv = cfModule?.env as unknown as { PAGE_VIEWS?: KVNamespace } | undefined;
-            kv = workerEnv?.PAGE_VIEWS;
-            if (!kv) {
-                const runtime = locals as { runtime?: { env?: { PAGE_VIEWS?: KVNamespace } } };
-                kv = runtime.runtime?.env?.PAGE_VIEWS;
-            }
-            if (kv) {
-                const viewKey = `views:${path}`;
-                const currentStr = await kv.get(viewKey);
-                const currentViews = currentStr ? parseInt(currentStr, 10) : 0;
-                await kv.put(viewKey, String(currentViews + 1));
-            }
-        } catch {
-            // KV fallback optional
-        }
-
         if (!db) {
             const persona = generateRandomFallbackPersona(visitorId, new Set());
             return new Response(JSON.stringify({ ok: true, persona }), {
